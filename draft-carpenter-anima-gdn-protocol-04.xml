@@ -1852,6 +1852,7 @@ specification of the objective.</t>
       Specified flag bits for objective options (resolved issue 15).
       <vspace blankLines="1"/>
       Clarified usage of ACP vs TLS/DTLS and TCP vs UDP (resolved issues 9,10,11).
+      <vspace blankLines="1"/>
       Editorial improvements.</t>
       <t>draft-carpenter-anima-discovery-negotiation-protocol-03, 2015-04-20:
       <vspace blankLines="1"/>
