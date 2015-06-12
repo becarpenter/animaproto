@@ -53,7 +53,7 @@
 
     <!---->
 
-    <date day="17" month="May" year="2015"/>
+    <date day="11" month="June" year="2015"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -75,8 +75,8 @@
       General aspects of autonomic networks are discussed in
       <xref target="I-D.irtf-nmrg-autonomic-network-definitions"/>
       and <xref target="I-D.irtf-nmrg-an-gap-analysis"/>. 
-      <!-- A reference model for autonomic networking is given in
-      <xref target="I-D.behringer-anima-reference-model"/> -->
+      A reference model for autonomic networking is given in
+      <xref target="I-D.behringer-anima-reference-model"/>.
       In order to fulfil autonomy, devices that embody autonomic service agents
       have specific signaling requirements. In particular they need to discover each other,
       to synchronize state with each other,
@@ -136,6 +136,11 @@
       several objectives. </t>
 
       <section title="Requirements for Discovery">
+        <t>1. ASAs may be designed to manage anything, as required in
+        <xref target="synchreq"/>. A basic requirement
+        is therefore that the protocol can represent and discover any
+        kind of network objective among arbitrary subsets of participating nodes.</t>
+        
         <t>In an autonomic network we must assume that when a device starts up
         it has no information about any peer devices, the network structure,
         or what specific role it must play. The ASA(s) inside the device are
@@ -144,31 +149,46 @@
         information about relevant peers. It might be necessary to set
         up resources on multiple other devices, coordinated and matched to
         each other so that there is no wasted resource. Security settings
-        might also need updating to allow for the new device or user.
-        Therefore a basic requirement is that there must be a mechanism by
-        which an ASA can separately discover peer ASAs for each of the
-        technical objectives that it needs to manage. Some objectives may
-        only be significant on the local link, but others may be significant
-        across the routed network and require off-link operations. Thus,
-        the relevant peers might be immediate neighbors on the same
-        layer 2 link or they might be more distant and only accessible via
-        layer 3. The mechanism must therefore support both on-link discovery
-        and off-link discovery of ASAs that support specific technical
-        objectives.</t>
-        
-        <t>The relevant peers may be different for different technical
+        might also need updating to allow for the new device or user. 
+        The relevant peers may be different for different technical
         objectives. Therefore discovery needs to be repeated as often as
         necessary to find peers capable of acting as counterparts for each
-        objective that a discovery initiator needs to handle. In many
-        scenarios, the discovery process may be followed by a synchronization
-        or negotiation process. Therefore, a discovery objective may be associated with
-        one or more synchronization or negotiation objectives.</t>
+        objective that a discovery initiator needs to handle.
+        From this background we derive the next three requirements:</t>
         
-        <t>When an ASA first starts up, it has no knowledge of the network structure.
+        <t>2. When an ASA first starts up, it has no knowledge of the specific network to
+        which it is attached.
         Therefore the discovery process must be able to support any network scenario,
         assuming only that the device concerned is bootstrapped from factory condition.
         </t>
-
+        
+        <t>3. When an ASA starts up, it must require no information about any
+        peers in order to discover them.</t>
+        
+        <t>4. If an ASA supports multiple objectives, relevant peers may be different
+        for different discovery objectives, so discovery needs to be repeated to
+        find counterparts for each objective. Thus, there must be a mechanism by
+        which an ASA can separately discover peer ASAs for each of the
+        technical objectives that it needs to manage, whenever necessary.</t>
+       
+        <t>5. Following discovery, an ASA will normally perform negotiation
+        or synchronization for the corresponding objectives. The design
+        should allow for this by associating discovery, negotiation
+        and synchronization objectives. It may provide an optional mechanism to
+        combine discovery and negotiation/synchronization in a single call.</t>
+        
+        <t>6. Some objectives may only be significant on the local link,
+        but others may be significant across the routed network and require
+        off-link operations. Thus, the relevant peers might be immediate
+        neighbors on the same layer 2 link, or they might be more distant and
+        only accessible via layer 3. The mechanism must therefore provide both
+        on-link and off-link discovery of ASAs supporting specific technical
+        objectives.</t>
+        
+        <t>7. The discovery process should be flexible enough to allow for
+        special cases, such as the following:
+ 
+        <list style="symbols">
         <t>In some networks, as mentioned above, there will be some
         hierarchical structure, at least for certain synchronization or negotiation
         objectives, but this is unknown in advance. The discovery protocol must therefore
@@ -186,64 +206,90 @@
         We require that once trust has been established for a device,
         all ASAs within the device inherit the device's credentials and are also trusted.</t>
         <t>
-        In addition, depending on the type of network involved, discovery of other
+        Depending on the type of network involved, discovery of other
         central functions might be needed, such as
         <!-- a source of intent distribution
         <xref target="I-D.irtf-nmrg-autonomic-network-definitions"/> or -->
         the Network Operations
         Center (NOC) <xref target="I-D.eckert-anima-stable-connectivity"/>.
-        GDNP must be capable of supporting such discovery during initialisation,
+        The protocol must be capable of supporting such discovery during initialisation,
         as well as discovery during ongoing operation.</t>
-        
-        <t>The discovery process must not generate excessive (multicast) traffic and 
+        </list></t>
+        <t>8. The discovery process must not generate excessive (multicast) traffic and 
         must take account of sleeping nodes in the case of a resource-constrained network. </t>
       </section>
+      
       <section anchor="synchreq" title="Requirements for Synchronization and Negotiation Capability">
-        <t>We start by considering routing protocols, the closest
-        approximation to autonomic networking in widespread use. Routing
+        <t>As background, consider the example of routing protocols, the closest
+        approximation to autonomic networking already in widespread use. Routing
         protocols use a largely autonomic model based on distributed devices
-        that communicate repeatedly with each other. However, routing is
-        mainly based on one-way information synchronization (in either
-        direction), rather than on bi-directional negotiation. The focus
-        is reachability, so current routing protocols only consider simple
+        that communicate repeatedly with each other. The focus
+        is reachability, so current routing protocols mainly consider simple
         link status, i.e., up or down, and an underlying assumption is that
-        all nodes need a consistent view of the network topology. Other information,
+        all nodes need a consistent view of the network topology in order
+        for the routing algorithm to converge. Thus, routing is
+        mainly based on information synchronization between peers,
+        rather than on bi-directional negotiation. Other information,
         such as latency, congestion, capacity, and particularly unused capacity,
         would be helpful to get better path selection and utilization rate, but
-        are not normally used in distributed routing algorithms. Also,
+        is not normally used in distributed routing algorithms. Additionally,
         autonomic networks need to be able to manage many more dimensions,
         such as security settings, power saving, load balancing, etc. 
-        In general, these items do not apply to all participating nodes, but only 
-        to a subset. A basic requirement for the protocol is therefore the
+        Status information and traffic metrics need to be shared between
+        nodes for dynamic adjustment of resources and for monitoring purposes.
+        While this might be achieved by existing protocols when they are
+        available, the new protocol needs to be able to support parameter
+        exchange, including mutual synchronization, even when no negotiation
+        as such is required. In general, these parameters do not apply to all
+        participating nodes, but only 
+        to a subset. </t>
+        
+        <t>9. A basic requirement for the protocol is therefore the
         ability to represent, discover, synchronize and negotiate almost any
         kind of network parameter among arbitrary subsets of participating nodes.</t>
-
-        <t>Human intervention in complex situations is costly and error-prone.
+        
+        <t>10. Negotiation is a request/response process that must be guaranteed to terminate 
+        (with success or failure) and if necessary it must contain tie-breaking rules for 
+        each technical objective that requires them. While these must be defined specifically 
+        for each use case, the protocol should have some general mechanisms in support of loop
+        and deadlock prevention.</t>
+        
+        <t>11. Synchronization might concern small groups of nodes or very large groups.
+        Different solutions might be needed at different scales. </t>
+        
+        <t>12. To avoid "reinventing the wheel", the protocol
+        should be able to carry the message formats used by
+        existing configuration protocols in cases where that is convenient.</t>
+        
+        <t>13. Human intervention in complex situations is costly and error-prone.
         Therefore, synchronization or negotiation of parameters without human
         intervention is desirable whenever the coordination of multiple devices can improve
         overall network performance. It follows that a requirement for the protocol
         is to be capable of running in any device that would otherwise need
         human intervention.</t>
 
-        <t>Human intervention in large networks is often replaced by use of a
+        <t>14. Human intervention in large networks is often replaced by use of a
         top-down network management system (NMS). It therefore follows that a
         requirement for the protocol is to be capable of running in
         any device that would otherwise be managed by an NMS, and that it can
         co-exist with an NMS.</t>
-
-        <t>Status information and traffic metrics need to be shared between
-        nodes for dynamic adjustment of resources and for monitoring purposes.
-        While this might be achieved by existing protocols when they are
-        available, the new protocol needs to be able to support parameter
-        exchange, including mutual synchronization, even when no negotiation
-        as such is required.</t>
         
-        <t>Some features are expected to be implemented by individual ASAs,
+        <t>15. Some features are expected to be implemented by individual ASAs,
         but the protocol must be general enough to allow them: 
-          <list style="none">
-
-          <t>It might happen that multiple ASAs attempt to manage the same resource, leading
-          to a need for conflict resolution. In such a case, the protocol's role is limited to
+          <list style="symbols">
+         
+          <t>Dependencies and conflicts: In order to
+          decide a configuration on a given device, the device may need
+          information from neighbors. This can be established through the
+          negotiation procedure, or through synchronization if that
+          is sufficient. However, a given item in a neighbor
+          may depend on other information from its own neighbors, which may
+          need another negotiation or synchronization procedure to obtain or decide.
+          Therefore, there are potential dependencies and conflicts among negotiation or synchronization
+          procedures. Resolving dependencies and conflicts is a matter for the individual ASAs involved. 
+          To allow this, there need to be clear boundaries and convergence
+          mechanisms for negotiations. Also some mechanisms are needed to avoid
+          loop dependencies. In such a case, the protocol's role is limited to
           signaling between ASAs. </t>
 
           <t>Recovery from faults and identification of faulty devices should be
@@ -266,80 +312,64 @@
           <xref target="I-D.behringer-anima-autonomic-control-plane"/>. </t>
           </list></t>
         
-        <t>The protocol needs to be able to deal with a wide variety of
+        <t>16. The protocol will be able to deal with a wide variety of
         technical objectives, covering any type of network parameter.
         Therefore the protocol will need either an explicit information model
         describing its messages, or at least a flexible and extensible message
         format. One design consideration is whether to adopt an existing
-        information model or to design a new one. Another consideration is
-        whether it should be able to carry some or all of the message formats used by
-        existing configuration protocols.</t>
-        
-        <t>The negotiation process must be guaranteed to terminate (with success or failure) and if necessary
-        it must contain tie-breaking rules for each technical objective that requires them. While this
-        must be defined specifically for each use case, the protocol should have some general mechanisms
-        in support of loop and deadlock prevention.</t>
-        
+        information model or to design a new one. </t>
 
       </section>
       
       <section title="Specific Technical Requirements">
-          <t>To be a generic platform, the protocol payload format should be 
-          independent of the transport protocol or IP version.
-          In particular, it should be able to run over IPv6 or IPv4.
-          However, some functions, such as multicasting or broadcasting on
-          a link, might need to be IP version dependent. In case of doubt, IPv6 should
-          be preferred.</t>
+      
+        <t>17. It should be convenient for ASA designers to define new objectives
+        and for programmers to express them, without excessive impact on
+        run-time efficiency and footprint. The classes of device in which the protocol
+        might run is discussed in <xref target="I-D.behringer-anima-reference-model"/>.</t>
+        
+        <t>18. The protocol should be extensible in case the initially defined discovery,
+        synchronization and negotiation mechanisms prove to be insufficient. </t>
           
-          <t>The protocol must be able to access off-link counterparts via routable addresses,
-          i.e., must not be restricted to link-local operation.</t>
+        <t>19. To be a generic platform, the protocol payload format should be 
+        independent of the transport protocol or IP version.
+        In particular, it should be able to run over IPv6 or IPv4.
+        However, some functions, such as multicasting or broadcasting on
+        a link, might need to be IP version dependent. In case of doubt, IPv6 should
+        be preferred.</t>
           
-          <t>Following discovery, an ASA will normally perform negotiation or
-          synchronization for the corresponding objectives. The design should allow for this
-          and may provide an optional mechanism to combine discovery and negotiation/synchronization
-          in a single call. However, it must also be possible for an external discovery mechanism
-          to be used, if so defined for a given objective. In other words, GDNP discovery must not
-          be a prerequisite for GDNP negotiation or synchronization. </t>
+        <t>20. The protocol must be able to access off-link counterparts via routable addresses,
+        i.e., must not be restricted to link-local operation.</t>
           
-
-          
-          <t>Dependencies and conflicts: In order to
-            decide a configuration on a given device, the device may need
-            information from neighbors. This can be established through the
-            negotiation procedure, or through synchronization if that
-            is sufficient. However, a given item in a neighbor
-            may depend on other information from its own neighbors, which may
-            need another negotiation or synchronization procedure to obtain or decide.
-            Therefore, there are potential dependencies and conflicts among negotiation or synchronization
-            procedures. Resolving dependencies and conflicts is a matter for the individual ASAs involved. 
-            To allow this, there need to be clear boundaries and convergence
-            mechanisms for negotiations. Also some mechanisms are needed to avoid
-            loop dependencies.</t>
-          
-          <t>Policy constraints: There must be
-            provision for general policy intent rules to be applied by all devices in
-            the network (e.g., security rules, prefix length, resource sharing
-            rules). However, policy intent distribution might not use the negotiation
-            protocol itself.</t>
-          
-          <t>Management monitoring, alerts and intervention:
-            Devices should be able to report to a monitoring
-            system. Some events must be able to generate operator alerts and
-            some provision for emergency intervention must be possible (e.g.
-            to freeze synchronization or negotiation in a mis-behaving device). These features
-            may not use the negotiation protocol itself.</t>
-            
-        <t>The protocol needs to be fully secure against forged messages and
-        man-in-the middle attacks, and as secure as reasonably possible
+        <t>21. It must also be possible for an external discovery mechanism
+        to be used, if appropriate for a given objective. In other words, GDNP discovery must not
+        be a prerequisite for GDNP negotiation or synchronization; the prerequisite is discovering
+        a peer's locator by any method. </t>
+        
+        <t>22. ASAs and the signaling protocol engine need to run asynchronously when wait states occur.</t>
+        
+        <t>23. Intent: There must be
+        provision for general policy intent rules to be applied by all devices in
+        the network (e.g., security rules, prefix length, resource sharing
+        rules). However, intent distribution might not use the signaling
+        protocol itself. </t>
+        
+        <t>24. Management monitoring, alerts and intervention:
+        Devices should be able to report to a monitoring
+        system. Some events must be able to generate operator alerts and
+        some provision for emergency intervention must be possible (e.g.
+        to freeze synchronization or negotiation in a mis-behaving device). These features
+        may not use the signaling protocol itself.</t>
+        
+        <t>25. The protocol needs to be fully secured against forged messages and
+        man-in-the middle attacks, and secured as much as reasonably possible
         against denial of service attacks. It needs to be capable of
         encryption in order to resist unwanted monitoring, although this
         capability may not be required in all deployments. However, it is not
         required that the protocol itself provides these security features; it may
         depend on an existing secure environment. </t>
         
-        <t>ASAs and the protocol engine need to run asynchronously when wait states occur.</t>
-      
-      </section>
+       </section>
     </section>
 
     <!-- reqts -->
@@ -510,7 +540,7 @@
             large groups of nodes, possibly including all autonomic nodes, might be needed.
             For such cases, a flooding mechanism such as ADNCP
             <xref target="I-D.stenberg-anima-adncp"/> is considered more appropriate.
-            GDNP is designed to coexist with ADNCP. The choice is left to the designers of
+            GDNP can coexist with ADNCP. The choice is left to the designers of
             individual ASAs.
             </t>
             </list></t>
@@ -519,7 +549,7 @@
             Multi-party negotiations are too complicated to be modeled and
             there might be too many dependencies among the parties to converge
             efficiently. A simple initiator/responder model is more feasible
-            and can complete multiple-party negotiations by indirect steps.
+            and can complete multi-party negotiations by indirect steps.
             <vspace blankLines="1"/></t>
 
             <t>Organizing of synchronization or negotiation content<vspace blankLines="1"/>
@@ -531,12 +561,12 @@
             negotiated or synchronized with different counterparts or may be
             different in response time.<vspace blankLines="1"/></t>
 
-            <t>Self aware network device<vspace blankLines="1"/>Every autonomic
+            <t>Self-aware network device<vspace blankLines="1"/>Every autonomic
             device will be pre-loaded with various functions and ASAs and will be
             aware of its own capabilities, typically decided by the hardware,
             firmware or pre-installed software. Its exact role may depend on
-            the surrounding network behaviors, which may include forwarding
-            behaviors, aggregation properties, topology location, bandwidth,
+            policy intent and on the surrounding network behaviors, which may include 
+            forwarding behaviors, aggregation properties, topology location, bandwidth,
             tunnel or translation properties, etc. The surrounding topology will
             depend on the network planning. Following an initial discovery phase,
             the device properties and those of its neighbors are the
@@ -666,7 +696,7 @@
 
                   <t>If an ASA in the neighbor device supports the requested discovery objective,
                   it MAY respond with a Response message (<xref target="ResponseMessage"/>) with
-                  locator option(s). Otherwise, if the neigbor has cached information
+                  locator option(s). Otherwise, if the neighbor has cached information
                   about an ASA that supports the requested discovery objective (usually
                   because it discovered the same objective before), it SHOULD
                   respond with a Response message with a Divert option pointing
@@ -1565,15 +1595,16 @@ specification of the objective.</t>
 
        
 
-      <section title="Items for Future Work">
+      <section title="Open Issues">
          
 
-        <t>There are various design questions that are worthy of more work
-        in the near future, as listed below (statically numbered for reference purposes,
-        resolved issues removed):</t>
+        <t>There are various unresolved design questions that are worthy of more work
+        in the near future, as listed below (statically numbered in historical order
+        for reference purposes,
+        with the resolved issues retained for reference):
 
-        <t><list style="symbols">
-            <!-- <t>1. UDP vs TCP: For now, this specification suggests UDP and TCP as
+           <list style="symbols">
+            <t>1. UDP vs TCP: For now, this specification suggests UDP and TCP as
             message transport mechanisms. This is not clarified yet. UDP
             is good for short conversations, is necessary for multicast discovery,
             and generally fits the discovery and divert scenarios
@@ -1582,8 +1613,9 @@ specification of the objective.</t>
             consumption during the session establishment stage. If messages
             exceed a reasonable MTU, a TCP mode will be required in any case.
             This question may be affected by the security discussion.
-            
-            Resolved by specifying UDP for short message and TCP for longer one.</t>
+            <vspace blankLines="1"/>
+            RESOLVED by specifying UDP for short message and TCP for longer one.
+            <vspace blankLines="1"/></t>
 
             <t>2. DTLS or TLS vs built-in security mechanism. For now, this
             specification has chosen a PKI based built-in security mechanism
@@ -1593,8 +1625,9 @@ specification of the objective.</t>
             The current approach requires expensive asymmetric cryptographic calculations
             for every message. (D)TLS has startup overheads but cheaper crypto per message.
             DTLS is less mature than TLS.
-            
-            Resolved by specifying external security (ACP or (D)TLS).
+            <vspace blankLines="1"/>
+            RESOLVED by specifying external security (ACP or (D)TLS).
+            <vspace blankLines="1"/>
             </t>
             
             <t>The following open issues apply only if the current security model is retained:
@@ -1605,15 +1638,15 @@ specification of the objective.</t>
             We could take the Timestamp out of signature option, to become
             an independent and OPTIONAL (or RECOMMENDED) option.</t>
             
-             <t>2.2. The Signature Option (<xref target="SignOption"/>) states that this option
+             <t>2.2. The Signature Option states that this option
             could be any place in a message. Wouldn't it be better to specify a position
             (such as the end)? That would be much simpler to implement. </t>
             
-            </list>Resolved by changing security model.</t>
+            </list>RESOLVED by changing security model.</t>
             
             <t>3. DoS Attack Protection needs work.
-            
-            Resolved by adding text.</t>  
+            <vspace blankLines="1"/>
+            RESOLVED by adding text.<vspace blankLines="1"/></t>  
 
               
             <t>4. Should we consider preferring a text-based approach to
@@ -1625,8 +1658,9 @@ specification of the objective.</t>
             using Dynamic DNS Update). The more records are stored in the repository, the less the 
             multicast-based discovery is needed. However, if we adopt such a mechanism, there would be
             challenges: stateful solution, and security. 
-            
-            Resolved by adding optional use of DNS-SD by ASAs.</t> -->
+            <vspace blankLines="1"/>
+            RESOLVED for now by adding optional use of DNS-SD by ASAs.<vspace blankLines="1"/>
+            </t> 
             
             <t>5. Need to expand description of the minimum requirements for
             the specification of an individual discovery, synchronization or
@@ -1641,35 +1675,62 @@ specification of the objective.</t>
             
             <t>7. Cross-check against other ANIMA WG documents for consistency and gaps.</t>
             
-            <!-- <t>8. Consideration of ADNCP proposal.
+            <t>8. Consideration of ADNCP proposal.
+            <vspace blankLines="1"/>
+            RESOLVED by adding optional use of DNCP for flooding-type synchronization.
+            <vspace blankLines="1"/></t> 
             
-            Resolved by adding optional use of DNCP for flooding-type synchronization.</t> -->
+            <t>9. Clarify how a GDNP instance knows whether it is running inside the ACP. (Sheng)
+            <vspace blankLines="1"/>
+            RESOLVED by improved text.<vspace blankLines="1"/></t>
             
-            <!-- <t>9. Clarify how a GDNP instance knows whether it is running inside the ACP. (Sheng)</t>
+            <t>10. Clarify how a non-ACP GDNP instance initiates (D)TLS. (Sheng)
+            <vspace blankLines="1"/>
+            RESOLVED by improved text and declaring DTLS out of scope for this draft.
+            <vspace blankLines="1"/></t>
+            <t>11. Clarify how UDP/TCP choice is made. (Sheng) [Like DNS? - Brian]
+            <vspace blankLines="1"/>
+            RESOLVED by improved text.<vspace blankLines="1"/></t>
             
-            <t>10. Clarify how a non-ACP GDNP instance initiates (D)TLS. (Sheng)</t>
-            
-            <t>11. Clarify how UDP/TCP choice is made. (Sheng) [Like DNS? - Brian]</t>
-            
-            Resolution of 9-11: improved text, declared DTLS out of scope for this draft.
-            -->
             
             <t>12. Justify that IP address within ACP or (D)TLS environment is sufficient to
             prove AN identity; or explain how Device Identity Option is used. (Sheng)
             <vspace blankLines="1"/>
-            For now, we assume that all ASAs in a device are trusted as soon as the device is trusted,
-            and share credentials. In that case the Device Identity Option is useless. This needs to be reviewed later.</t>
+            RESOLVED for now: we assume that all ASAs in a device are trusted
+            as soon as the device is trusted, so they share credentials. In that case
+            the Device Identity Option is useless. This needs to be reviewed later.<vspace blankLines="1"/></t>
             
-            <!-- <t>13. Emphasise that negotiation/synchronization are independent from discovery,
+            <t>13. Emphasise that negotiation/synchronization are independent from discovery,
             although the rapid discovery mode includes the first step of a negotiation/synchronization. 
-            (Sheng) Resolved by improved text. </t> -->
+            (Sheng) 
+            <vspace blankLines="1"/>
+            RESOLVED by improved text. <vspace blankLines="1"/></t>
             
             <t>14. Do we need an unsolicited flooding mechanism for discovery (for discovery results
             that everyone needs), to reduce scaling impact of flooding discovery messages? (Toerless)</t>
             
-            <!-- <t>15. Do we need flag bits in Objective Options to distinguish distinguish Synchronization
+            <t>15. Do we need flag bits in Objective Options to distinguish distinguish Synchronization
             and Negotiation "Request" or rapid mode "Discovery" messages? (Bing)
-            Resolution: yes, work on the API showed that these flags are essential. </t> -->
+            <vspace blankLines="1"/>
+            RESOLVED: yes, work on the API showed that these flags are essential. </t> 
+            
+            <t>16. (Related to issue 14). Should we revive the "unsolicited Response" for flooding
+            synchronisation data? This has to be done carefully due to the well-known issues with
+            flooding, but it could be useful, e.g. for intent distribution, where DNCP doesn't
+            seem applicable.</t>
+            
+            <t>17. Ensure that the discovery mechanism is completely proof against loops 
+            and protected against duplicate responses.</t>
+            
+            <t>18. Discuss the handling of multiple valid discovery responses.</t>
+            
+            <t>19. Should we use a text-oriented format such as JSON/CBOR instead of 
+            native binary TLV format? </t>
+            
+            <t>20. Is the Divert option needed? If a discovery response provides a valid
+            IP address or FQDN, the recipient doesn't gain any extra knowledge from the Divert.</t>
+            
+            <t>21. Rename the protocol as GRASP (GeneRic Autonomic Signaling Protocol)?</t>
             
 
             
@@ -1700,7 +1761,7 @@ specification of the objective.</t>
 
       <t>- Privacy and confidentiality<list style="hanging">
           <t>Generally speaking, no personal information is expected to be
-          involved in the negotiation protocol, so there should be no direct
+          involved in the signaling protocol, so there should be no direct
           impact on personal privacy. Nevertheless, traffic flow paths, VPNs,
           etc. could be negotiated, which could be of interest for traffic
           analysis. Also, operators generally want to conceal details of their
@@ -1837,14 +1898,16 @@ specification of the objective.</t>
     </section>
 
     <section anchor="changes" title="Change log [RFC Editor: Please remove]">
-    <t>draft-carpenter-anima-discovery-negotiation-protocol-04, 2015-05-17:
+    <t>draft-carpenter-anima-discovery-negotiation-protocol-04, 2015-06-12:
       <vspace blankLines="1"/>
       Tuned wording around hierarchical structure.
       <vspace blankLines="1"/>
-      Changed "device" to "ASA" in many places. Reformulated requirements etc. to 
-      be clear that the ASA is the customer for signaling.
+      Changed "device" to "ASA" in many places. 
       <vspace blankLines="1"/>
-      Requirements expanded and rearranged following design team discussion.
+      Reformulated requirements to be clear that the ASA is the main customer 
+      for signaling, and following design discussions.
+      <vspace blankLines="1"/>
+      Requirements clarified, expanded and rearranged following design team discussion.
       <vspace blankLines="1"/>
       Clarified that GDNP discovery must not
       be a prerequisite for GDNP negotiation or synchronization (resolved issue 13).
@@ -1927,7 +1990,7 @@ specification of the objective.</t>
       <?rfc include='reference.I-D.ietf-homenet-dncp'?>
       <?rfc include='reference.I-D.ietf-netconf-restconf'?>
       <?rfc include='reference.I-D.chaparadza-intarea-igcp'?>
-      <!-- <?rfc include='reference.I-D.behringer-anima-reference-model'?> -->
+      <?rfc include='reference.I-D.behringer-anima-reference-model'?>
       <?rfc include='reference.I-D.pritikin-anima-bootstrapping-keyinfra'?>
       <?rfc include='reference.I-D.behringer-anima-autonomic-control-plane'?>
       <?rfc include='reference.I-D.irtf-nmrg-an-gap-analysis'?>
