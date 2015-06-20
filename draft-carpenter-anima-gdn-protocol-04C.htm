@@ -1,0 +1,1442 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>A Generic Discovery and Negotiation Protocol for Autonomic Networking</title>
+
+  <style type="text/css" title="Xml2Rfc (sans serif)">
+  /*<![CDATA[*/
+	  a {
+	  text-decoration: none;
+	  }
+      /* info code from SantaKlauss at http://www.madaboutstyle.com/tooltip2.html */
+      a.info {
+          /* This is the key. */
+          position: relative;
+          z-index: 24;
+          text-decoration: none;
+      }
+      a.info:hover {
+          z-index: 25;
+          color: #FFF; background-color: #900;
+      }
+      a.info span { display: none; }
+      a.info:hover span.info {
+          /* The span will display just on :hover state. */
+          display: block;
+          position: absolute;
+          font-size: smaller;
+          top: 2em; left: -5em; width: 15em;
+          padding: 2px; border: 1px solid #333;
+          color: #900; background-color: #EEE;
+          text-align: left;
+      }
+	  a.smpl {
+	  color: black;
+	  }
+	  a:hover {
+	  text-decoration: underline;
+	  }
+	  a:active {
+	  text-decoration: underline;
+	  }
+	  address {
+	  margin-top: 1em;
+	  margin-left: 2em;
+	  font-style: normal;
+	  }
+	  body {
+	  color: black;
+	  font-family: verdana, helvetica, arial, sans-serif;
+	  font-size: 10pt;
+	  max-width: 55em;
+	  
+	  }
+	  cite {
+	  font-style: normal;
+	  }
+	  dd {
+	  margin-right: 2em;
+	  }
+	  dl {
+	  margin-left: 2em;
+	  }
+	
+	  ul.empty {
+	  list-style-type: none;
+	  }
+	  ul.empty li {
+	  margin-top: .5em;
+	  }
+	  dl p {
+	  margin-left: 0em;
+	  }
+	  dt {
+	  margin-top: .5em;
+	  }
+	  h1 {
+	  font-size: 14pt;
+	  line-height: 21pt;
+	  page-break-after: avoid;
+	  }
+	  h1.np {
+	  page-break-before: always;
+	  }
+	  h1 a {
+	  color: #333333;
+	  }
+	  h2 {
+	  font-size: 12pt;
+	  line-height: 15pt;
+	  page-break-after: avoid;
+	  }
+	  h3, h4, h5, h6 {
+	  font-size: 10pt;
+	  page-break-after: avoid;
+	  }
+	  h2 a, h3 a, h4 a, h5 a, h6 a {
+	  color: black;
+	  }
+	  img {
+	  margin-left: 3em;
+	  }
+	  li {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol p {
+	  margin-left: 0em;
+	  }
+	  p {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  pre {
+	  margin-left: 3em;
+	  background-color: lightyellow;
+	  padding: .25em;
+	  }
+	  pre.text2 {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f0f0f0;
+	  width: 69em;
+	  }
+	  pre.inline {
+	  background-color: white;
+	  padding: 0em;
+	  }
+	  pre.text {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  width: 69em;
+	  }
+	  pre.drawing {
+	  border-style: solid;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  padding: 2em;
+	  }
+	  table {
+	  margin-left: 2em;
+	  }
+	  table.tt {
+	  vertical-align: top;
+	  }
+	  table.full {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.headers {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.tt td {
+	  vertical-align: top;
+	  }
+	  table.full td {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.tt th {
+	  vertical-align: top;
+	  }
+	  table.full th {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.headers th {
+	  border-style: none none inset none;
+	  border-width: 1px;
+	  }
+	  table.left {
+	  margin-right: auto;
+	  }
+	  table.right {
+	  margin-left: auto;
+	  }
+	  table.center {
+	  margin-left: auto;
+	  margin-right: auto;
+	  }
+	  caption {
+	  caption-side: bottom;
+	  font-weight: bold;
+	  font-size: 9pt;
+	  margin-top: .5em;
+	  }
+	
+	  table.header {
+	  border-spacing: 1px;
+	  width: 95%;
+	  font-size: 10pt;
+	  color: white;
+	  }
+	  td.top {
+	  vertical-align: top;
+	  }
+	  td.topnowrap {
+	  vertical-align: top;
+	  white-space: nowrap; 
+	  }
+	  table.header td {
+	  background-color: gray;
+	  width: 50%;
+	  }
+	  table.header a {
+	  color: white;
+	  }
+	  td.reference {
+	  vertical-align: top;
+	  white-space: nowrap;
+	  padding-right: 1em;
+	  }
+	  thead {
+	  display:table-header-group;
+	  }
+	  ul.toc, ul.toc ul {
+	  list-style: none;
+	  margin-left: 1.5em;
+	  margin-right: 0em;
+	  padding-left: 0em;
+	  }
+	  ul.toc li {
+	  line-height: 150%;
+	  font-weight: bold;
+	  font-size: 10pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  ul.toc li li {
+	  line-height: normal;
+	  font-weight: normal;
+	  font-size: 9pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  li.excluded {
+	  font-size: 0pt;
+	  }
+	  ul p {
+	  margin-left: 0em;
+	  }
+	
+	  .comment {
+	  background-color: yellow;
+	  }
+	  .center {
+	  text-align: center;
+	  }
+	  .error {
+	  color: red;
+	  font-style: italic;
+	  font-weight: bold;
+	  }
+	  .figure {
+	  font-weight: bold;
+	  text-align: center;
+	  font-size: 9pt;
+	  }
+	  .filename {
+	  color: #333333;
+	  font-weight: bold;
+	  font-size: 12pt;
+	  line-height: 21pt;
+	  text-align: center;
+	  }
+	  .fn {
+	  font-weight: bold;
+	  }
+	  .hidden {
+	  display: none;
+	  }
+	  .left {
+	  text-align: left;
+	  }
+	  .right {
+	  text-align: right;
+	  }
+	  .title {
+	  color: #990000;
+	  font-size: 18pt;
+	  line-height: 18pt;
+	  font-weight: bold;
+	  text-align: center;
+	  margin-top: 36pt;
+	  }
+	  .vcardline {
+	  display: block;
+	  }
+	  .warning {
+	  font-size: 14pt;
+	  background-color: yellow;
+	  }
+	
+	
+	  @media print {
+	  .noprint {
+		display: none;
+	  }
+	
+	  a {
+		color: black;
+		text-decoration: none;
+	  }
+	
+	  table.header {
+		width: 90%;
+	  }
+	
+	  td.header {
+		width: 50%;
+		color: black;
+		background-color: white;
+		vertical-align: top;
+		font-size: 12pt;
+	  }
+	
+	  ul.toc a::after {
+		content: leader('.') target-counter(attr(href), page);
+	  }
+	
+	  ul.ind li li a {
+		content: target-counter(attr(href), page);
+	  }
+	
+	  .print2col {
+		column-count: 2;
+		-moz-column-count: 2;
+		column-fill: auto;
+	  }
+	  }
+	
+	  @page {
+	  @top-left {
+		   content: "Internet-Draft"; 
+	  } 
+	  @top-right {
+		   content: "December 2010"; 
+	  } 
+	  @top-center {
+		   content: "Abbreviated Title";
+	  } 
+	  @bottom-left {
+		   content: "Doe"; 
+	  } 
+	  @bottom-center {
+		   content: "Expires June 2011"; 
+	  } 
+	  @bottom-right {
+		   content: "[Page " counter(page) "]"; 
+	  } 
+	  }
+	
+	  @page:first { 
+		@top-left {
+		  content: normal;
+		}
+		@top-right {
+		  content: normal;
+		}
+		@top-center {
+		  content: normal;
+		}
+	  }
+  /*]]>*/
+  </style>
+
+  <link href="#rfc.toc" rel="Contents"/>
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
+<link href="#rfc.section.2" rel="Chapter" title="2 Requirement Analysis of Discovery, Synchronization and Negotiation"/>
+<link href="#rfc.section.2.1" rel="Chapter" title="2.1 Requirements for Discovery"/>
+<link href="#rfc.section.2.2" rel="Chapter" title="2.2 Requirements for Synchronization and Negotiation Capability"/>
+<link href="#rfc.section.2.3" rel="Chapter" title="2.3 Specific Technical Requirements"/>
+<link href="#rfc.section.3" rel="Chapter" title="3 GDNP Protocol Overview"/>
+<link href="#rfc.section.3.1" rel="Chapter" title="3.1 Terminology"/>
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 High-Level Design Choices"/>
+<link href="#rfc.section.3.3" rel="Chapter" title="3.3 GDNP Protocol Basic Properties and Mechanisms"/>
+<link href="#rfc.section.3.3.1" rel="Chapter" title="3.3.1 Required External Security Mechanism"/>
+<link href="#rfc.section.3.3.2" rel="Chapter" title="3.3.2 Transport Layer Usage"/>
+<link href="#rfc.section.3.3.3" rel="Chapter" title="3.3.3 Discovery Mechanism and Procedures"/>
+<link href="#rfc.section.3.3.4" rel="Chapter" title="3.3.4 Negotiation Procedures"/>
+<link href="#rfc.section.3.3.5" rel="Chapter" title="3.3.5 Synchronization Procedure"/>
+<link href="#rfc.section.3.4" rel="Chapter" title="3.4 GDNP Constants"/>
+<link href="#rfc.section.3.5" rel="Chapter" title="3.5 Session Identifier (Session ID)"/>
+<link href="#rfc.section.3.6" rel="Chapter" title="3.6 GDNP Messages"/>
+<link href="#rfc.section.3.6.1" rel="Chapter" title="3.6.1 GDNP Message Format"/>
+<link href="#rfc.section.3.6.2" rel="Chapter" title="3.6.2 Discovery Message"/>
+<link href="#rfc.section.3.6.3" rel="Chapter" title="3.6.3 Response Message"/>
+<link href="#rfc.section.3.6.4" rel="Chapter" title="3.6.4 Request Message"/>
+<link href="#rfc.section.3.6.5" rel="Chapter" title="3.6.5 Negotiation Message"/>
+<link href="#rfc.section.3.6.6" rel="Chapter" title="3.6.6 Negotiation-ending Message"/>
+<link href="#rfc.section.3.6.7" rel="Chapter" title="3.6.7 Confirm-waiting Message"/>
+<link href="#rfc.section.3.7" rel="Chapter" title="3.7 GDNP General Options"/>
+<link href="#rfc.section.3.7.1" rel="Chapter" title="3.7.1 Format of GDNP Options"/>
+<link href="#rfc.section.3.7.2" rel="Chapter" title="3.7.2 Divert Option"/>
+<link href="#rfc.section.3.7.3" rel="Chapter" title="3.7.3 Accept Option"/>
+<link href="#rfc.section.3.7.4" rel="Chapter" title="3.7.4 Decline Option"/>
+<link href="#rfc.section.3.7.5" rel="Chapter" title="3.7.5 Waiting Time Option"/>
+<link href="#rfc.section.3.7.6" rel="Chapter" title="3.7.6 Device Identity Option"/>
+<link href="#rfc.section.3.7.7" rel="Chapter" title="3.7.7 Locator Options"/>
+<link href="#rfc.section.3.8" rel="Chapter" title="3.8 Objective Options"/>
+<link href="#rfc.section.3.8.1" rel="Chapter" title="3.8.1 Format of Objective Options"/>
+<link href="#rfc.section.3.8.2" rel="Chapter" title="3.8.2 General Considerations for Objective Options"/>
+<link href="#rfc.section.3.8.3" rel="Chapter" title="3.8.3 Organizing of Objective Options"/>
+<link href="#rfc.section.3.8.4" rel="Chapter" title="3.8.4 Vendor Specific Objective Options"/>
+<link href="#rfc.section.3.8.5" rel="Chapter" title="3.8.5 Experimental Objective Options"/>
+<link href="#rfc.section.4" rel="Chapter" title="4 Open Issues"/>
+<link href="#rfc.section.5" rel="Chapter" title="5 Security Considerations"/>
+<link href="#rfc.section.6" rel="Chapter" title="6 IANA Considerations"/>
+<link href="#rfc.section.7" rel="Chapter" title="7 Acknowledgements"/>
+<link href="#rfc.section.8" rel="Chapter" title="8 Change log [RFC Editor: Please remove]"/>
+<link href="#rfc.references" rel="Chapter" title="9 References"/>
+<link href="#rfc.references.1" rel="Chapter" title="9.1 Normative References"/>
+<link href="#rfc.references.2" rel="Chapter" title="9.2 Informative References"/>
+<link href="#rfc.appendix.A" rel="Chapter" title="A Capability Analysis of Current Protocols"/>
+<link href="#rfc.authors" rel="Chapter"/>
+
+
+  <meta name="generator" content="xml2rfc version 2.5.0 - http://tools.ietf.org/tools/xml2rfc" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+  <meta name="dct.creator" content="Carpenter, B. and B. Liu" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-carpenter-anima-gdn-protocol-04" />
+  <meta name="dct.issued" scheme="ISO8601" content="2015-6-20" />
+  <meta name="dct.abstract" content="This document establishes requirements for a signaling protocol that enables autonomic devices and autonomic service agents to dynamically discover peers, to synchronize state with them, and to negotiate parameter settings mutually with them. The document then defines a general protocol for discovery, synchronization and negotiation, while the technical objectives for specific scenarios are to be described in separate documents. An Appendix briefly discusses existing protocols with comparable features." />
+  <meta name="description" content="This document establishes requirements for a signaling protocol that enables autonomic devices and autonomic service agents to dynamically discover peers, to synchronize state with them, and to negotiate parameter settings mutually with them. The document then defines a general protocol for discovery, synchronization and negotiation, while the technical objectives for specific scenarios are to be described in separate documents. An Appendix briefly discusses existing protocols with comparable features." />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+  <td class="left">Network Working Group</td>
+  <td class="right">B. Carpenter</td>
+</tr>
+<tr>
+  <td class="left">Internet-Draft</td>
+  <td class="right">Univ. of Auckland</td>
+</tr>
+<tr>
+  <td class="left">Intended status: Standards Track</td>
+  <td class="right">B. Liu</td>
+</tr>
+<tr>
+  <td class="left">Expires: December 22, 2015</td>
+  <td class="right">Huawei Technologies Co., Ltd</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">June 20, 2015</td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">A Generic Discovery and Negotiation Protocol for Autonomic Networking<br />
+  <span class="filename">draft-carpenter-anima-gdn-protocol-04</span></p>
+  
+  <h1 id="rfc.abstract">
+  <a href="#rfc.abstract">Abstract</a>
+</h1>
+<p>This document establishes requirements for a signaling protocol that enables autonomic devices and autonomic service agents to dynamically discover peers, to synchronize state with them, and to negotiate parameter settings mutually with them. The document then defines a general protocol for discovery, synchronization and negotiation, while the technical objectives for specific scenarios are to be described in separate documents. An Appendix briefly discusses existing protocols with comparable features.</p>
+<h1 id="rfc.status">
+  <a href="#rfc.status">Status of This Memo</a>
+</h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on December 22, 2015.</p>
+<h1 id="rfc.copyrightnotice">
+  <a href="#rfc.copyrightnotice">Copyright Notice</a>
+</h1>
+<p>Copyright (c) 2015 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a></li>
+<li>2.   <a href="#rfc.section.2">Requirement Analysis of Discovery, Synchronization and Negotiation</a></li>
+<ul><li>2.1.   <a href="#rfc.section.2.1">Requirements for Discovery</a></li>
+<li>2.2.   <a href="#rfc.section.2.2">Requirements for Synchronization and Negotiation Capability</a></li>
+<li>2.3.   <a href="#rfc.section.2.3">Specific Technical Requirements</a></li>
+</ul><li>3.   <a href="#rfc.section.3">GDNP Protocol Overview</a></li>
+<ul><li>3.1.   <a href="#rfc.section.3.1">Terminology</a></li>
+<li>3.2.   <a href="#rfc.section.3.2">High-Level Design Choices</a></li>
+<li>3.3.   <a href="#rfc.section.3.3">GDNP Protocol Basic Properties and Mechanisms</a></li>
+<ul><li>3.3.1.   <a href="#rfc.section.3.3.1">Required External Security Mechanism</a></li>
+<li>3.3.2.   <a href="#rfc.section.3.3.2">Transport Layer Usage</a></li>
+<li>3.3.3.   <a href="#rfc.section.3.3.3">Discovery Mechanism and Procedures</a></li>
+<li>3.3.4.   <a href="#rfc.section.3.3.4">Negotiation Procedures</a></li>
+<li>3.3.5.   <a href="#rfc.section.3.3.5">Synchronization Procedure</a></li>
+</ul><li>3.4.   <a href="#rfc.section.3.4">GDNP Constants</a></li>
+<li>3.5.   <a href="#rfc.section.3.5">Session Identifier (Session ID)</a></li>
+<li>3.6.   <a href="#rfc.section.3.6">GDNP Messages</a></li>
+<ul><li>3.6.1.   <a href="#rfc.section.3.6.1">GDNP Message Format</a></li>
+<li>3.6.2.   <a href="#rfc.section.3.6.2">Discovery Message</a></li>
+<li>3.6.3.   <a href="#rfc.section.3.6.3">Response Message</a></li>
+<li>3.6.4.   <a href="#rfc.section.3.6.4">Request Message</a></li>
+<li>3.6.5.   <a href="#rfc.section.3.6.5">Negotiation Message</a></li>
+<li>3.6.6.   <a href="#rfc.section.3.6.6">Negotiation-ending Message</a></li>
+<li>3.6.7.   <a href="#rfc.section.3.6.7">Confirm-waiting Message</a></li>
+</ul><li>3.7.   <a href="#rfc.section.3.7">GDNP General Options</a></li>
+<ul><li>3.7.1.   <a href="#rfc.section.3.7.1">Format of GDNP Options</a></li>
+<li>3.7.2.   <a href="#rfc.section.3.7.2">Divert Option</a></li>
+<li>3.7.3.   <a href="#rfc.section.3.7.3">Accept Option</a></li>
+<li>3.7.4.   <a href="#rfc.section.3.7.4">Decline Option</a></li>
+<li>3.7.5.   <a href="#rfc.section.3.7.5">Waiting Time Option</a></li>
+<li>3.7.6.   <a href="#rfc.section.3.7.6">Device Identity Option</a></li>
+<li>3.7.7.   <a href="#rfc.section.3.7.7">Locator Options</a></li>
+</ul><li>3.8.   <a href="#rfc.section.3.8">Objective Options</a></li>
+<ul><li>3.8.1.   <a href="#rfc.section.3.8.1">Format of Objective Options</a></li>
+<li>3.8.2.   <a href="#rfc.section.3.8.2">General Considerations for Objective Options</a></li>
+<li>3.8.3.   <a href="#rfc.section.3.8.3">Organizing of Objective Options</a></li>
+<li>3.8.4.   <a href="#rfc.section.3.8.4">Vendor Specific Objective Options</a></li>
+<li>3.8.5.   <a href="#rfc.section.3.8.5">Experimental Objective Options</a></li>
+</ul></ul><li>4.   <a href="#rfc.section.4">Open Issues</a></li>
+<li>5.   <a href="#rfc.section.5">Security Considerations</a></li>
+<li>6.   <a href="#rfc.section.6">IANA Considerations</a></li>
+<li>7.   <a href="#rfc.section.7">Acknowledgements</a></li>
+<li>8.   <a href="#rfc.section.8">Change log [RFC Editor: Please remove]</a></li>
+<li>9.   <a href="#rfc.references">References</a></li>
+<ul><li>9.1.   <a href="#rfc.references.1">Normative References</a></li>
+<li>9.2.   <a href="#rfc.references.2">Informative References</a></li>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">Capability Analysis of Current Protocols</a></li>
+<li><a href="#rfc.authors">Authors' Addresses</a></li>
+
+
+  </ul>
+
+  <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a></h1>
+<p id="rfc.section.1.p.1">The success of the Internet has made IP-based networks bigger and more complicated. Large-scale ISP and enterprise networks have become more and more problematic for human based management. Also, operational costs are growing quickly.  Consequently, there are increased requirements for autonomic behavior in the networks.  General aspects of autonomic networks are discussed in <a href="#RFC7575">[RFC7575]</a> and <a href="#RFC7576">[RFC7576]</a>.  A reference model for autonomic networking is given in <a href="#I-D.behringer-anima-reference-model">[I-D.behringer-anima-reference-model]</a>.  In order to fulfil autonomy, devices that embody autonomic service agents have specific signaling requirements. In particular they need to discover each other, to synchronize state with each other, and to negotiate parameters and resources directly with each other.  There is no restriction on the type of parameters and resources concerned, which include very basic information needed for addressing and routing, as well as anything else that might be configured in a conventional non-autonomic network.  The atomic unit of synchronization or negotiation is referred to as a technical objective, i.e, a configurable parameter or set of parameters (defined more precisely in <a href="#terms">Section 3.1</a>).</p>
+<p id="rfc.section.1.p.2">Following this Introduction, <a href="#reqts">Section 2</a> describes the requirements for discovery, synchronization and negotiation.  Negotiation is an iterative process, requiring multiple message exchanges forming a closed loop between the negotiating devices. State synchronization, when needed, can be regarded as a special case of negotiation, without iteration.  <a href="#highlevel">Section 3.2</a> describes a behavior model for a protocol intended to support discovery, synchronization and negotiation. The design of Generic Discovery and Negotiation Protocol (GDNP) in <a href="#Overview">Section 3</a> of this document is mainly based on this behavior model. The relevant capabilities of various existing protocols are reviewed in <a href="#current">Appendix A</a>.</p>
+<p id="rfc.section.1.p.3">The proposed discovery mechanism is oriented towards synchronization and negotiation objectives. It is based on a neighbor discovery process, but also supports diversion to off-link peers. Although many negotiations will occur between horizontally distributed peers, many target scenarios are hierarchical networks, which is the predominant structure of current large-scale managed networks.  However, when a device starts up with no pre-configuration, it has no knowledge of the topology. The protocol itself is capable of being used in a small and/or flat network structure such as a small office or home network as well as a professionally managed network.  Therefore, the discovery mechanism needs to be able to allow a device to bootstrap itself without making any prior assumptions about network structure. </p>
+<p id="rfc.section.1.p.4">Because GDNP can be used to perform a decision process among distributed devices or between networks, it must run in a secure and strongly authenticated environment.  </p>
+<p id="rfc.section.1.p.5">It is understood that in realistic deployments, not all devices will support GDNP. It is expected that some autonomic service agents will directly manage a group of non-autonomic nodes, and that other non-autonomic nodes will be managed traditionally. Such mixed scenarios are not discussed in this specification.</p>
+<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#reqts" id="reqts">Requirement Analysis of Discovery, Synchronization and Negotiation</a></h1>
+<p id="rfc.section.2.p.1">This section discusses the requirements for discovery, negotiation and synchronization capabilities. The primary user of the protocol is an autonomic service agent (ASA), so the requirements are mainly expressed as the features needed by an ASA.  A single physical device might contain several ASAs, and a single ASA might manage several technical objectives. </p>
+<h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> Requirements for Discovery</h1>
+<p id="rfc.section.2.1.p.1">1. ASAs may be designed to manage anything, as required in <a href="#synchreq">Section 2.2</a>. A basic requirement is therefore that the protocol can represent and discover any kind of technical objective among arbitrary subsets of participating nodes.</p>
+<p id="rfc.section.2.1.p.2">In an autonomic network we must assume that when a device starts up it has no information about any peer devices, the network structure, or what specific role it must play. The ASA(s) inside the device are in the same situation. In some cases, when a new application session starts up within a device, the device or ASA may again lack information about relevant peers. It might be necessary to set up resources on multiple other devices, coordinated and matched to each other so that there is no wasted resource. Security settings might also need updating to allow for the new device or user.  The relevant peers may be different for different technical objectives. Therefore discovery needs to be repeated as often as necessary to find peers capable of acting as counterparts for each objective that a discovery initiator needs to handle.  From this background we derive the next three requirements:</p>
+<p id="rfc.section.2.1.p.3">2. When an ASA first starts up, it has no knowledge of the specific network to which it is attached.  Therefore the discovery process must be able to support any network scenario, assuming only that the device concerned is bootstrapped from factory condition.  </p>
+<p id="rfc.section.2.1.p.4">3. When an ASA starts up, it must require no information about any peers in order to discover them.</p>
+<p id="rfc.section.2.1.p.5">4. If an ASA supports multiple technical objectives, relevant peers may be different for different discovery objectives, so discovery needs to be repeated to find counterparts for each objective. Thus, there must be a mechanism by which an ASA can separately discover peer ASAs for each of the technical objectives that it needs to manage, whenever necessary.</p>
+<p id="rfc.section.2.1.p.6">5. Following discovery, an ASA will normally perform negotiation or synchronization for the corresponding objectives. The design should allow for this by associating discovery, negotiation and synchronization objectives. It may provide an optional mechanism to combine discovery and negotiation/synchronization in a single call.</p>
+<p id="rfc.section.2.1.p.7">6. Some objectives may only be significant on the local link, but others may be significant across the routed network and require off-link operations. Thus, the relevant peers might be immediate neighbors on the same layer 2 link, or they might be more distant and only accessible via layer 3. The mechanism must therefore provide both on-link and off-link discovery of ASAs supporting specific technical objectives.</p>
+<p id="rfc.section.2.1.p.8">7. The discovery process should be flexible enough to allow for special cases, such as the following: </p>
+
+<ul>
+  <li>In some networks, as mentioned above, there will be some hierarchical structure, at least for certain synchronization or negotiation objectives, but this is unknown in advance. The discovery protocol must therefore operate regardless of hierarchical structure, which is an attribute of individual technical objectives and not of the autonomic network as a whole.  This is part of the more general requirement to discover off-link peers.</li>
+  <li>During initialisation, a device must be able to establish mutual trust with the rest of the network and join an authentication mechanism. Although this will inevitably start with a discovery action, it is a special case precisely because trust is not yet established. This topic is the subject of <a href="#I-D.pritikin-anima-bootstrapping-keyinfra">[I-D.pritikin-anima-bootstrapping-keyinfra]</a>.  We require that once trust has been established for a device, all ASAs within the device inherit the device's credentials and are also trusted.</li>
+  <li>Depending on the type of network involved, discovery of other central functions might be needed, such as a source of Intent distribution <a href="#RFC7575">[RFC7575]</a> or the Network Operations Center (NOC) <a href="#I-D.eckert-anima-stable-connectivity">[I-D.eckert-anima-stable-connectivity]</a>.  The protocol must be capable of supporting such discovery during initialisation, as well as discovery during ongoing operation.</li>
+</ul>
+<p id="rfc.section.2.1.p.9">8. The discovery process must not generate excessive (multicast) traffic and must take account of sleeping nodes in the case of a resource-constrained network <a href="#RFC7228">[RFC7228]</a>. </p>
+<h1 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a> <a href="#synchreq" id="synchreq">Requirements for Synchronization and Negotiation Capability</a></h1>
+<p id="rfc.section.2.2.p.1">As background, consider the example of routing protocols, the closest approximation to autonomic networking already in widespread use. Routing protocols use a largely autonomic model based on distributed devices that communicate repeatedly with each other. The focus is reachability, so current routing protocols mainly consider simple link status, i.e., up or down, and an underlying assumption is that all nodes need a consistent view of the network topology in order for the routing algorithm to converge. Thus, routing is mainly based on information synchronization between peers, rather than on bi-directional negotiation. Other information, such as latency, congestion, capacity, and particularly unused capacity, would be helpful to get better path selection and utilization rate, but is not normally used in distributed routing algorithms. Additionally, autonomic networks need to be able to manage many more dimensions, such as security settings, power saving, load balancing, etc.  Status information and traffic metrics need to be shared between nodes for dynamic adjustment of resources and for monitoring purposes.  While this might be achieved by existing protocols when they are available, the new protocol needs to be able to support parameter exchange, including mutual synchronization, even when no negotiation as such is required. In general, these parameters do not apply to all participating nodes, but only to a subset. </p>
+<p id="rfc.section.2.2.p.2">9. A basic requirement for the protocol is therefore the ability to represent, discover, synchronize and negotiate almost any kind of network parameter among arbitrary subsets of participating nodes.</p>
+<p id="rfc.section.2.2.p.3">10. Negotiation is a request/response process that must be guaranteed to terminate (with success or failure) and if necessary it must contain tie-breaking rules for each technical objective that requires them. While these must be defined specifically for each use case, the protocol should have some general mechanisms in support of loop and deadlock prevention, such as hop count limits or timeouts.</p>
+<p id="rfc.section.2.2.p.4">11. Synchronization might concern small groups of nodes or very large groups.  Different solutions might be needed at different scales. </p>
+<p id="rfc.section.2.2.p.5">12. To avoid "reinventing the wheel", the protocol should be able to carry the message formats used by existing configuration protocols (such as NETCONF/YANG) in cases where that is convenient.</p>
+<p id="rfc.section.2.2.p.6">13. Human intervention in complex situations is costly and error-prone.  Therefore, synchronization or negotiation of parameters without human intervention is desirable whenever the coordination of multiple devices can improve overall network performance. It therefore follows that the protocol, as part of the Autonomic Networking Infrastructure, must be capable of running in any device that would otherwise need human intervention.</p>
+<p id="rfc.section.2.2.p.7">14. Human intervention in large networks is often replaced by use of a top-down network management system (NMS). It therefore follows that the protocol, as part of the Autonomic Networking Infrastructure, must be capable of running in any device that would otherwise be managed by an NMS, and that it can co-exist with an NMS, and with protocols such as SNMP and NETCONF.</p>
+<p id="rfc.section.2.2.p.8">15. Some features are expected to be implemented by individual ASAs, but the protocol must be general enough to allow them: </p>
+
+<ul>
+  <li>Dependencies and conflicts: In order to decide a configuration on a given device, the device may need information from neighbors. This can be established through the negotiation procedure, or through synchronization if that is sufficient. However, a given item in a neighbor may depend on other information from its own neighbors, which may need another negotiation or synchronization procedure to obtain or decide.  Therefore, there are potential dependencies and conflicts among negotiation or synchronization procedures. Resolving dependencies and conflicts is a matter for the individual ASAs involved.  To allow this, there need to be clear boundaries and convergence mechanisms for negotiations. Also some mechanisms are needed to avoid loop dependencies. In such a case, the protocol's role is limited to signaling between ASAs. </li>
+  <li>Recovery from faults and identification of faulty devices should be as automatic as possible. The protocol's role is limited to the ability to handle discovery, synchronization and negotiation at any time, in case an ASA detects an anomaly such as a negotiation counterpart failing.</li>
+  <li>Since the goal is to minimize human intervention, it is necessary that the network can in effect "think ahead" before changing its parameters. In other words there must be a possibility of forecasting the effect of a change by a "dry run" mechanism before actually installing the change. This will be an application of the protocol rather than a feature of the protocol itself. </li>
+  <li>Management logging, monitoring, alerts and tools for intervention are required.  However, these can only be features of individual ASAs.  Another document <a href="#I-D.eckert-anima-stable-connectivity">[I-D.eckert-anima-stable-connectivity]</a> discusses how such agents may be linked into conventional OAM systems via an Autonomic Control Plane <a href="#I-D.behringer-anima-autonomic-control-plane">[I-D.behringer-anima-autonomic-control-plane]</a>. </li>
+</ul>
+<p id="rfc.section.2.2.p.9">16. The protocol will be able to deal with a wide variety of technical objectives, covering any type of network parameter.  Therefore the protocol will need either an explicit information model describing its messages, or at least a flexible and extensible message format. One design consideration is whether to adopt an existing information model or to design a new one. </p>
+<h1 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> Specific Technical Requirements</h1>
+<p id="rfc.section.2.3.p.1">17. It should be convenient for ASA designers to define new technical objectives and for programmers to express them, without excessive impact on run-time efficiency and footprint. The classes of device in which the protocol might run is discussed in <a href="#I-D.behringer-anima-reference-model">[I-D.behringer-anima-reference-model]</a>.</p>
+<p id="rfc.section.2.3.p.2">18. The protocol should be extensible in case the initially defined discovery, synchronization and negotiation mechanisms prove to be insufficient. </p>
+<p id="rfc.section.2.3.p.3">19. To be a generic platform, the protocol payload format should be independent of the transport protocol or IP version.  In particular, it should be able to run over IPv6 or IPv4.  However, some functions, such as multicasting or broadcasting on a link, might need to be IP version dependent. In case of doubt, IPv6 should be preferred.</p>
+<p id="rfc.section.2.3.p.4">20. The protocol must be able to access off-link counterparts via routable addresses, i.e., must not be restricted to link-local operation.</p>
+<p id="rfc.section.2.3.p.5">21. It must also be possible for an external discovery mechanism to be used, if appropriate for a given technical objective. In other words, GDNP discovery must not be a prerequisite for GDNP negotiation or synchronization; the prerequisite is discovering a peer's locator by any method. </p>
+<p id="rfc.section.2.3.p.6">22. ASAs and the signaling protocol engine need to run asynchronously when wait states occur.</p>
+<p id="rfc.section.2.3.p.7">23. Intent: There must be provision for general Intent rules to be applied by all devices in the network (e.g., security rules, prefix length, resource sharing rules). However, Intent distribution might not use the signaling protocol itself, but its design should not exclude such use. </p>
+<p id="rfc.section.2.3.p.8">24. Management monitoring, alerts and intervention: Devices should be able to report to a monitoring system. Some events must be able to generate operator alerts and some provision for emergency intervention must be possible (e.g.  to freeze synchronization or negotiation in a mis-behaving device). These features might not use the signaling protocol itself, but its design should not exclude such use.</p>
+<p id="rfc.section.2.3.p.9">25. The protocol needs to be fully secured against forged messages and man-in-the middle attacks, and secured as much as reasonably possible against denial of service attacks. It needs to be capable of encryption in order to resist unwanted monitoring, although this capability may not be required in all deployments. However, it is not required that the protocol itself provides these security features; it may depend on an existing secure environment. </p>
+<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#Overview" id="Overview">GDNP Protocol Overview</a></h1>
+<h1 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a> <a href="#terms" id="terms">Terminology</a></h1>
+<p id="rfc.section.3.1.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a> when they appear in ALL CAPS. When these words are not in ALL CAPS (such as "should" or "Should"), they have their usual English meanings, and are not to be interpreted as <a href="#RFC2119">[RFC2119]</a> key words.</p>
+<p id="rfc.section.3.1.p.2">This document uses terminology defined in <a href="#RFC7575">[RFC7575]</a>.</p>
+<p id="rfc.section.3.1.p.3">The following additional terms are used throughout this document: </p>
+
+<ul>
+  <li>Discovery: a process by which an ASA discovers peers according to a specific discovery objective. The discovery results may be different according to the different discovery objectives.  The discovered peers may later be used as negotiation counterparts or as sources of synchronization data. </li>
+  <li>Negotiation: a process by which two (or more) ASAs interact iteratively to agree on parameter settings that best satisfy the objectives of one or more ASAs.</li>
+  <li>State Synchronization: a process by which two (or more) ASAs interact to agree on the current state of parameter values stored in each ASA. This is a special case of negotiation in which information is sent but the ASAs do not request their peers to change parameter settings. All other definitions apply to both negotiation and synchronization. </li>
+  <li>Technical Objective (usually abbreviated as Objective): A technical objective is a configurable parameter or set of parameters of some kind, which occurs in three contexts: Discovery, Negotiation and Synchronization. In the protocol, an objective is represented by an identifier (actually a GDNP option number) and if relevant a value.  Normally, a given objective will occur during discovery and negotiation, or during discovery and synchronization, but not in all three contexts.  <ul><li>One ASA may support multiple independent objectives.</li><li>The parameter described by a given objective is naturally based on a specific service or function or action. It may in principle be anything that can be set to a specific logical, numerical or string value, or a more complex data structure, by a network node.  That node is generally expected to contain an ASA which may itself manage other nodes.</li><li>Discovery Objective: if a node needs to synchronize or negotiate a specific objective but does not know a peer that supports this objective, it starts a discovery process. The objective is called a Discovery Objective during this process.</li><li>Synchronization Objective: an objective whose specific technical content needs to be synchronized among two or more ASAs. </li><li>Negotiation Objective: an objective whose specific technical content needs to be decided in coordination with another ASA. </li></ul></li>
+  <li>Discovery Initiator: an ASA that spontaneously starts discovery by sending a discovery message referring to a specific discovery objective.</li>
+  <li>Discovery Responder: a peer ASA which responds to the discovery objective initiated by the discovery initiator.</li>
+  <li>Synchronization Initiator: an ASA that spontaneously starts synchronization by sending a request message referring to a specific synchronization objective.</li>
+  <li>Synchronization Responder: a peer ASA which responds with the value of a synchronization objective.</li>
+  <li>Negotiation Initiator: an ASA that spontaneously starts negotiation by sending a request message referring to a specific negotiation objective.</li>
+  <li>Negotiation Counterpart: a peer with which the Negotiation Initiator negotiates a specific negotiation objective.</li>
+</ul>
+<h1 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a> <a href="#highlevel" id="highlevel">High-Level Design Choices</a></h1>
+<p id="rfc.section.3.2.p.1">This section describes a behavior model and some considerations for designing a generic discovery, synchronization and negotiation protocol, which can act as a platform for different technical objectives.</p>
+<p id="rfc.section.3.2.p.2">NOTE: This protocol is described here in a stand-alone fashion as a proof of concept. An early version was prototyped by Huawei and the Beijing University of Posts and Telecommunications. However, this is not yet a definitive proposal for IETF adoption. In particular, adaptation and extension of one of the protocols discussed in <a href="#current">Appendix A</a> might be an option. This whole specification is subject to change as a result.</p>
+<p/>
+
+<ul>
+  <li>A generic platform<br/><br/> The protocol is designed as a generic platform, which is independent from the synchronization or negotiation contents. It takes care of the general intercommunication between counterparts. The technical contents will vary according to the various technical objectives and the different pairs of counterparts.<br/><br/></li>
+  <li>The protocol is expected to form part of an Autonomic Networking Infrastructure <a href="#I-D.behringer-anima-reference-model">[I-D.behringer-anima-reference-model]</a>. It will provide services to ASAs via a suitable application programming interface, which will reflect the protocol elements but will not necessarily be in one-to-one correspondence to them. It is expected that the protocol engine and each ASA will run as independent asynchronous processes.</li>
+  <li>Security infrastructure and trust relationship<br/><br/> Because this negotiation protocol may directly cause changes to device configurations and bring significant impacts to a running network, this protocol is assumed to run within an existing secure environment with strong authentication.  <br/><br/> On the other hand, a limited negotiation model might be deployed based on a limited trust relationship. For example, between two administrative domains, ASAs might also exchange limited information and negotiate some particular configurations based on a limited conventional or contractual trust relationship.<br/><br/></li>
+  <li>Discovery, synchronization and negotiation designed together<br/><br/> The discovery method and the synchronization and negotiation methods are designed in the same way and can be combined when this is useful. These processes can also be performed independently when appropriate.  <ul><li>GDNP discovery is appropriate for efficient discovery of GDNP peers and allows a rapid mode of operation described in <a href="#discmech">Section 3.3.3</a>.  For some parameters, especially those concerned with application layer services, a text-based discovery mechanism such as DNS Service Discovery <a href="#I-D.ietf-dnssd-requirements">[I-D.ietf-dnssd-requirements]</a> or Service Location Protocol <a href="#RFC2608">[RFC2608]</a> might be more appropriate. The choice is left to the designers of individual ASAs.  </li></ul></li>
+  <li>A uniform pattern for technical contents<br/><br/> The synchronization and negotiation contents are defined according to a uniform pattern. They could be carried either in simple TLV (Type, Length and Value) format or in payloads described by a flexible language. The initial protocol design uses the TLV approach.  The format is extensible for unknown future requirements. <br/><br/></li>
+  <li>A flexible model for synchronization<br/><br/> GDNP supports bilateral synchronization, which could be used to perform synchronization among a small number of nodes.  It also supports an unsolicited flooding mode when large groups of nodes, possibly including all autonomic nodes, need data for the same technical objective.  <ul><li>There may be some network parameters for which a more traditional flooding mechanism such as ADNCP <a href="#I-D.stenberg-anima-adncp">[I-D.stenberg-anima-adncp]</a> is considered more appropriate. GDNP can coexist with ADNCP.  </li></ul></li>
+  <li>A simple initiator/responder model for negotiation<br/><br/> Multi-party negotiations are too complicated to be modeled and there might be too many dependencies among the parties to converge efficiently. A simple initiator/responder model is more feasible and can complete multi-party negotiations by indirect steps.  <br/><br/></li>
+  <li>Organizing of synchronization or negotiation content<br/><br/> Naturally, the technical content will be organized according to the relevant function or service. The content from different functions or services is kept independent from each other. They are not combined into a single option or single session because these contents may be negotiated or synchronized with different counterparts or may be different in response time.<br/><br/></li>
+  <li>Self-aware network device<br/><br/>Every autonomic device will be pre-loaded with various functions and ASAs and will be aware of its own capabilities, typically decided by the hardware, firmware or pre-installed software. Its exact role may depend on Intent and on the surrounding network behaviors, which may include forwarding behaviors, aggregation properties, topology location, bandwidth, tunnel or translation properties, etc. The surrounding topology will depend on the network planning. Following an initial discovery phase, the device properties and those of its neighbors are the foundation of the synchronization or negotiation behavior of a specific device. A device has no pre-configuration for the particular network in which it is installed.<br/><br/></li>
+  <li>Requests and responses in negotiation procedures<br/><br/> The initiator can negotiate with its relevant negotiation counterpart ASAs, which may be different according to the specific negotiation objective. It can request relevant information from the negotiation counterpart so that it can decide its local configuration to give the most coordinated performance. It can request the negotiation counterpart to make a matching configuration in order to set up a successful communication with it. It can request certain simulation or forecast results by sending some dry run conditions.  <br/><br/>Beyond the traditional yes/no answer, the responder can reply with a suggested alternative if its answer is 'no'. This would start a bi-directional negotiation ending in a compromise between the two ASAs.<br/><br/></li>
+  <li>Convergence of negotiation procedures<br/><br/> To enable convergence, when a responder makes a suggestion of a changed condition in a negative reply, it should be as close as possible to the original request or previous suggestion. The suggested value of the third or later negotiation steps should be chosen between the suggested values from the last two negotiation steps. In any case there must be a mechanism to guarantee convergence (or failure) in a small number of steps, such as a timeout or maximum number of iterations.  <br/><br/> <ul><li>End of negotiation<br/><br/> A limited number of rounds, for example three, or a timeout, is needed on each ASA for each negotiation objective. It may be an implementation choice, a pre-configurable parameter, or network Intent.  These choices might vary between different types of ASA.  Therefore, the definition of each negotiation objective MUST clearly specify this, so that the negotiation can always be terminated properly.  <br/><br/></li><li>Failed negotiation<br/><br/>There must be a well-defined procedure for concluding that a negotiation cannot succeed, and if so deciding what happens next (deadlock resolution, tie-breaking, or revert to best-effort service). Again, this MUST be specified for individual negotiation objectives, as an implementation choice, a pre-configurable parameter, or network Intent.</li></ul></li>
+</ul>
+<h1 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a> GDNP Protocol Basic Properties and Mechanisms</h1>
+<h1 id="rfc.section.3.3.1"><a href="#rfc.section.3.3.1">3.3.1.</a> Required External Security Mechanism</h1>
+<p id="rfc.section.3.3.1.p.1">The protocol SHOULD run within a secure Autonomic Control Plane (ACP) <a href="#I-D.behringer-anima-autonomic-control-plane">[I-D.behringer-anima-autonomic-control-plane]</a>. The procedure for establishing the ACP MUST provide a flag indicating to GDNP that the ACP has been established. </p>
+<p id="rfc.section.3.3.1.p.2">If there is no ACP, the protocol MUST use TLS <a href="#RFC5246">[RFC5246]</a> or DTLS <a href="#RFC6347">[RFC6347]</a> for all messages, based on a local Public Key Infrastructure (PKI) <a href="#RFC5280">[RFC5280]</a> managed within the autonomic network itself. </p>
+<p id="rfc.section.3.3.1.p.3">Link-local multicast is used for discovery messages. These cannot be secured, but responses to discovery messages MUST be secured. However, during initialisation, before a node has joined the applicable trust infrastructure, e.g., <a href="#I-D.pritikin-anima-bootstrapping-keyinfra">[I-D.pritikin-anima-bootstrapping-keyinfra]</a>, it might be impossible to secure certain messages.  Such messages MUST be limited to the strictly necessary minimum. </p>
+<h1 id="rfc.section.3.3.2"><a href="#rfc.section.3.3.2">3.3.2.</a> Transport Layer Usage</h1>
+<p id="rfc.section.3.3.2.p.1">The protocol is capable of running over UDP or TCP, except for link-local multicast discovery messages, which can only run over UDP and MUST NOT be fragmented, and therefore cannot exceed the link MTU size. </p>
+<p id="rfc.section.3.3.2.p.2">When running within a secure ACP, UDP SHOULD be used for messages not exceeding the minimum IPv6 path MTU, and TCP MUST be used for longer messages. In other words, IPv6 fragmentation is avoided. If a node receives a UDP message but the reply is too long, it MUST open a TCP connection to the peer for the reply.</p>
+<p id="rfc.section.3.3.2.p.3">When running without an ACP, TLS MUST be supported and used by default, except for multicast discovery messages. DTLS MAY be supported as an alternative but the details are out of scope for this document. </p>
+<p id="rfc.section.3.3.2.p.4">For all transport protocols, the GDNP protocol listens to the GDNP Listen Port (<a href="#Constants">Section 3.4</a>).</p>
+<h1 id="rfc.section.3.3.3"><a href="#rfc.section.3.3.3">3.3.3.</a> <a href="#discmech" id="discmech">Discovery Mechanism and Procedures</a></h1>
+<p/>
+
+<ul>
+  <li>Separated discovery and negotiation mechanisms<ul class="empty"><li>Although discovery and negotiation or synchronization are defined together in the GDNP, they are separated mechanisms. The discovery process could run independently from the negotiation or synchronization process. Upon receiving a discovery (<a href="#DiscoveryMessage">Section 3.6.2</a>) or request (<a href="#RequestMessage">Section 3.6.4</a>) message, the recipient ASA should return a message in which it either indicates itself as a discovery responder or diverts the initiator towards another more suitable ASA.</li><li>The discovery action will normally be followed by a negotiation or synchronization action. The discovery results could be utilized by the negotiation protocol to decide which ASA the initiator will negotiate with.</li></ul></li>
+  <li>Discovery Procedures<ul class="empty"><li>Discovery starts as an on-link operation. The Divert option can tell the discovery initiator to contact an off-link ASA for that discovery objective. Every DISCOVERY message is sent by a discovery initiator via UDP to the ALL_GDNP_NEIGHBOR multicast address (<a href="#Constants">Section 3.4</a>). Every network device that supports the GDNP always listens to a well-known UDP port to capture the discovery messages.</li><li>If an ASA in the neighbor device supports the requested discovery objective, it MAY respond with a Response message (<a href="#ResponseMessage">Section 3.6.3</a>) with locator option(s). Otherwise, if the neighbor has cached information about an ASA that supports the requested discovery objective (usually because it discovered the same objective before), it SHOULD respond with a Response message with a Divert option pointing to the appropriate Discovery Responder.</li><li>If no discovery response is received within a reasonable timeout (default GDNP_DEF_TIMEOUT milliseconds, <a href="#Constants">Section 3.4</a>), the DISCOVERY message MAY be repeated, with a newly generated Session ID (<a href="#SessionID">Section 3.5</a>). An exponential backoff SHOULD be used for subsequent repetitions, in order to mitigate possible denial of service attacks.</li><li>After a GDNP device successfully discovers a Discovery Responder supporting a specific objective, it MUST cache this information. This cache record MAY be used for future negotiation or synchronization, and SHOULD be passed on when appropriate as a Divert option to another Discovery Initiator. The cache lifetime is an implementation choice that MAY be modified by network Intent.</li><li>If multiple Discovery Responders are found for the same objective, they SHOULD all be cached, unless this creates a resource shortage. The method of choosing between multiple responders is an implementation choice.</li><li>A GDNP device with multiple link-layer interfaces (typically a router) MUST support discovery on all interfaces. If it receives a DISCOVERY message on a given interface for a specific objective that it does not support and for which it has not previously discovered a Discovery Responder, it MUST relay the query by re-issuing the same DISCOVERY message on its other interfaces.  However, it MUST limit the total rate at which it relays discovery messages to a reasonable value, in order to mitigate possible denial of service attacks.  It MUST cache the Session ID value of each relayed discovery message and, to prevent loops, MUST NOT relay a DISCOVERY message which carries such a cached Session ID. These precautions avoid discovery loops.</li><li>This relayed discovery mechanism, with caching of the results, should be sufficient to support most network bootstrapping scenarios.</li></ul></li>
+  <li>A complete discovery process will start with multicast on the local link; a neighbor might divert it to an off-link destination, which could be a default higher-level gateway in a hierarchical network.  Then discovery would continue with a unicast to that gateway; if that gateway is still not the right counterpart, it should divert to another gateway, which is in principle closer to the right counterpart. Finally the right counterpart responds to start the negotiation or synchronization process.  </li>
+  <li>Rapid Mode (Discovery/Negotiation binding)<ul class="empty"><li>A Discovery message MAY include one or more Negotiation Objective option(s). This allows a rapid mode of negotiation described in <a href="#negproc">Section 3.3.4</a>. A similar mechanism is defined for synchronization in <a href="#synchproc">Section 3.3.5</a>.</li></ul></li>
+</ul>
+<h1 id="rfc.section.3.3.4"><a href="#rfc.section.3.3.4">3.3.4.</a> <a href="#negproc" id="negproc">Negotiation Procedures</a></h1>
+<p id="rfc.section.3.3.4.p.1">A negotiation initiator sends a negotiation request to a counterpart ASA, including a specific negotiation objective.  It may request the negotiation counterpart to make a specific configuration. Alternatively, it may request a certain simulation or forecast result by sending a dry run configuration.  The details, including the distinction between dry run and an actual configuration change, will be defined separately for each type of negotiation objective.</p>
+<p id="rfc.section.3.3.4.p.2">If the counterpart can immediately apply the requested configuration, it will give an immediate positive (accept) answer.  This will end the negotiation phase immediately. Otherwise, it will negotiate. It will reply with a proposed alternative configuration that it can apply (typically, a configuration that uses fewer resources than requested by the negotiation initiator). This will start a bi-directional negotiation to reach a compromise between the two ASAs.</p>
+<p id="rfc.section.3.3.4.p.3">The negotiation procedure is ended when one of the negotiation peers sends a Negotiation Ending message, which contains an accept or decline option and does not need a response from the negotiation peer. Negotiation may also end in failure (equivalent to a decline) if a timeout is exceeded or a loop count is exceeded. </p>
+<p id="rfc.section.3.3.4.p.4">A negotiation procedure concerns one objective and one counterpart. Both the initiator and the counterpart may take part in simultaneous negotiations with various other ASAs, or in simultaneous negotiations about different objectives. Thus, GDNP is expected to be used in a multi-threaded mode. Certain negotiation objectives may have restrictions on multi-threading, for example to avoid over-allocating resources.</p>
+<p id="rfc.section.3.3.4.p.5">Rapid Mode (Discovery/Negotiation linkage)</p>
+
+<ul class="empty">
+  <li>A Discovery message MAY include a Negotiation Objective option. In this case the Discovery message also acts as a Request message to indicate to the Discovery Responder that it could directly reply to the Discovery Initiator with a Negotiation message for rapid processing, if it could act as the corresponding negotiation counterpart. However, the indication is only advisory not prescriptive. </li>
+  <li>This rapid mode could reduce the interactions between nodes so that a higher efficiency could be achieved. This rapid negotiation function SHOULD be configured off by default and MAY be configured on or off by Intent.</li>
+</ul>
+<h1 id="rfc.section.3.3.5"><a href="#rfc.section.3.3.5">3.3.5.</a> <a href="#synchproc" id="synchproc">Synchronization Procedure</a></h1>
+<p id="rfc.section.3.3.5.p.1">A synchronization initiator sends a synchronization request to a counterpart, including a specific synchronization objective.  The counterpart responds with a Response message containing the current value of the requested synchronization objective. No further messages are needed. If no Response message is received, the synchronization request MAY be repeated after a suitable timeout.</p>
+<p id="rfc.section.3.3.5.p.2">In the case just described, the message exchange is unicast and concerns only one synchronization objective. For large groups of nodes requiring the same data, synchronization flooding is available. For this, a synchronization responder MAY send an unsolicited Response message containing one or more Synchronization Objective option(s), if and only if the specification of those objectives permits it. This is sent as a multicast message to the ALL_GDNP_NEIGHBOR multicast address (<a href="#Constants">Section 3.4</a>).  In this case a suitable mechanism is needed to avoid excessive multicast traffic. This mechanism MUST be defined as part of the specification of the synchronization objective(s) concerned. It might be a simple rate limit or a more complex mechanism such as the Trickle algorithm <a href="#RFC6206">[RFC6206]</a>.</p>
+<p id="rfc.section.3.3.5.p.3">A GDNP device with multiple link-layer interfaces (typically a router) MUST support synchronization flooding on all interfaces. If it receives a multicast unsolicited Response message on a given interface, it MUST relay it by re-issuing the same Response message on its other interfaces.  However, it MUST limit the total rate at which it relays Response messages to a reasonable value, in order to mitigate possible denial of service attacks.  It MUST cache the Session ID value of each relayed discovery message and, to prevent loops, MUST NOT relay a Response message which carries such a cached Session ID. These precautions avoid synchronization loops.</p>
+<p id="rfc.section.3.3.5.p.4">Note that this mechanism is unreliable in the case of sleeping nodes. Sleeping nodes that require an objective subject to synchronization flooding SHOULD periodically initiate normal synchronization for that objective. </p>
+<p id="rfc.section.3.3.5.p.5">Rapid Mode (Discovery/Synchronization linkage)</p>
+
+<ul class="empty">
+  <li>A Discovery message MAY include one or more Synchronization Objective option(s). In this case the Discovery message also acts as a Request message to indicate to the Discovery Responder that it could directly reply to the Discovery Initiator with a Response message with synchronization data for rapid processing, if the discovery target supports the corresponding synchronization objective(s). However, the indication is only advisory not prescriptive.</li>
+  <li>This rapid mode could reduce the interactions between nodes so that a higher efficiency could be achieved. This rapid synchronization function SHOULD be configured off by default and MAY be configured on or off by Intent.</li>
+</ul>
+<h1 id="rfc.section.3.4"><a href="#rfc.section.3.4">3.4.</a> <a href="#Constants" id="Constants">GDNP Constants</a></h1>
+<p/>
+
+<ul>
+  <li>ALL_GDNP_NEIGHBOR<br/><br/>A link-local scope multicast address used by a GDNP-enabled device to discover GDNP-enabled neighbor (i.e., on-link) devices . All devices that support GDNP are members of this multicast group.<ul><li>IPv6 multicast address: TBD1</li><li>IPv4 multicast address: TBD2</li></ul></li>
+  <li>GDNP Listen Port (TBD3)<br/><br/>A UDP and TCP port that every GDNP-enabled network device always listens to.</li>
+  <li>GDNP_DEF_TIMEOUT (60000 milliseconds)<br/><br/>The default timeout used to determine that a discovery or negotiation has failed to complete.</li>
+  <li>GDNP_DEF_LOOPCT (6)<br/><br/>The default loop count used to determine that a negotiation has failed to complete.</li>
+</ul>
+<h1 id="rfc.section.3.5"><a href="#rfc.section.3.5">3.5.</a> <a href="#SessionID" id="SessionID">Session Identifier (Session ID)</a></h1>
+<p id="rfc.section.3.5.p.1">A 24-bit opaque value used to distinguish multiple sessions between the same two devices. A new Session ID MUST be generated for every new Discovery or Request message, and for every unsolicited Response message.  All follow-up messages in the same discovery, synchronization or negotiation procedure, which is initiated by the request message, MUST carry the same Session ID.</p>
+<p id="rfc.section.3.5.p.2">The Session ID SHOULD have a very low collision rate locally. It is RECOMMENDED to be generated by a pseudo-random algorithm using a seed which is unlikely to be used by any other device in the same network <a href="#RFC4086">[RFC4086]</a>.</p>
+<h1 id="rfc.section.3.6"><a href="#rfc.section.3.6">3.6.</a> <a href="#GDNPMessages" id="GDNPMessages">GDNP Messages</a></h1>
+<p id="rfc.section.3.6.p.1">This document defines the following GDNP message format and types.  Message types not listed here are reserved for future use. The numeric encoding for each message type is shown in parentheses.</p>
+<h1 id="rfc.section.3.6.1"><a href="#rfc.section.3.6.1">3.6.1.</a> GDNP Message Format</h1>
+<p id="rfc.section.3.6.1.p.1">GDNP messages share an identical fixed format header and a variable format area for options. GDNP message headers and options are in the type-length-value (TLV) format defined in DNCP (see Section "Type-Length-Value Objects" in <a href="#I-D.ietf-homenet-dncp">[I-D.ietf-homenet-dncp]</a>).  </p>
+<p id="rfc.section.3.6.1.p.2">Every GDNP message carries a Session ID. Options are presented serially in the options field, with padding to 4-byte alignment.</p>
+<p id="rfc.section.3.6.1.p.3">The following diagram illustrates the format of GDNP messages:</p>
+<pre> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          MESSAGE_TYPE         |                4              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|    Reserved   |                Session ID                     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Options  (variable length)             |
+.                                                               .
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p/>
+<p/>
+
+<dl>
+  <dt>MESSAGE_TYPE:</dt>
+  <dd style="margin-left: 8">Identifies the GDNP message type. 16-bit.  </dd>
+  <dt>Reserved:</dt>
+  <dd style="margin-left: 8">Set to zero, ignored on receipt. 8-bit.  </dd>
+  <dt>Session ID:</dt>
+  <dd style="margin-left: 8">Identifies this GDNP session, as defined in <a href="#SessionID">Section 3.5</a>. 24-bit.  </dd>
+  <dt>Options:</dt>
+  <dd style="margin-left: 8">GDNP Options carried in this message. Options are defined starting at <a href="#GDNPOptions">Section 3.7</a>.  </dd>
+</dl>
+<h1 id="rfc.section.3.6.2"><a href="#rfc.section.3.6.2">3.6.2.</a> <a href="#DiscoveryMessage" id="DiscoveryMessage">Discovery Message</a></h1>
+<p id="rfc.section.3.6.2.p.1">DISCOVERY (MESSAGE_TYPE = G1):</p>
+<p id="rfc.section.3.6.2.p.2">A discovery initiator sends a DISCOVERY message to initiate a discovery process.  </p>
+<p id="rfc.section.3.6.2.p.3">The discovery initiator sends the DISCOVERY messages to the link-local ALL_GDNP_NEIGHBOR multicast address for discovery, and stores the discovery results (including responding discovery objectives and corresponding unicast addresses or FQDNs).  </p>
+<p id="rfc.section.3.6.2.p.4">A DISCOVERY message MUST include exactly one of the following: </p>
+
+<ul>
+  <li>a discovery objective option (<a href="#ObjOption">Section 3.8.1</a>).  </li>
+  <li>a negotiation objective option (<a href="#ObjOption">Section 3.8.1</a>) to indicate to the discovery target that it MAY directly reply to the discovery initiatior with a NEGOTIATION message for rapid processing, if it could act as the corresponding negotiation counterpart.  The sender of such a DISCOVERY message MUST initialize a negotiation timer and loop count in the same way as a REQUEST message (<a href="#RequestMessage">Section 3.6.4</a>).  </li>
+  <li>one or more synchronization objective options (<a href="#ObjOption">Section 3.8.1</a>) to indicate to the discovery target that it MAY directly reply to the discovery initiator with a RESPONSE message for rapid processing, if it could act as the corresponding synchronization counterpart.</li>
+</ul>
+<h1 id="rfc.section.3.6.3"><a href="#rfc.section.3.6.3">3.6.3.</a> <a href="#ResponseMessage" id="ResponseMessage">Response Message</a></h1>
+<p id="rfc.section.3.6.3.p.1">RESPONSE (MESSAGE_TYPE = G2):</p>
+<p id="rfc.section.3.6.3.p.2">A node which receives a DISCOVERY message sends a Response message to respond to a discovery. It MUST contain the same Session ID as the DISCOVERY message.  It MAY include a copy of the discovery objective from the DISCOVERY message.  </p>
+<p id="rfc.section.3.6.3.p.3">If the responding node supports the discovery objective of the discovery, it MUST include at least one kind of locator option (<a href="#LocatorOption">Section 3.7.7</a>) to indicate its own location. A combination of multiple kinds of locator options (e.g. IP address option + FQDN option) is also valid.  </p>
+<p id="rfc.section.3.6.3.p.4">If the responding node itself does not support the discovery objective, but it knows the locator of the discovery objective, then it SHOULD respond to the discovery message with a divert option (<a href="#DivertOption">Section 3.7.2</a>) embedding a locator option or a combination of multiple kinds of locator options which indicate the locator(s) of the discovery objective.  </p>
+<p id="rfc.section.3.6.3.p.5">A node which receives a synchronization request sends a Response message with the synchronization data, in the form of GDNP Option(s) for the specific synchronization objective(s).</p>
+<h1 id="rfc.section.3.6.4"><a href="#rfc.section.3.6.4">3.6.4.</a> <a href="#RequestMessage" id="RequestMessage">Request Message</a></h1>
+<p id="rfc.section.3.6.4.p.1">REQUEST (MESSAGE_TYPE = G3):</p>
+<p id="rfc.section.3.6.4.p.2">A negotiation or synchronization requesting node sends the REQUEST message to the unicast address (directly stored or resolved from the FQDN) of the negotiation or synchronization counterpart (selected from the discovery results).</p>
+<p id="rfc.section.3.6.4.p.3">A request message MUST include the relevant objective option, with the requested value in the case of negotiation. </p>
+<p id="rfc.section.3.6.4.p.4">When an initiator sends a REQUEST message, it MUST initialize a negotiation timer for the new negotiation thread with the value GDNP_DEF_TIMEOUT milliseconds. Unless this timeout is modified by a CONFIRM-WAITING message (<a href="#ConfirmWaitingMessage">Section 3.6.7</a>), the initiator will consider that the negotiation has failed when the timer expires. </p>
+<p id="rfc.section.3.6.4.p.5">When an initiator sends a REQUEST message, it MUST initialize the loop count of the objective option with a value defined in the specification of the option or, if no such value is specified, with GDNP_DEF_LOOPCT. </p>
+<h1 id="rfc.section.3.6.5"><a href="#rfc.section.3.6.5">3.6.5.</a> <a href="#NegotiationMessage" id="NegotiationMessage">Negotiation Message</a></h1>
+<p id="rfc.section.3.6.5.p.1">NEGOTIATION (MESSAGE_TYPE = G4):</p>
+<p id="rfc.section.3.6.5.p.2">A negotiation counterpart sends a NEGOTIATION message in response to a REQUEST message, a NEGOTIATION message, or a DISCOVERY message in Rapid Mode. A negotiation process MAY include multiple steps.</p>
+<p id="rfc.section.3.6.5.p.3">The NEGOTIATION message MUST include the relevant Negotiation Objective option, with its value updated according to progress in the negotiation. The sender MUST decrement the loop count by 1. If the loop count becomes zero both parties will consider that the negotiation has failed.</p>
+<h1 id="rfc.section.3.6.6"><a href="#rfc.section.3.6.6">3.6.6.</a> <a href="#NegotiationEndingMessage" id="NegotiationEndingMessage">Negotiation-ending Message</a></h1>
+<p id="rfc.section.3.6.6.p.1">NEGOTIATION-ENDING (MESSAGE_TYPE = G5):</p>
+<p id="rfc.section.3.6.6.p.2">A negotiation counterpart sends an NEGOTIATION-ENDING message to close the negotiation. It MUST contain one, but only one of accept/decline option, defined in <a href="#AcceptOption">Section 3.7.3</a> and <a href="#DeclineOption">Section 3.7.4</a>.  It could be sent either by the requesting node or the responding node.</p>
+<h1 id="rfc.section.3.6.7"><a href="#rfc.section.3.6.7">3.6.7.</a> <a href="#ConfirmWaitingMessage" id="ConfirmWaitingMessage">Confirm-waiting Message</a></h1>
+<p id="rfc.section.3.6.7.p.1">CONFIRM-WAITING (MESSAGE_TYPE = G6):</p>
+<p id="rfc.section.3.6.7.p.2">A responding node sends a CONFIRM-WAITING message to indicate the requesting node to wait for a further negotiation response. It might be that the local process needs more time or that the negotiation depends on another triggered negotiation. This message MUST NOT include any other options than the Waiting Time Option (<a href="#WaitingTimeOption">Section 3.7.5</a>).</p>
+<h1 id="rfc.section.3.7"><a href="#rfc.section.3.7">3.7.</a> <a href="#GDNPOptions" id="GDNPOptions">GDNP General Options</a></h1>
+<p id="rfc.section.3.7.p.1">This section defines the GDNP general options for the negotiation and synchronization protocol signaling. Additional option types are reserved for GDNP general options defined in the future.</p>
+<h1 id="rfc.section.3.7.1"><a href="#rfc.section.3.7.1">3.7.1.</a> Format of GDNP Options</h1>
+<pre> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          option-code          |           option-len          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                          option-data                          |
+|                      (option-len octets)                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p/>
+<p/>
+
+<dl>
+  <dt>Option-code:</dt>
+  <dd style="margin-left: 8">An unsigned integer identifying the specific option type carried in this option.  </dd>
+  <dt>Option-len:</dt>
+  <dd style="margin-left: 8">An unsigned integer giving the length of the option-data field in this option in octets.  </dd>
+  <dt>Option-data:</dt>
+  <dd style="margin-left: 8">The data for the option; the format of this data depends on the definition of the option.</dd>
+</dl>
+<p id="rfc.section.3.7.1.p.3">GDNP options are scoped by using encapsulation. If an option contains other options, the outer Option-len includes the total size of the encapsulated options, and the latter apply only to the outer option.</p>
+<h1 id="rfc.section.3.7.2"><a href="#rfc.section.3.7.2">3.7.2.</a> <a href="#DivertOption" id="DivertOption">Divert Option</a></h1>
+<p id="rfc.section.3.7.2.p.1">The divert option is used to redirect a GDNP request to another node, which may be more appropriate for the intended negotiation or synchronization. It may redirect to an entity that is known as a specific negotiation or synchronization counterpart (on-link or off-link) or a default gateway. The divert option MUST only be encapsulated in Response messages.  If found elsewhere, it SHOULD be silently ignored.</p>
+<pre> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         OPTION_DIVERT         |           option-len          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|             Locator Option(s) of Diversion Target(s)          |
+.                                                               .
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p/>
+<p/>
+
+<dl>
+  <dt>Option-code:</dt>
+  <dd style="margin-left: 8">OPTION_DIVERT (G32).  </dd>
+  <dt>Option-len:</dt>
+  <dd style="margin-left: 8">The total length of diverted destination sub-option(s) in octets.  </dd>
+  <dt>Locator Option(s) of Diversion Device(s):</dt>
+  <dd style="margin-left: 8">Embedded Locator Option(s) (<a href="#LocatorOption">Section 3.7.7</a>) that point to diverted destination target(s).  </dd>
+</dl>
+<h1 id="rfc.section.3.7.3"><a href="#rfc.section.3.7.3">3.7.3.</a> <a href="#AcceptOption" id="AcceptOption">Accept Option</a></h1>
+<p id="rfc.section.3.7.3.p.1">The accept option is used to indicate to the negotiation counterpart that the proposed negotiation content is accepted.</p>
+<p id="rfc.section.3.7.3.p.2">The accept option MUST only be encapsulated in Negotiation-ending messages. If found elsewhere, it SHOULD be silently ignored.</p>
+<pre> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|        OPTION_ACCEPT          |           option-len          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p/>
+<p/>
+
+<dl>
+  <dt>Option-code:</dt>
+  <dd style="margin-left: 8">OPTION_ACCEPT (G33) </dd>
+  <dt>Option-len:</dt>
+  <dd style="margin-left: 8">0 </dd>
+</dl>
+<h1 id="rfc.section.3.7.4"><a href="#rfc.section.3.7.4">3.7.4.</a> <a href="#DeclineOption" id="DeclineOption">Decline Option</a></h1>
+<p id="rfc.section.3.7.4.p.1">The decline option is used to indicate to the negotiation counterpart the proposed negotiation content is declined and end the negotiation process.</p>
+<p id="rfc.section.3.7.4.p.2">The decline option MUST only be encapsulated in Negotiation-ending messages. If found elsewhere, it SHOULD be silently ignored.</p>
+<pre> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|        OPTION_DECLINE         |           option-len          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p/>
+<p/>
+
+<dl>
+  <dt>Option-code:</dt>
+  <dd style="margin-left: 8">OPTION_DECLINE (G34) </dd>
+  <dt>Option-len:</dt>
+  <dd style="margin-left: 8">0 </dd>
+</dl>
+<p id="rfc.section.3.7.4.p.5">Notes: there are scenarios where a negotiation counterpart wants to decline the proposed negotiation content and continue the negotiation process. For these scenarios, the negotiation counterpart SHOULD use a Negotiate message, with either an objective option that contains at least one data field with all bits set to 1 to indicate a meaningless initial value, or a specific objective option that provides further conditions for convergence.</p>
+<h1 id="rfc.section.3.7.5"><a href="#rfc.section.3.7.5">3.7.5.</a> <a href="#WaitingTimeOption" id="WaitingTimeOption">Waiting Time Option</a></h1>
+<p id="rfc.section.3.7.5.p.1">The waiting time option is used to indicate that the negotiation counterpart needs to wait for a further negotiation response, since the processing might need more time than usual or it might depend on another triggered negotiation.</p>
+<p id="rfc.section.3.7.5.p.2">The waiting time option MUST only be encapsulated in Confirm-waiting messages. If found elsewhere, it SHOULD be silently ignored. When received, its value overwrites the negotiation timer (<a href="#RequestMessage">Section 3.6.4</a>).</p>
+<p id="rfc.section.3.7.5.p.3">The counterpart SHOULD send a Negotiation, Negotiation-Ending or another Confirm-waiting message before the negotiation timer expires. If not, the initiator MUST abandon or restart the negotiation procedure, to avoid an indefinite wait.</p>
+<pre> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|       OPTION_WAITING          |           option-len          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                              Time                             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p/>
+<p/>
+
+<dl>
+  <dt>Option-code:</dt>
+  <dd style="margin-left: 8">OPTION_WAITING (G35) </dd>
+  <dt>Option-len:</dt>
+  <dd style="margin-left: 8">4, in octets </dd>
+  <dt>Time:</dt>
+  <dd style="margin-left: 8">Time in milliseconds </dd>
+</dl>
+<h1 id="rfc.section.3.7.6"><a href="#rfc.section.3.7.6">3.7.6.</a> <a href="#IDOption" id="IDOption">Device Identity Option</a></h1>
+<p id="rfc.section.3.7.6.p.1">The Device Identity option carries the identities of the sender and of the domain(s) that it belongs to. The format of the Device Identity option is as follows:</p>
+<pre> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|       OPTION_DEVICE_ID        |           option-len          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+.                    Identities (variable length)               .
+.                                                               .
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p/>
+<p/>
+
+<dl>
+  <dt>Option-code:</dt>
+  <dd style="margin-left: 8">OPTION_DEVICE_ID (G36) </dd>
+  <dt>Option-len:</dt>
+  <dd style="margin-left: 8">Length of identities in octets </dd>
+  <dt>Identities:</dt>
+  <dd style="margin-left: 8">A variable-length field containing the device identity and one or more domain identities. The format is not yet defined.  </dd>
+  <dt>Note:</dt>
+  <dd style="margin-left: 8">Currently this option is a placeholder. It might be removed or modified.  </dd>
+</dl>
+<h1 id="rfc.section.3.7.7"><a href="#rfc.section.3.7.7">3.7.7.</a> <a href="#LocatorOption" id="LocatorOption">Locator Options</a></h1>
+<p id="rfc.section.3.7.7.p.1">These locator options are used to present reachability information for an ASA, a device or an interface. They are Locator IPv4 Address Option, Locator IPv6 Address Option and Locator FQDN (Fully Qualified Domain Name) Option.</p>
+<p id="rfc.section.3.7.7.p.2">Note that it is assumed that all locators are in scope throughout the GDNP domain. GDNP is not intended to work across disjoint addressing or naming realms. </p>
+<h1 id="rfc.section.3.7.7.1"><a href="#rfc.section.3.7.7.1">3.7.7.1.</a> Locator IPv4 address option</h1>
+<pre> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|    OPTION_LOCATOR_IPV4ADDR    |           option-len          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                          IPv4-Address                         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p/>
+<p/>
+
+<dl>
+  <dt>Option-code:</dt>
+  <dd style="margin-left: 8">OPTION_LOCATOR_IPV4ADDR (G37) </dd>
+  <dt>Option-len:</dt>
+  <dd style="margin-left: 8">4, in octets </dd>
+  <dt>IPv4-Address:</dt>
+  <dd style="margin-left: 8">The IPv4 address locator of the target </dd>
+</dl>
+<p id="rfc.section.3.7.7.1.p.3">Note: If an operator has internal network address translation for IPv4, this option MUST NOT be used within the Divert option.</p>
+<h1 id="rfc.section.3.7.7.2"><a href="#rfc.section.3.7.7.2">3.7.7.2.</a> Locator IPv6 address option</h1>
+<pre> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   OPTION_LOCATOR_IPV6ADDR     |           option-len          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+|                          IPv6-Address                         |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p/>
+<p/>
+
+<dl>
+  <dt>Option-code:</dt>
+  <dd style="margin-left: 8">OPTION_LOCATOR_IPV6ADDR (G38) </dd>
+  <dt>Option-len:</dt>
+  <dd style="margin-left: 8">16, in octets </dd>
+  <dt>IPv6-Address:</dt>
+  <dd style="margin-left: 8">The IPv6 address locator of the target </dd>
+</dl>
+<p id="rfc.section.3.7.7.2.p.3">Note: A link-local IPv6 address MUST NOT be used when this option is used within the Divert option.</p>
+<h1 id="rfc.section.3.7.7.3"><a href="#rfc.section.3.7.7.3">3.7.7.3.</a> Locator FQDN option</h1>
+<pre> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         OPTION_FQDN           |           option-len          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                   Fully Qualified Domain Name                 |
+|                       (variable length)                       |
+.                                                               .
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p/>
+<p/>
+
+<dl>
+  <dt>Option-code:</dt>
+  <dd style="margin-left: 8">OPTION_FQDN (G39) </dd>
+  <dt>Option-len:</dt>
+  <dd style="margin-left: 8">Length of Fully Qualified Domain Name in octets </dd>
+  <dt>Domain-Name:</dt>
+  <dd style="margin-left: 8">The Fully Qualified Domain Name of the target </dd>
+</dl>
+<p id="rfc.section.3.7.7.3.p.3">Note: Any FQDN which might not be valid throughout the network in question, such as a Multicast DNS name <a href="#RFC6762">[RFC6762]</a>, MUST NOT be used when this option is used within the Divert option.</p>
+<h1 id="rfc.section.3.8"><a href="#rfc.section.3.8">3.8.</a> Objective Options</h1>
+<h1 id="rfc.section.3.8.1"><a href="#rfc.section.3.8.1">3.8.1.</a> <a href="#ObjOption" id="ObjOption">Format of Objective Options</a></h1>
+<p id="rfc.section.3.8.1.p.1">An objective option is used to identify objectives for the purposes of discovery, negotiation or synchronization.  All objectives must follow a common format as follows:</p>
+<pre> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         OPTION_XXX            |           option-len          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   flags       |   loop-count  |                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          value                |
+.                                    (variable length)          .
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p/>
+<p/>
+
+<dl>
+  <dt>Option-code:</dt>
+  <dd style="margin-left: 8">OPTION_XXX: The option code assigned in the specification of the XXX objective.  </dd>
+  <dt>option-len:</dt>
+  <dd style="margin-left: 8">The total length in octets.  </dd>
+  <dt>flags:</dt>
+  <dd style="margin-left: 8">Flag bits.  <br/><br/> Bit 0 (D bit): set if this objective is valid for GDNP discovery operations.  <br/><br/> Bit 1 (N bit): set if this objective is valid for GDNP negotiation operations.  <br/><br/> Bit 2 (S bit): set if this objective is valid for GDNP synchronization operations.  <br/><br/> Bits 3~7: reserved, set to zero and ignored on reception.  </dd>
+  <dt>loop-count:</dt>
+  <dd style="margin-left: 8">The loop count for terminating negotation. This field is present if and only if the objective is a negotiation objective.  </dd>
+  <dt>value:</dt>
+  <dd style="margin-left: 8">This field is to express the actual value of a negotiation or synchronization objective. Its format is defined in the specification of the objective and may be a single value or a data structure of any kind.  </dd>
+</dl>
+<h1 id="rfc.section.3.8.2"><a href="#rfc.section.3.8.2">3.8.2.</a> <a href="#ConsOption" id="ConsOption">General Considerations for Objective Options</a></h1>
+<p id="rfc.section.3.8.2.p.1">Objective Options MUST be assigned an option type greater than G63 in the GDNP option table.</p>
+<p id="rfc.section.3.8.2.p.2">An Objective Option that contains no additional fields, i.e., has a length of 4 octets, is a discovery objective and MUST only be used in Discovery and Response messages.</p>
+<p id="rfc.section.3.8.2.p.3">The Negotiation Objective Options contain negotiation objectives, which are various according to different functions/services. They MUST be carried by Discovery, Request or Negotiation Messages only. The negotiation initiator MUST set the initial "loop-count" to a value specified in the specification of the objective or, if no such value is specified, to GDNP_DEF_LOOPCT.</p>
+<p id="rfc.section.3.8.2.p.4">For most scenarios, there should be initial values in the negotiation requests. Consequently, the Negotiation Objective options MUST always be completely presented in a Request message, or in a Discovery message in rapid mode. If there is no initial value, the bits in the value field SHOULD all be set to 1 to indicate a meaningless value, unless this is inappropriate for the specific negotiation objective.</p>
+<p id="rfc.section.3.8.2.p.5">Synchronization Objective Options are similar, but MUST be carried by Discovery, Request or Response messages only. They include value fields only in Response messages. </p>
+<h1 id="rfc.section.3.8.3"><a href="#rfc.section.3.8.3">3.8.3.</a> Organizing of Objective Options</h1>
+<p id="rfc.section.3.8.3.p.1">As noted earlier, one negotiation objective is handled by each GDNP negotiation thread. Therefore, a negotiation objective, which is based on a specific function or action, SHOULD be organized as a single GDNP option. It is NOT RECOMMENDED to organize multiple negotiation objectives into a single option, nor to split a single function or action into multiple negotiation objectives. </p>
+<p id="rfc.section.3.8.3.p.2">A synchronization objective SHOULD also be organized as a single GDNP option.</p>
+<p id="rfc.section.3.8.3.p.3">Some objectives will support more than one operational mode.  An example is a negotiation objective with both a "dry run" mode (where the negotiation is to find out whether the other end can in fact make the requested change without problems) and a "live" mode. Such modes will be defined in the specification of such an objective. These objectives SHOULD include a "flags" octet, with bits indicating the applicable mode(s).</p>
+<p id="rfc.section.3.8.3.p.4">An objective may have multiple parameters. Parameters can be categorized into two classes: the obligatory ones presented as fixed fields; and the optional ones presented in TLV sub-options or some other form of data structure. The format might be inherited from an existing management or configuration protocol, the objective option acting as a carrier for that format.  The data structure might be defined in a formal language, but that is a matter for the specifications of individual objectives.  There are many candidates, according to the context, such as ABNF, RBNF, XML Schema, possibly YANG, etc. The GDNP protocol itself is agnostic on these questions. </p>
+<p id="rfc.section.3.8.3.p.5">It is NOT RECOMMENDED to split parameters in a single objective into multiple options, unless they have different response periods. An exception scenario may also be described by split objectives.</p>
+<h1 id="rfc.section.3.8.4"><a href="#rfc.section.3.8.4">3.8.4.</a> Vendor Specific Objective Options </h1>
+<p id="rfc.section.3.8.4.p.1">Option codes G128~159 have been reserved for vendor specific options. Multiple option codes have been assigned because a single vendor might use multiple options simultaneously. These vendor specific options are highly likely to have different meanings when used by different vendors. Therefore, they SHOULD NOT be used without an explicit human decision and SHOULD NOT be used in unmanaged networks such as home networks.</p>
+<p id="rfc.section.3.8.4.p.2">There is one general requirement that applies to all vendor specific options. They MUST start with a field that uniquely identifies the enterprise that defines the option, in the form of a registered 32 bit Private Enterprise Number (PEN) <a href="#I-D.liang-iana-pen">[I-D.liang-iana-pen]</a>. There is no default value for this field.  Note that it is not used during discovery. It MUST be verified during negotiation or synchronization.</p>
+<p id="rfc.section.3.8.4.p.3">In the case of a vendor-specific objective, the loop count and flags, if present, follow the PEN.</p>
+<pre> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         OPTION_vendor         |           option-len          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                              PEN                              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   flags       |   loop-count  |                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+          value                |
+.                                    (variable length)          .
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p/>
+<p/>
+
+<dl>
+  <dt>Option-code:</dt>
+  <dd style="margin-left: 8">OPTION_vendor (G128~159) </dd>
+  <dt>Option-len:</dt>
+  <dd style="margin-left: 8">The total length in octets.</dd>
+  <dt>PEN:</dt>
+  <dd style="margin-left: 8">Private Enterprise Number.</dd>
+  <dt>flags:</dt>
+  <dd style="margin-left: 8">See <a href="#ObjOption">Section 3.8.1</a> </dd>
+  <dt>loop-count:</dt>
+  <dd style="margin-left: 8">See <a href="#ObjOption">Section 3.8.1</a> This field is present if and only if the objective is a negotiation objective.  </dd>
+  <dt>value:</dt>
+  <dd style="margin-left: 8">This field is to express the actual value of a negotiation or synchronization objective. Its format is defined in the vendor's specification of the objective.</dd>
+</dl>
+<h1 id="rfc.section.3.8.5"><a href="#rfc.section.3.8.5">3.8.5.</a> Experimental Objective Options</h1>
+<p id="rfc.section.3.8.5.p.1">Option codes G176~191 have been reserved for experimental options.  Multiple option codes have been assigned because a single experiment may use multiple options simultaneously. These experimental options are highly likely to have different meanings when used for different experiments. Therefore, they SHOULD NOT be used without an explicit human decision and SHOULD NOT be used in unmanaged networks such as home networks.</p>
+<p id="rfc.section.3.8.5.p.2">These option codes are also RECOMMENDED for use in documentation examples.</p>
+<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> Open Issues</h1>
+<p id="rfc.section.4.p.1">There are various unresolved design questions that are worthy of more work in the near future, as listed below (statically numbered in historical order for reference purposes, with the resolved issues retained for reference): </p>
+
+<ul>
+  <li>1. UDP vs TCP: For now, this specification suggests UDP and TCP as message transport mechanisms. This is not clarified yet. UDP is good for short conversations, is necessary for multicast discovery, and generally fits the discovery and divert scenarios well. However, it will cause problems with large messages. TCP is good for stable and long sessions, with a little bit of time consumption during the session establishment stage. If messages exceed a reasonable MTU, a TCP mode will be required in any case.  This question may be affected by the security discussion.  <br/><br/> RESOLVED by specifying UDP for short message and TCP for longer one.  <br/><br/></li>
+  <li>2. DTLS or TLS vs built-in security mechanism. For now, this specification has chosen a PKI based built-in security mechanism based on asymmetric cryptography. However, (D)TLS might be chosen as security solution to avoid duplication of effort. It also allows essentially similar security for short messages over UDP and longer ones over TCP. The implementation trade-offs are different.  The current approach requires expensive asymmetric cryptographic calculations for every message. (D)TLS has startup overheads but cheaper crypto per message.  DTLS is less mature than TLS.  <br/><br/> RESOLVED by specifying external security (ACP or (D)TLS).  <br/><br/> </li>
+  <li>The following open issues apply only if the current security model is retained: <ul><li>2.1. For replay protection, GDNP currently requires every participant to have an NTP-synchronized clock. Is this OK for low-end devices, and how does it work during device bootstrapping? We could take the Timestamp out of signature option, to become an independent and OPTIONAL (or RECOMMENDED) option.</li><li>2.2. The Signature Option states that this option could be any place in a message. Wouldn't it be better to specify a position (such as the end)? That would be much simpler to implement. </li></ul><p>RESOLVED by changing security model.</p></li>
+  <li>3. DoS Attack Protection needs work.  <br/><br/> RESOLVED by adding text.<br/><br/></li>
+  <li>4. Should we consider preferring a text-based approach to discovery (after the initial discovery needed for bootstrapping)? This could be a complementary mechanism for multicast based discovery, especially for a very large autonomic network. Centralized registration could be automatically deployed incrementally. At the very first stage, the repository could be empty; then it could be filled in by the objectives discovered by different devices (for example using Dynamic DNS Update). The more records are stored in the repository, the less the multicast-based discovery is needed. However, if we adopt such a mechanism, there would be challenges: stateful solution, and security.  <br/><br/> RESOLVED for now by adding optional use of DNS-SD by ASAs.<br/><br/> </li>
+  <li>5. Need to expand description of the minimum requirements for the specification of an individual discovery, synchronization or negotiation objective. </li>
+  <li>6. Use case and protocol walkthrough. A description of how a node starts up, performs discovery, and conducts negotiation and synchronisation for a sample use case would help readers to understand the applicability of this specification.  Maybe it should be an artificial use case or maybe a simple real one, based on a conceptual API. However, the authors have not yet decided whether to have a separate document or have it in the protocol document. </li>
+  <li>7. Cross-check against other ANIMA WG documents for consistency and gaps.</li>
+  <li>8. Consideration of ADNCP proposal.  <br/><br/> RESOLVED by adding optional use of DNCP for flooding-type synchronization.  <br/><br/></li>
+  <li>9. Clarify how a GDNP instance knows whether it is running inside the ACP. (Sheng) <br/><br/> RESOLVED by improved text.<br/><br/></li>
+  <li>10. Clarify how a non-ACP GDNP instance initiates (D)TLS. (Sheng) <br/><br/> RESOLVED by improved text and declaring DTLS out of scope for this draft.  <br/><br/></li>
+  <li>11. Clarify how UDP/TCP choice is made. (Sheng) [Like DNS? - Brian] <br/><br/> RESOLVED by improved text.<br/><br/></li>
+  <li>12. Justify that IP address within ACP or (D)TLS environment is sufficient to prove AN identity; or explain how Device Identity Option is used. (Sheng) <br/><br/> RESOLVED for now: we assume that all ASAs in a device are trusted as soon as the device is trusted, so they share credentials. In that case the Device Identity Option is useless. This needs to be reviewed later.<br/><br/></li>
+  <li>13. Emphasise that negotiation/synchronization are independent from discovery, although the rapid discovery mode includes the first step of a negotiation/synchronization.  (Sheng) <br/><br/> RESOLVED by improved text. <br/><br/></li>
+  <li>14. Do we need an unsolicited flooding mechanism for discovery (for discovery results that everyone needs), to reduce scaling impact of flooding discovery messages? (Toerless) <br/><br/> RESOLVED: Yes, added to requirements and solution. <br/><br/></li>
+  <li>15. Do we need flag bits in Objective Options to distinguish distinguish Synchronization and Negotiation "Request" or rapid mode "Discovery" messages? (Bing) <br/><br/> RESOLVED: yes, work on the API showed that these flags are essential. </li>
+  <li>16. (Related to issue 14). Should we revive the "unsolicited Response" for flooding synchronisation data? This has to be done carefully due to the well-known issues with flooding, but it could be useful, e.g. for Intent distribution, where DNCP doesn't seem applicable.</li>
+  <li>17. Ensure that the discovery mechanism is completely proof against loops and protected against duplicate responses.</li>
+  <li>18. Discuss the handling of multiple valid discovery responses.</li>
+  <li>19. Should we use a text-oriented format such as JSON/CBOR instead of native binary TLV format? </li>
+  <li>20. Is the Divert option needed? If a discovery response provides a valid IP address or FQDN, the recipient doesn't gain any extra knowledge from the Divert.</li>
+  <li>21. Rename the protocol as GRASP (GeneRic Autonomic Signaling Protocol)?</li>
+</ul>
+<h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#security" id="security">Security Considerations</a></h1>
+<p id="rfc.section.5.p.1">It is obvious that a successful attack on negotiation-enabled nodes would be extremely harmful, as such nodes might end up with a completely undesirable configuration that would also adversely affect their peers.  GDNP nodes and messages therefore require full protection. </p>
+<p id="rfc.section.5.p.2">- Authentication</p>
+
+<dl>
+  <dt></dt>
+  <dd style="margin-left: 8">A cryptographically authenticated identity for each device is needed in an autonomic network. It is not safe to assume that a large network is physically secured against interference or that all personnel are trustworthy. Each autonomic device MUST be capable of proving its identity and authenticating its messages. GDNP relies on a separate certificate-based security mechanism to support authentication, data integrity protection, and anti-replay protection.</dd>
+  <dt></dt>
+  <dd style="margin-left: 8">Since GDNP is intended to be deployed in a single administrative domain operating its own trust anchor and CA, there is no need for a trusted public third party. In a network requiring "air gap" security, such a dependency would be unacceptable. </dd>
+</dl>
+<p id="rfc.section.5.p.3">- Privacy and confidentiality</p>
+
+<dl>
+  <dt></dt>
+  <dd style="margin-left: 8">Generally speaking, no personal information is expected to be involved in the signaling protocol, so there should be no direct impact on personal privacy. Nevertheless, traffic flow paths, VPNs, etc. could be negotiated, which could be of interest for traffic analysis. Also, operators generally want to conceal details of their network topology and traffic density from outsiders. Therefore, since insider attacks cannot be excluded in a large network, the security mechanism for the protocol MUST provide message confidentiality.</dd>
+</dl>
+<p id="rfc.section.5.p.4">- DoS Attack Protection</p>
+
+<dl>
+  <dt></dt>
+  <dd style="margin-left: 8">GDNP discovery partly relies on insecure link-local multicast. Since routers participating in GDNP sometimes relay discovery messages from one link to another, this could be a vector for denial of service attacks. Relevant mitigations are specified in <a href="#discmech">Section 3.3.3</a>. Additionally, it is of great importance that firewalls prevent any GDNP messages from entering the domain from an untrusted source. </dd>
+</dl>
+<p id="rfc.section.5.p.5">- Security during bootstrap and discovery</p>
+
+<dl>
+  <dt></dt>
+  <dd style="margin-left: 8">A node cannot authenticate GDNP traffic from other nodes until it has identified the trust anchor and can validate certificates for other nodes. Also, until it has succesfully enrolled <a href="#I-D.pritikin-anima-bootstrapping-keyinfra">[I-D.pritikin-anima-bootstrapping-keyinfra]</a> it cannot assume that other nodes are able to authenticate its own traffic.  Therefore, GDNP discovery during the bootstrap phase for a new device will inevitably be insecure and GDNP synchronization and negotiation will be impossible until enrollment is complete.</dd>
+</dl>
+<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
+<p><a href="#Constants">Section 3.4</a> defines the following link-local multicast addresses, which have been assigned by IANA for use by GDNP:</p>
+<p/>
+
+<dl>
+  <dt>ALL_GDNP_NEIGHBOR multicast address</dt>
+  <dd style="margin-left: 8">(IPv6): (TBD1).  Assigned in the IPv6 Link-Local Scope Multicast Addresses registry.</dd>
+  <dt>ALL_GDNP_NEIGHBOR multicast address</dt>
+  <dd style="margin-left: 8">(IPv4): (TBD2).  Assigned in the IPv4 Multicast Local Network Control Block.  <br/><br/> (Note in draft: alternatively, we could use 224.0.0.1, currently defined as All Systems on this Subnet.)</dd>
+</dl>
+<p><a href="#Constants">Section 3.4</a> defines the following UDP and TCP port, which has been assigned by IANA for use by GDNP:</p>
+<p/>
+
+<dl>
+  <dt>GDNP Listen Port:</dt>
+  <dd style="margin-left: 8">(TBD3)</dd>
+</dl>
+<p id="rfc.section.6.p.5">This document defines the General Discovery and Negotiation Protocol (GDNP). The IANA is requested to create a GDNP registry within the unused portion of the DNCP registry <a href="#I-D.ietf-homenet-dncp">[I-D.ietf-homenet-dncp]</a>.  The IANA is also requested to add two new registry tables to the newly-created GDNP registry. The two tables are the GDNP Messages table and GDNP Options table.</p>
+<p id="rfc.section.6.p.6">Initial values for these registries are given below. Future assignments are to be made through Standards Action or Specification Required <a href="#RFC5226">[RFC5226]</a>. Assignments for each registry consist of a type code value, a name and a document where the usage is defined.</p>
+<p id="rfc.section.6.p.7">Note to the RFC Editor: In the following tables and in the body of this document, the values G0, G1, etc., should be replaced by the assigned values.</p>
+<p id="rfc.section.6.p.8">GDNP Messages table. The values in this table are 16-bit unsigned integers. The following initial values are assigned in <a href="#GDNPMessages">Section 3.6</a> in this document:</p>
+<pre>      Type  |          Name               |   RFCs
+   ---------+-----------------------------+------------
+        G0  |Reserved                     | this document
+        G1  |Discovery Message            | this document
+        G2  |Response Message             | this document
+        G3  |Request Message              | this document
+        G4  |Negotiation Message          | this document
+        G5  |Negotiation-ending Message   | this document
+        G6  |Confirm-waiting Message      | this document
+     G7~31  |reserved for future messages | 
+</pre>
+<p/>
+<p id="rfc.section.6.p.10">GDNP Options table. The values in this table are 16-bit unsigned integers. The following initial values are assigned in <a href="#GDNPOptions">Section 3.7</a> and <a href="#ObjOption">Section 3.8.1</a> in this document:</p>
+<pre>      Type  |          Name               |   RFCs
+   ---------+-----------------------------+------------
+       G32  |Divert Option                | this document
+       G33  |Accept Option                | this document
+       G34  |Decline Option               | this document
+       G35  |Waiting Time Option          | this document 
+       G36  |Device Identity Option       | this document
+       G37  |Locator IPv4 Address Option  | this document
+       G38  |Locator IPv6 Address Option  | this document
+       G39  |Locator FQDN Option          | this document
+    G40~63  |Reserved for future GDNP     |  
+            |General Options              |
+    G64~127 |Reserved for future GDNP     |  
+            |Objective Options            |
+    G128~159|Vendor Specific Options      | this document
+    G160~175|Reserved for future use      |
+    G176~191|Experimental Options         | this document
+    G192~???|Reserved for future use      |  
+</pre>
+<p/>
+<h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#ack" id="ack">Acknowledgements</a></h1>
+<p id="rfc.section.7.p.1">A major contribution to the original version of this document was made by Sheng Jiang.</p>
+<p id="rfc.section.7.p.2">Valuable comments were received from Michael Behringer, Jeferson Campos Nobre, Laurent Ciavaglia, Zongpeng Du, Yu Fu, Zhenbin Li, Dimitri Papadimitriou, Michael Richardson, Markus Stenberg, Rene Struik, Dacheng Zhang, and other participants in the NMRG research group and the ANIMA working group.</p>
+<p id="rfc.section.7.p.3">This document was produced using the xml2rfc tool <a href="#RFC2629">[RFC2629]</a>.</p>
+<h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#changes" id="changes">Change log [RFC Editor: Please remove]</a></h1>
+<p id="rfc.section.8.p.1">draft-carpenter-anima-discovery-negotiation-protocol-04, 2015-06-20: <br/><br/> Tuned wording around hierarchical structure.  <br/><br/> Changed "device" to "ASA" in many places.  <br/><br/> Reformulated requirements to be clear that the ASA is the main customer for signaling.  <br/><br/> Added requirement for flooding unsolicited synch, and added it to protocol spec.  <br/><br/> Requirements clarified, expanded and rearranged following design team discussion.  <br/><br/> Clarified that GDNP discovery must not be a prerequisite for GDNP negotiation or synchronization (resolved issue 13).  <br/><br/> Specified flag bits for objective options (resolved issue 15).  <br/><br/> Clarified usage of ACP vs TLS/DTLS and TCP vs UDP (resolved issues 9,10,11).  <br/><br/> Editorial improvements.</p>
+<p id="rfc.section.8.p.2">draft-carpenter-anima-discovery-negotiation-protocol-03, 2015-04-20: <br/><br/> Removed intrinsic security, required external security <br/><br/> Format changes to allow ADNCP co-existence <br/><br/> Recognized DNS-SD as alternative discovery method <br/><br/> Editorial improvements</p>
+<p id="rfc.section.8.p.3">draft-carpenter-anima-discovery-negotiation-protocol-02, 2015-02-19: <br/><br/> Tuned requirements to clarify scope, <br/><br/> Clarified relationship between types of objective, <br/><br/> Clarified that objectives may be simple values or complex data structures, <br/><br/> Improved description of objective options, <br/><br/> Added loop-avoidance mechanisms (loop count and default timeout, limitations on discovery relaying and on unsolicited responses), <br/><br/> Allow multiple discovery objectives in one response, <br/><br/> Provided for missing or multiple discovery responses, <br/><br/> Indicated how modes such as "dry run" should be supported, <br/><br/> Minor editorial and technical corrections and clarifications, <br/><br/> Reorganized future work list. </p>
+<p id="rfc.section.8.p.4">draft-carpenter-anima-discovery-negotiation-protocol-01, restructured the logical flow of the document, updated to describe synchronization completely, add unsolicited responses, numerous corrections and clarifications, expanded future work list, 2015-01-06. </p>
+<p id="rfc.section.8.p.5">draft-carpenter-anima-discovery-negotiation-protocol-00, combination of draft-jiang-config-negotiation-ps-03 and draft-jiang-config-negotiation-protocol-02, 2014-10-08.</p>
+<h1 id="rfc.references"><a href="#rfc.references">9.</a> References</h1>
+<h1 id="rfc.references.1"><a href="#rfc.references.1">9.1.</a> Normative References</h1>
+<table>
+  <tbody>
+    <tr>
+      <td class="reference">
+        <b id="RFC2119">[RFC2119]</b>
+      </td>
+      <td class="top"><a href="mailto:sob@harvard.edu" title="Harvard University">Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, March 1997.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC4086">[RFC4086]</b>
+      </td>
+      <td class="top"><a>Eastlake, D.</a>, <a>Schiller, J.</a> and <a>S. Crocker</a>, "<a href="http://tools.ietf.org/html/rfc4086">Randomness Requirements for Security</a>", BCP 106, RFC 4086, June 2005.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5246">[RFC5246]</b>
+      </td>
+      <td class="top"><a>Dierks, T.</a> and <a>E. Rescorla</a>, "<a href="http://tools.ietf.org/html/rfc5246">The Transport Layer Security (TLS) Protocol Version 1.2</a>", RFC 5246, August 2008.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5280">[RFC5280]</b>
+      </td>
+      <td class="top"><a>Cooper, D.</a>, <a>Santesson, S.</a>, <a>Farrell, S.</a>, <a>Boeyen, S.</a>, <a>Housley, R.</a> and <a>W. Polk</a>, "<a href="http://tools.ietf.org/html/rfc5280">Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</a>", RFC 5280, May 2008.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6347">[RFC6347]</b>
+      </td>
+      <td class="top"><a>Rescorla, E.</a> and <a>N. Modadugu</a>, "<a href="http://tools.ietf.org/html/rfc6347">Datagram Transport Layer Security Version 1.2</a>", RFC 6347, January 2012.</td>
+    </tr>
+  </tbody>
+</table>
+<h1 id="rfc.references.2"><a href="#rfc.references.2">9.2.</a> Informative References</h1>
+<table>
+  <tbody>
+    <tr>
+      <td class="reference">
+        <b id="I-D.behringer-anima-autonomic-control-plane">[I-D.behringer-anima-autonomic-control-plane]</b>
+      </td>
+      <td class="top"><a>Behringer, M.</a>, <a>Bjarnason, S.</a>, <a>BL, B.</a> and <a>T. Eckert</a>, "<a href="http://tools.ietf.org/html/draft-behringer-anima-autonomic-control-plane-02">An Autonomic Control Plane</a>", Internet-Draft draft-behringer-anima-autonomic-control-plane-02, March 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.behringer-anima-reference-model">[I-D.behringer-anima-reference-model]</b>
+      </td>
+      <td class="top"><a>Behringer, M.</a>, <a>Carpenter, B.</a>, <a>Eckert, T.</a>, <a>Ciavaglia, L.</a> and <a>B. Liu</a>, "<a href="http://tools.ietf.org/html/draft-behringer-anima-reference-model-02">A Reference Model for Autonomic Networking</a>", Internet-Draft draft-behringer-anima-reference-model-02, June 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.chaparadza-intarea-igcp">[I-D.chaparadza-intarea-igcp]</b>
+      </td>
+      <td class="top"><a>Behringer, M.</a>, <a>Chaparadza, R.</a>, <a>Petre, R.</a>, <a>Li, X.</a> and <a>H. Mahkonen</a>, "<a href="http://tools.ietf.org/html/draft-chaparadza-intarea-igcp-00">IP based Generic Control Protocol (IGCP)</a>", Internet-Draft draft-chaparadza-intarea-igcp-00, July 2011.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.eckert-anima-stable-connectivity">[I-D.eckert-anima-stable-connectivity]</b>
+      </td>
+      <td class="top"><a>Eckert, T.</a> and <a>M. Behringer</a>, "<a href="http://tools.ietf.org/html/draft-eckert-anima-stable-connectivity-01">Using Autonomic Control Plane for Stable Connectivity of Network OAM</a>", Internet-Draft draft-eckert-anima-stable-connectivity-01, March 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-dnssd-requirements">[I-D.ietf-dnssd-requirements]</b>
+      </td>
+      <td class="top"><a>Lynn, K.</a>, <a>Cheshire, S.</a>, <a>Blanchet, M.</a> and <a>D. Migault</a>, "<a href="http://tools.ietf.org/html/draft-ietf-dnssd-requirements-06">Requirements for Scalable DNS-SD/mDNS Extensions</a>", Internet-Draft draft-ietf-dnssd-requirements-06, March 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-homenet-dncp">[I-D.ietf-homenet-dncp]</b>
+      </td>
+      <td class="top"><a>Stenberg, M.</a> and <a>S. Barth</a>, "<a href="http://tools.ietf.org/html/draft-ietf-homenet-dncp-05">Distributed Node Consensus Protocol</a>", Internet-Draft draft-ietf-homenet-dncp-05, June 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-homenet-hncp">[I-D.ietf-homenet-hncp]</b>
+      </td>
+      <td class="top"><a>Stenberg, M.</a>, <a>Barth, S.</a> and <a>P. Pfister</a>, "<a href="http://tools.ietf.org/html/draft-ietf-homenet-hncp-06">Home Networking Control Protocol</a>", Internet-Draft draft-ietf-homenet-hncp-06, June 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-netconf-restconf">[I-D.ietf-netconf-restconf]</b>
+      </td>
+      <td class="top"><a>Bierman, A.</a>, <a>Bjorklund, M.</a> and <a>K. Watsen</a>, "<a href="http://tools.ietf.org/html/draft-ietf-netconf-restconf-05">RESTCONF Protocol</a>", Internet-Draft draft-ietf-netconf-restconf-05, June 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.liang-iana-pen">[I-D.liang-iana-pen]</b>
+      </td>
+      <td class="top"><a>Liang, P.</a>, <a>Melnikov, A.</a> and <a>D. Conrad</a>, "<a href="http://tools.ietf.org/html/draft-liang-iana-pen-05">Private Enterprise Number (PEN) practices and Internet Assigned Numbers Authority (IANA) registration considerations</a>", Internet-Draft draft-liang-iana-pen-05, March 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.pritikin-anima-bootstrapping-keyinfra">[I-D.pritikin-anima-bootstrapping-keyinfra]</b>
+      </td>
+      <td class="top"><a>Pritikin, M.</a>, <a>Behringer, M.</a> and <a>S. Bjarnason</a>, "<a href="http://tools.ietf.org/html/draft-pritikin-anima-bootstrapping-keyinfra-01">Bootstrapping Key Infrastructures</a>", Internet-Draft draft-pritikin-anima-bootstrapping-keyinfra-01, February 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.stenberg-anima-adncp">[I-D.stenberg-anima-adncp]</b>
+      </td>
+      <td class="top"><a>Stenberg, M.</a>, "<a href="http://tools.ietf.org/html/draft-stenberg-anima-adncp-00">Autonomic Distributed Node Consensus Protocol</a>", Internet-Draft draft-stenberg-anima-adncp-00, March 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC2205">[RFC2205]</b>
+      </td>
+      <td class="top"><a href="mailto:Braden@ISI.EDU" title="USC Information Sciences Institute">Braden, B.</a>, <a href="mailto:lixia@cs.ucla.edu" title="UCLA Computer Science Department">Zhang, L.</a>, <a href="mailto:Berson@ISI.EDU" title="USC Information Sciences Institute">Berson, S.</a>, <a href="mailto:Herzog@WATSON.IBM.COM" title="IBM T. J. Watson Research Center">Herzog, S.</a> and <a href="mailto:jamin@EECS.UMICH.EDU" title="University of Michigan">S. Jamin</a>, "<a href="http://tools.ietf.org/html/rfc2205">Resource ReSerVation Protocol (RSVP) -- Version 1 Functional Specification</a>", RFC 2205, September 1997.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC2608">[RFC2608]</b>
+      </td>
+      <td class="top"><a href="mailto:Erik.Guttman@sun.com" title="Sun Microsystems">Guttman, E.</a>, <a href="mailto:cperkins@sun.com" title="Sun Microsystems">Perkins, C.</a>, <a href="mailto:veizades@home.net" title="@Home Network">Veizades, J.</a> and <a href="mailto:mday@vinca.com" title="Vinca Corporation.">M. Day</a>, "<a href="http://tools.ietf.org/html/rfc2608">Service Location Protocol, Version 2</a>", RFC 2608, June 1999.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC2629">[RFC2629]</b>
+      </td>
+      <td class="top"><a href="mailto:mrose@not.invisible.net" title="Invisible Worlds, Inc.">Rose, M.</a>, "<a href="http://tools.ietf.org/html/rfc2629">Writing I-Ds and RFCs using XML</a>", RFC 2629, June 1999.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC2865">[RFC2865]</b>
+      </td>
+      <td class="top"><a>Rigney, C.</a>, <a>Willens, S.</a>, <a>Rubens, A.</a> and <a>W. Simpson</a>, "<a href="http://tools.ietf.org/html/rfc2865">Remote Authentication Dial In User Service (RADIUS)</a>", RFC 2865, June 2000.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC3209">[RFC3209]</b>
+      </td>
+      <td class="top"><a>Awduche, D.</a>, <a>Berger, L.</a>, <a>Gan, D.</a>, <a>Li, T.</a>, <a>Srinivasan, V.</a> and <a>G. Swallow</a>, "<a href="http://tools.ietf.org/html/rfc3209">RSVP-TE: Extensions to RSVP for LSP Tunnels</a>", RFC 3209, December 2001.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC3315">[RFC3315]</b>
+      </td>
+      <td class="top"><a>Droms, R.</a>, <a>Bound, J.</a>, <a>Volz, B.</a>, <a>Lemon, T.</a>, <a>Perkins, C.</a> and <a>M. Carney</a>, "<a href="http://tools.ietf.org/html/rfc3315">Dynamic Host Configuration Protocol for IPv6 (DHCPv6)</a>", RFC 3315, July 2003.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC3416">[RFC3416]</b>
+      </td>
+      <td class="top"><a>Presuhn, R.</a>, "<a href="http://tools.ietf.org/html/rfc3416">Version 2 of the Protocol Operations for the Simple Network Management Protocol (SNMP)</a>", STD 62, RFC 3416, December 2002.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC4861">[RFC4861]</b>
+      </td>
+      <td class="top"><a>Narten, T.</a>, <a>Nordmark, E.</a>, <a>Simpson, W.</a> and <a>H. Soliman</a>, "<a href="http://tools.ietf.org/html/rfc4861">Neighbor Discovery for IP version 6 (IPv6)</a>", RFC 4861, September 2007.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5226">[RFC5226]</b>
+      </td>
+      <td class="top"><a>Narten, T.</a> and <a>H. Alvestrand</a>, "<a href="http://tools.ietf.org/html/rfc5226">Guidelines for Writing an IANA Considerations Section in RFCs</a>", BCP 26, RFC 5226, May 2008.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5971">[RFC5971]</b>
+      </td>
+      <td class="top"><a>Schulzrinne, H.</a> and <a>R. Hancock</a>, "<a href="http://tools.ietf.org/html/rfc5971">GIST: General Internet Signalling Transport</a>", RFC 5971, October 2010.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6206">[RFC6206]</b>
+      </td>
+      <td class="top"><a>Levis, P.</a>, <a>Clausen, T.</a>, <a>Hui, J.</a>, <a>Gnawali, O.</a> and <a>J. Ko</a>, "<a href="http://tools.ietf.org/html/rfc6206">The Trickle Algorithm</a>", RFC 6206, March 2011.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6241">[RFC6241]</b>
+      </td>
+      <td class="top"><a>Enns, R.</a>, <a>Bjorklund, M.</a>, <a>Schoenwaelder, J.</a> and <a>A. Bierman</a>, "<a href="http://tools.ietf.org/html/rfc6241">Network Configuration Protocol (NETCONF)</a>", RFC 6241, June 2011.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6733">[RFC6733]</b>
+      </td>
+      <td class="top"><a>Fajardo, V.</a>, <a>Arkko, J.</a>, <a>Loughney, J.</a> and <a>G. Zorn</a>, "<a href="http://tools.ietf.org/html/rfc6733">Diameter Base Protocol</a>", RFC 6733, October 2012.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6762">[RFC6762]</b>
+      </td>
+      <td class="top"><a>Cheshire, S.</a> and <a>M. Krochmal</a>, "<a href="http://tools.ietf.org/html/rfc6762">Multicast DNS</a>", RFC 6762, February 2013.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6763">[RFC6763]</b>
+      </td>
+      <td class="top"><a>Cheshire, S.</a> and <a>M. Krochmal</a>, "<a href="http://tools.ietf.org/html/rfc6763">DNS-Based Service Discovery</a>", RFC 6763, February 2013.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6887">[RFC6887]</b>
+      </td>
+      <td class="top"><a>Wing, D.</a>, <a>Cheshire, S.</a>, <a>Boucadair, M.</a>, <a>Penno, R.</a> and <a>P. Selkirk</a>, "<a href="http://tools.ietf.org/html/rfc6887">Port Control Protocol (PCP)</a>", RFC 6887, April 2013.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7228">[RFC7228]</b>
+      </td>
+      <td class="top"><a>Bormann, C.</a>, <a>Ersue, M.</a> and <a>A. Keranen</a>, "<a href="http://tools.ietf.org/html/rfc7228">Terminology for Constrained-Node Networks</a>", RFC 7228, May 2014.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7575">[RFC7575]</b>
+      </td>
+      <td class="top"><a>Behringer, M.</a>, <a>Pritikin, M.</a>, <a>Bjarnason, S.</a>, <a>Clemm, A.</a>, <a>Carpenter, B.</a>, <a>Jiang, S.</a> and <a>L. Ciavaglia</a>, "<a href="http://tools.ietf.org/html/rfc7575">Autonomic Networking: Definitions and Design Goals</a>", RFC 7575, June 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7576">[RFC7576]</b>
+      </td>
+      <td class="top"><a>Jiang, S.</a>, <a>Carpenter, B.</a> and <a>M. Behringer</a>, "<a href="http://tools.ietf.org/html/rfc7576">General Gap Analysis for Autonomic Networking</a>", RFC 7576, June 2015.</td>
+    </tr>
+  </tbody>
+</table>
+<h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> <a href="#current" id="current">Capability Analysis of Current Protocols</a></h1>
+<p id="rfc.section.A.p.1">This appendix discusses various existing protocols with properties related to the above negotiation and synchronisation requirements. The purpose is to evaluate whether any existing protocol, or a simple combination of existing protocols, can meet those requirements.</p>
+<p id="rfc.section.A.p.2">Numerous protocols include some form of discovery, but these all appear to be very specific in their applicability. Service Location Protocol (SLP) <a href="#RFC2608">[RFC2608]</a> provides service discovery for managed networks, but requires configuration of its own servers. DNS-SD <a href="#RFC6763">[RFC6763]</a> combined with mDNS <a href="#RFC6762">[RFC6762]</a> provides service discovery for small networks with a single link layer. <a href="#I-D.ietf-dnssd-requirements">[I-D.ietf-dnssd-requirements]</a> aims to extend this to larger autonomous networks. However, both SLP and DNS-SD appear to target primarily application layer services, not the layer 2 and 3 objectives relevant to basic network configuration. Both SLP and DNS-SD are text-based protocols. </p>
+<p id="rfc.section.A.p.3">Routing protocols are mainly one-way information announcements. The receiver makes independent decisions based on the received information and there is no direct feedback information to the announcing peer. This remains true even though the protocol is used in both directions between peer routers; there is state synchronization, but no negotiation, and each peer runs its route calculations independently.</p>
+<p id="rfc.section.A.p.4">Simple Network Management Protocol (SNMP) <a href="#RFC3416">[RFC3416]</a> uses a command/response model not well suited for peer negotiation. Network Configuration Protocol (NETCONF) <a href="#RFC6241">[RFC6241]</a> uses an RPC model that does allow positive or negative responses from the target system, but this is still not adequate for negotiation.</p>
+<p id="rfc.section.A.p.5">There are various existing protocols that have elementary negotiation abilities, such as Dynamic Host Configuration Protocol for IPv6 (DHCPv6) <a href="#RFC3315">[RFC3315]</a>, Neighbor Discovery (ND) <a href="#RFC4861">[RFC4861]</a>, Port Control Protocol (PCP) <a href="#RFC6887">[RFC6887]</a>, Remote Authentication Dial In User Service (RADIUS) <a href="#RFC2865">[RFC2865]</a>, Diameter <a href="#RFC6733">[RFC6733]</a>, etc. Most of them are configuration or management protocols. However, they either provide only a simple request/response model in a master/slave context or very limited negotiation abilities.</p>
+<p id="rfc.section.A.p.6">There are some signaling protocols with an element of negotiation.  For example Resource ReSerVation Protocol (RSVP) <a href="#RFC2205">[RFC2205]</a> was designed for negotiating quality of service parameters along the path of a unicast or multicast flow. RSVP is a very specialised protocol aimed at end-to-end flows. However, it has some flexibility, having been extended for MPLS label distribution <a href="#RFC3209">[RFC3209]</a>.  A more generic design is General Internet Signalling Transport (GIST) <a href="#RFC5971">[RFC5971]</a>, but it is complex, tries to solve many problems, and is also aimed at per-flow signaling across many hops rather than at device-to-device signaling.  However, we cannot completely exclude extended RSVP or GIST as a synchronization and negotiation protocol. They do not appear to be directly useable for peer discovery.</p>
+<p id="rfc.section.A.p.7">We now consider two protocols that are works in progress at the time of this writing. Firstly, RESTCONF <a href="#I-D.ietf-netconf-restconf">[I-D.ietf-netconf-restconf]</a> is a protocol intended to convey NETCONF information expressed in the YANG language via HTTP, including the ability to transit HTML intermediaries. While this is a powerful approach in the context of centralised configuration of a complex network, it is not well adapted to efficient interactive negotiation between peer devices, especially simple ones that are unlikely to include YANG processing already.</p>
+<p id="rfc.section.A.p.8">Secondly, we consider Distributed Node Consensus Protocol (DNCP) <a href="#I-D.ietf-homenet-dncp">[I-D.ietf-homenet-dncp]</a>. This is defined as a generic form of state synchronization protocol, with a proposed usage profile being the Home Networking Control Protocol (HNCP) <a href="#I-D.ietf-homenet-hncp">[I-D.ietf-homenet-hncp]</a> for configuring Homenet routers. A specific application of DNCP for autonomic networking was proposed in <a href="#I-D.stenberg-anima-adncp">[I-D.stenberg-anima-adncp]</a>.  </p>
+<p id="rfc.section.A.p.9">Specific features of DNCP include: </p>
+
+<ul>
+  <li>Every participating node has a unique node identifier.</li>
+  <li>DNCP messages are encoded as a sequence of TLV objects, sent over unicast UDP or TCP, with or without (D)TLS security.</li>
+  <li>Multicast is used only for discovery of DNCP neighbors when lower security is acceptable.</li>
+  <li>Synchronization of state is maintained by a flooding process using the Trickle algorithm.  There is no bilateral synchronization or negotiation capability.</li>
+  <li>The HNCP profile of DNCP is designed to operate between directly connected neighbors on a shared link using UDP and link-local IPv6 addresses.</li>
+</ul>
+
+<p> DNCP does not meet the needs of a general negotiation protocol, because it is designed just for flooding synchronization. Also, in its HNCP profile it is limited to link-local messages and to IPv6. However, at the minimum it is a very interesting test case for this style of interaction between devices without needing a central authority, and it is a proven method of network-wide state synchronization by flooding.</p>
+<p id="rfc.section.A.p.10">A proposal was made some years ago for an IP based Generic Control Protocol (IGCP) <a href="#I-D.chaparadza-intarea-igcp">[I-D.chaparadza-intarea-igcp]</a>. This was aimed at information exchange and negotiation but not directly at peer discovery. However, it has many points in common with the present work.</p>
+<p id="rfc.section.A.p.11">None of the above solutions appears to completely meet the needs of generic discovery, state synchronization and negotiation in a single solution.  Neither is there an obvious combination of protocols that does so.  Therefore, this document proposes the design of a protocol that does meet those needs. However, this proposal needs to be compared with alternatives such as extension and adaptation of GIST or DNCP, or combination with IGCP.</p>
+<h1 id="rfc.authors">
+  <a href="#rfc.authors">Authors' Addresses</a>
+</h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Brian Carpenter</span> 
+	  <span class="n hidden">
+		<span class="family-name">Carpenter</span>
+	  </span>
+	</span>
+	<span class="org vcardline"></span>
+	<span class="adr">
+	  <span class="vcardline">Department of Computer Science</span>
+<span class="vcardline">University of Auckland</span>
+<span class="vcardline">PB 92019</span>
+
+	  <span class="vcardline">
+		<span class="locality">Auckland</span>,  
+		<span class="region"></span>
+		<span class="code">1142</span>
+	  </span>
+	  <span class="country-name vcardline">New Zealand</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:brian.e.carpenter@gmail.com">brian.e.carpenter@gmail.com</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Bing Liu</span> 
+	  <span class="n hidden">
+		<span class="family-name">Liu</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Huawei Technologies Co., Ltd</span>
+	<span class="adr">
+	  <span class="vcardline">Q14, Huawei Campus</span>
+<span class="vcardline">No.156 Beiqing Road</span>
+
+	  <span class="vcardline">
+		<span class="locality">Hai-Dian District, Beijing</span>,  
+		<span class="region"></span>
+		<span class="code">100095</span>
+	  </span>
+	  <span class="country-name vcardline">P.R. China</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:leo.liubing@huawei.com">leo.liubing@huawei.com</a></span>
+
+  </address>
+</div>
+
+</body>
+</html>
