@@ -551,7 +551,8 @@
                         
             <list style="symbols">
             <t>There may be some network parameters for which a more traditional flooding
-            mechanism such as ADNCP <xref target="I-D.stenberg-anima-adncp"/> is
+            mechanism such as ADNCP <xref target="I-D.ietf-homenet-dncp"/>
+            <xref target="I-D.stenberg-anima-adncp"/> is
             considered more appropriate. GDNP can coexist with ADNCP.
             </t>
             </list></t>
@@ -1701,7 +1702,7 @@ specification of the objective.</t>
             
             <t>8. Consideration of ADNCP proposal.
             <vspace blankLines="1"/>
-            RESOLVED by adding optional use of DNCP for flooding-type synchronization.
+            RESOLVED by adding optional use of ADNCP for flooding-type synchronization.
             <vspace blankLines="1"/></t> 
             
             <t>9. Clarify how a GDNP instance knows whether it is running inside the ACP. (Sheng)
@@ -1924,7 +1925,7 @@ specification of the objective.</t>
     </section>
 
     <section anchor="changes" title="Change log [RFC Editor: Please remove]">
-    <t>draft-carpenter-anima-discovery-negotiation-protocol-04, 2015-06-20:
+    <t>draft-carpenter-anima-discovery-negotiation-protocol-04, 2015-06-21:
       <vspace blankLines="1"/>
       Tuned wording around hierarchical structure.
       <vspace blankLines="1"/>
@@ -1934,6 +1935,7 @@ specification of the objective.</t>
       for signaling.
       <vspace blankLines="1"/>
       Added requirement for flooding unsolicited synch, and added it to protocol spec.
+      Recognized DNCP as alternative for flooding synch data.
       <vspace blankLines="1"/>
       Requirements clarified, expanded and rearranged following design team discussion.
       <vspace blankLines="1"/>
@@ -1944,6 +1946,8 @@ specification of the objective.</t>
       <vspace blankLines="1"/>
       Clarified usage of ACP vs TLS/DTLS and TCP vs UDP (resolved issues 9,10,11).
       <vspace blankLines="1"/>
+      Updated DNCP description from latest DNCP draft.
+      <vspace blankLines="1"/>
       Editorial improvements.</t>
       <t>draft-carpenter-anima-discovery-negotiation-protocol-03, 2015-04-20:
       <vspace blankLines="1"/>
@@ -1951,7 +1955,7 @@ specification of the objective.</t>
       <vspace blankLines="1"/>
       Format changes to allow ADNCP co-existence
       <vspace blankLines="1"/>
-      Recognized DNS-SD as alternative discovery method
+      Recognized DNS-SD as alternative discovery method.
       <vspace blankLines="1"/>
       Editorial improvements</t>
       <t>draft-carpenter-anima-discovery-negotiation-protocol-02, 2015-02-19:
@@ -2098,8 +2102,14 @@ specification of the objective.</t>
       Home Networking Control Protocol (HNCP) <xref target="I-D.ietf-homenet-hncp"/>
       for configuring Homenet routers. A specific application of DNCP for autonomic
       networking was proposed in <xref target="I-D.stenberg-anima-adncp"/>.
-      </t><t>
-      Specific features of DNCP include:
+      </t>
+      <t>DNCP "is designed to provide a way for each participating node to
+         publish a set of TLV (Type-Length-Value) tuples, and to provide a
+         shared and common view about the data published... DNCP is most suitable
+         for data that changes only infrequently... If constant rapid
+         state changes are needed, the preferable choice is to use an
+         additional point-to-point channel..."</t>
+      <t>Specific features of DNCP include:
       <list style="symbols">
           <t>Every participating node has a unique node identifier.</t>
           
@@ -2116,7 +2126,7 @@ specification of the objective.</t>
           on a shared link using UDP and link-local IPv6 addresses.</t>
         </list>
       DNCP does not meet the needs of a general negotiation protocol, because it is designed
-      just for flooding synchronization. Also, in its HNCP profile it is limited to link-local
+      specifically for flooding synchronization. Also, in its HNCP profile it is limited to link-local
       messages and to IPv6. However, at the minimum it is a
       very interesting test case for this style of interaction between devices
       without needing a central authority, and it is a proven method of network-wide state
