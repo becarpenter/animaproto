@@ -1,0 +1,2336 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This is built from a template for a generic Internet Draft. Suggestions for
+     improvement welcome - write to Brian Carpenter, brian.e.carpenter @ gmail.com 
+     This can be converted using the Web service at http://xml.resource.org/ -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc toc="yes"?>
+<!-- You want a table of contents -->
+<?rfc symrefs="yes"?>
+<!-- Use symbolic labels for references -->
+<?rfc sortrefs="yes"?>
+<!-- This sorts the references -->
+<?rfc iprnotified="no" ?>
+<!-- Change to "yes" if someone has disclosed IPR for the draft -->
+<?rfc compact="yes"?>
+<!-- This defines the specific filename and version number of your draft (and inserts the appropriate IETF boilerplate -->
+<rfc category="std" docName="draft-ietf-anima-grasp-01" ipr="trust200902">
+  <front>
+    <title abbrev="GRASP">A Generic Autonomic Signaling Protocol (GRASP)</title>
+    
+    <author initials="C." surname="Bormann" fullname="Carsten Bormann">
+      <organization>Universit&#228;t Bremen TZI</organization>
+      <address>
+        <postal>
+          <street>Postfach 330440</street>
+          <city>D-28359 Bremen</city>
+          <country>Germany</country>
+        </postal>
+        <email>cabo@tzi.org</email>
+      </address>
+    </author>
+
+    <author fullname="Brian Carpenter" initials="B. E." surname="Carpenter" role="editor">
+      <organization abbrev="Univ. of Auckland"/>
+      <address>
+        <postal>
+          <street>Department of Computer Science</street>
+          <street>University of Auckland</street>
+          <street>PB 92019</street>
+          <city>Auckland</city>
+          <region/>
+          <code>1142</code>
+          <country>New Zealand</country>
+        </postal>
+        <email>brian.e.carpenter@gmail.com</email>
+      </address>
+    </author>
+
+
+    <author fullname="Bing Liu" initials="B." surname="Liu" role="editor">
+      <organization>Huawei Technologies Co., Ltd</organization>
+      <address>
+        <postal>
+          <street>Q14, Huawei Campus</street>
+          <street>No.156 Beiqing Road</street>
+          <city>Hai-Dian District, Beijing</city>
+          <code>100095</code>
+          <country>P.R. China</country>
+        </postal>
+        <email>leo.liubing@huawei.com</email>
+      </address>
+    </author>
+
+    <!---->
+
+    <date day="25" month="September" year="2015"/>
+
+    <abstract>
+      <t>This document establishes requirements for a signaling protocol that enables autonomic
+      devices and autonomic service agents to dynamically discover peers, to synchronize
+      state with them, and to negotiate parameter settings mutually with them. The document
+      then defines a general protocol for discovery, synchronization and negotiation,
+      while the technical objectives for specific scenarios are to be described in
+      separate documents. An Appendix briefly discusses existing protocols with
+      comparable features.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section anchor="intro" title="Introduction">
+      <t>The success of the Internet has made IP-based networks bigger and
+      more complicated. Large-scale ISP and enterprise networks have become more and more
+      problematic for human based management. Also, operational costs are growing quickly.
+      Consequently, there are increased requirements for autonomic behavior in the networks.
+      General aspects of autonomic networks are discussed in
+      <xref target="RFC7575"/>
+      and <xref target="RFC7576"/>. 
+      A reference model for autonomic networking is given in
+      <xref target="I-D.behringer-anima-reference-model"/>.
+      In order to fulfil autonomy, devices that embody autonomic service agents
+      have specific signaling requirements. In particular they need to discover each other,
+      to synchronize state with each other,
+      and to negotiate parameters and resources directly with each other.
+      There is no restriction on the type of parameters and resources concerned,
+      which include very basic information needed for addressing and routing,
+      as well as anything else that might be configured in a conventional non-autonomic network.
+      The atomic unit of synchronization or negotiation is referred to as a technical
+      objective, i.e, a configurable parameter or set of parameters 
+      (defined more precisely in <xref target="terms"/>).</t>
+
+      <t>Following this Introduction, <xref target="reqts"/> describes the requirements
+      for discovery, synchronization and negotiation.
+      Negotiation is an iterative process, requiring multiple message exchanges forming
+      a closed loop between the negotiating devices. State synchronization, when needed,
+      can be regarded as a special case of negotiation, without iteration.
+      <xref target="highlevel"/> describes a behavior model for a protocol
+      intended to support discovery, synchronization and negotiation. The
+      design of GeneRic Autonomic Signaling Protocol (GRASP) in <xref target="Overview"/>
+      of this document is mainly based on this behavior model. The relevant capabilities 
+      of various existing protocols are reviewed in <xref target="current"/>.</t>
+
+      <t>The proposed discovery mechanism is oriented towards synchronization and
+      negotiation objectives. It is based on a neighbor discovery process, but
+      also supports diversion to off-link peers. Although many negotiations will occur
+      between horizontally distributed peers, many target scenarios are hierarchical
+      networks, which is the predominant structure of current large-scale 
+      managed networks.
+      However, when a device starts up with no pre-configuration, it has no
+      knowledge of the topology. The protocol itself is capable of
+      being used in a small and/or flat network structure such as a small
+      office or home network as well as a professionally managed network.
+      Therefore, the discovery mechanism needs to be able to allow a device
+      to bootstrap itself without making any prior assumptions about network
+      structure. </t>
+
+      <t>Because GRASP can be used to perform a decision process among distributed
+      devices or between networks, it must run in a secure and strongly authenticated
+      environment. 
+      </t>
+
+      <t>It is understood that in realistic deployments, not all devices will
+      support GRASP. It is expected that some autonomic service agents will directly
+      manage a group of non-autonomic nodes, and that other non-autonomic nodes
+      will be managed traditionally. Such mixed scenarios
+      are not discussed in this specification.</t>
+    </section>
+
+    <!-- intro -->
+
+
+
+    <section anchor="reqts" title="Requirement Analysis of Discovery, Synchronization and Negotiation">
+      <t>This section discusses the requirements for discovery, negotiation
+      and synchronization capabilities. The primary user of the protocol is an autonomic service
+      agent (ASA), so the requirements are mainly expressed as the features needed by an ASA.
+      A single physical device might contain several ASAs, and a single ASA might manage
+      several technical objectives. </t>
+      
+      <t>Note that requirements for ASAs themselves, such as the processing of Intent 
+      <xref target="RFC7575"/> or interfaces for coordination between ASAs are out of scope
+      for the present document.</t>
+
+      <section title="Requirements for Discovery">
+        <t>1. ASAs may be designed to manage anything, as required in
+        <xref target="synchreq"/>. A basic requirement
+        is therefore that the protocol can represent and discover any
+        kind of technical objective among arbitrary subsets of participating nodes.</t>
+        
+        <t>In an autonomic network we must assume that when a device starts up
+        it has no information about any peer devices, the network structure,
+        or what specific role it must play. The ASA(s) inside the device are
+        in the same situation. In some cases, when a new application session
+        starts up within a device, the device or ASA may again lack
+        information about relevant peers. It might be necessary to set
+        up resources on multiple other devices, coordinated and matched to
+        each other so that there is no wasted resource. Security settings
+        might also need updating to allow for the new device or user. 
+        The relevant peers may be different for different technical
+        objectives. Therefore discovery needs to be repeated as often as
+        necessary to find peers capable of acting as counterparts for each
+        objective that a discovery initiator needs to handle.
+        From this background we derive the next three requirements:</t>
+        
+        <t>2. When an ASA first starts up, it has no knowledge of the specific network to
+        which it is attached.
+        Therefore the discovery process must be able to support any network scenario,
+        assuming only that the device concerned is bootstrapped from factory condition.
+        </t>
+        
+        <t>3. When an ASA starts up, it must require no information about any
+        peers in order to discover them.</t>
+        
+        <t>4. If an ASA supports multiple technical objectives, relevant peers may be different
+        for different discovery objectives, so discovery needs to be repeated to
+        find counterparts for each objective. Thus, there must be a mechanism by
+        which an ASA can separately discover peer ASAs for each of the
+        technical objectives that it needs to manage, whenever necessary.</t>
+       
+        <t>5. Following discovery, an ASA will normally perform negotiation
+        or synchronization for the corresponding objectives. The design
+        should allow for this by associating discovery, negotiation
+        and synchronization objectives. It may provide an optional mechanism to
+        combine discovery and negotiation/synchronization in a single call.</t>
+        
+        <t>6. Some objectives may only be significant on the local link,
+        but others may be significant across the routed network and require
+        off-link operations. Thus, the relevant peers might be immediate
+        neighbors on the same layer 2 link, or they might be more distant and
+        only accessible via layer 3. The mechanism must therefore provide both
+        on-link and off-link discovery of ASAs supporting specific technical
+        objectives.</t>
+        
+        <t>7. The discovery process should be flexible enough to allow for
+        special cases, such as the following:
+ 
+        <list style="symbols">
+        <t>In some networks, as mentioned above, there will be some
+        hierarchical structure, at least for certain synchronization or negotiation
+        objectives, but this is unknown in advance. The discovery protocol must therefore
+        operate regardless of hierarchical structure, which is an attribute of 
+        individual technical objectives
+        and not of the autonomic network as a whole. <!--A special case of discovery is that each
+        device must be able to discover its hierarchical superior for each
+        such objective that it is capable of handling.--> This is part of the more
+        general requirement to discover off-link peers.</t>
+
+        <t>During initialisation, a device must be able to establish mutual trust
+        with the rest of the network and join an authentication mechanism. Although
+        this will inevitably start with a discovery action, it is a special case
+        precisely because trust is not yet established. This topic
+        is the subject of <xref target="I-D.pritikin-anima-bootstrapping-keyinfra"/>.
+        We require that once trust has been established for a device,
+        all ASAs within the device inherit the device's credentials and are also trusted.</t>
+        <t>
+        Depending on the type of network involved, discovery of other
+        central functions might be needed, such as
+        <!--a source of Intent distribution <xref target="RFC7575"/> or -->
+        the Network Operations
+        Center (NOC) <xref target="I-D.eckert-anima-stable-connectivity"/>.
+        The protocol must be capable of supporting such discovery during initialisation,
+        as well as discovery during ongoing operation.</t>
+        </list></t>
+        <t>8. The discovery process must not generate excessive (multicast) traffic and 
+        must take account of sleeping nodes in the case of a resource-constrained network
+        <xref target="RFC7228"/>. </t>
+      </section>
+      
+      <section anchor="synchreq" title="Requirements for Synchronization and Negotiation Capability">
+        <t>As background, consider the example of routing protocols, the closest
+        approximation to autonomic networking already in widespread use. Routing
+        protocols use a largely autonomic model based on distributed devices
+        that communicate repeatedly with each other. The focus
+        is reachability, so current routing protocols mainly consider simple
+        link status, i.e., up or down, and an underlying assumption is that
+        all nodes need a consistent view of the network topology in order
+        for the routing algorithm to converge. Thus, routing is
+        mainly based on information synchronization between peers,
+        rather than on bi-directional negotiation. Other information,
+        such as latency, congestion, capacity, and particularly unused capacity,
+        would be helpful to get better path selection and utilization rate, but
+        is not normally used in distributed routing algorithms. Additionally,
+        autonomic networks need to be able to manage many more dimensions,
+        such as security settings, power saving, load balancing, etc. 
+        Status information and traffic metrics need to be shared between
+        nodes for dynamic adjustment of resources and for monitoring purposes.
+        While this might be achieved by existing protocols when they are
+        available, the new protocol needs to be able to support parameter
+        exchange, including mutual synchronization, even when no negotiation
+        as such is required. In general, these parameters do not apply to all
+        participating nodes, but only 
+        to a subset. </t>
+        
+        <t>9. A basic requirement for the protocol is therefore the
+        ability to represent, discover, synchronize and negotiate almost any
+        kind of network parameter among arbitrary subsets of participating nodes.</t>
+        
+        <t>10. Negotiation is a request/response process that must be guaranteed to terminate 
+        (with success or failure) and if necessary it must contain tie-breaking rules for 
+        each technical objective that requires them. While these must be defined specifically 
+        for each use case, the protocol should have some general mechanisms in support of loop
+        and deadlock prevention, such as hop count limits or timeouts.</t>
+        
+        <t>11. Synchronization might concern small groups of nodes or very large groups.
+        Different solutions might be needed at different scales. </t>
+        
+        <t>12. To avoid "reinventing the wheel", the protocol should be able to carry 
+        the message formats used by existing configuration protocols (such as NETCONF/YANG)
+        in cases where that is convenient.</t>
+        
+        <t>13. Human intervention in complex situations is costly and error-prone.
+        Therefore, synchronization or negotiation of parameters without human
+        intervention is desirable whenever the coordination of multiple devices can improve
+        overall network performance. It therefore follows that the protocol, as part of the
+        Autonomic Networking Infrastructure, must be capable of running in any device 
+        that would otherwise need human intervention.</t>
+
+        <t>14. Human intervention in large networks is often replaced by use of a
+        top-down network management system (NMS). It therefore follows that 
+        the protocol, as part of the Autonomic Networking Infrastructure, must
+        be capable of running in any device that would otherwise be managed by 
+        an NMS, and that it can co-exist with an NMS, and with protocols
+        such as SNMP and NETCONF.</t>
+        
+        <t>15. Some features are expected to be implemented by individual ASAs,
+        but the protocol must be general enough to allow them: 
+          <list style="symbols">
+         
+          <t>Dependencies and conflicts: In order to
+          decide a configuration on a given device, the device may need
+          information from neighbors. This can be established through the
+          negotiation procedure, or through synchronization if that
+          is sufficient. However, a given item in a neighbor
+          may depend on other information from its own neighbors, which may
+          need another negotiation or synchronization procedure to obtain or decide.
+          Therefore, there are potential dependencies and conflicts among negotiation or synchronization
+          procedures. Resolving dependencies and conflicts is a matter for the individual ASAs involved. 
+          To allow this, there need to be clear boundaries and convergence
+          mechanisms for negotiations. Also some mechanisms are needed to avoid
+          loop dependencies. In such a case, the protocol's role is limited to
+          signaling between ASAs. </t>
+
+          <t>Recovery from faults and identification of faulty devices should be
+          as automatic as possible. The protocol's role is limited
+          to the ability to handle discovery, synchronization and negotiation at
+          any time, in case an ASA detects an anomaly such
+          as a negotiation counterpart failing.</t>
+          
+          <t>Since the goal is to minimize human intervention, it is necessary that the
+          network can in effect "think ahead" before changing its parameters. In
+          other words there must be a possibility of forecasting the effect of a
+          change by a "dry run" mechanism before actually installing the
+          change. This will be an application of the protocol rather than a feature
+          of the protocol itself. </t>
+        
+          <t>Management logging, monitoring, alerts and tools for intervention are required.
+          However, these can only be features of individual ASAs. 
+          Another document <xref target="I-D.eckert-anima-stable-connectivity"/> discusses how
+          such agents may be linked into conventional OAM systems via an Autonomic Control Plane
+          <xref target="I-D.behringer-anima-autonomic-control-plane"/>. </t>
+          </list></t>
+        
+        <t>16. The protocol will be able to deal with a wide variety of
+        technical objectives, covering any type of network parameter.
+        Therefore the protocol will need either an explicit information model
+        describing its messages, or at least a flexible and easily extensible message
+        format. One design consideration is whether to adopt an existing
+        information model or to design a new one. </t>
+
+      </section>
+      
+      <section title="Specific Technical Requirements">
+      
+        <t>17. It should be convenient for ASA designers to define new technical objectives
+        and for programmers to express them, without excessive impact on
+        run-time efficiency and footprint. The classes of device in which the protocol
+        might run is discussed in <xref target="I-D.behringer-anima-reference-model"/>.</t>
+        
+        <t>18. The protocol should be easily extensible in case the initially defined discovery,
+        synchronization and negotiation mechanisms prove to be insufficient. </t>
+          
+        <t>19. To be a generic platform, the protocol payload format should be 
+        independent of the transport protocol or IP version.
+        In particular, it should be able to run over IPv6 or IPv4.
+        However, some functions, such as multicasting or broadcasting on
+        a link, might need to be IP version dependent. In case of doubt, IPv6 should
+        be preferred.</t>
+          
+        <t>20. The protocol must be able to access off-link counterparts via routable addresses,
+        i.e., must not be restricted to link-local operation.</t>
+          
+        <t>21. It must also be possible for an external discovery mechanism
+        to be used, if appropriate for a given technical objective. In other words, GRASP discovery
+        must not be a prerequisite for GRASP negotiation or synchronization; the prerequisite 
+        is discovering a peer's locator by any method. </t>
+        
+        <t>22. ASAs and the signaling protocol engine need to run asynchronously when wait states occur.</t>
+        
+        <t>23. Intent: There must be
+        provision for general Intent rules to be applied by all devices in
+        the network (e.g., security rules, prefix length, resource sharing
+        rules). However, Intent distribution might not use the signaling
+        protocol itself, but its design should not exclude such use. </t>
+        
+        <t>24. Management monitoring, alerts and intervention:
+        Devices should be able to report to a monitoring
+        system. Some events must be able to generate operator alerts and
+        some provision for emergency intervention must be possible (e.g.
+        to freeze synchronization or negotiation in a mis-behaving device). These features
+        might not use the signaling protocol itself, but its design should not exclude such use.</t>
+        
+        <t>25. The protocol needs to be fully secured against forged messages and
+        man-in-the middle attacks, and secured as much as reasonably possible
+        against denial of service attacks. It needs to be capable of
+        encryption in order to resist unwanted monitoring, although this
+        capability may not be required in all deployments. However, it is not
+        required that the protocol itself provides these security features; it may
+        depend on an existing secure environment. </t>
+        
+       </section>
+    </section>
+
+    <!-- reqts -->
+
+   
+
+    <section anchor="Overview" title="GRASP Protocol Overview">
+       
+      
+      <section anchor="terms" title="Terminology">
+         
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in
+      <xref target="RFC2119"/> when they appear in ALL CAPS. When these words
+      are not in ALL CAPS (such as "should" or "Should"), they have their
+      usual English meanings, and are not to be interpreted as <xref target="RFC2119"/> key words.</t> 
+      
+      <t>This document uses terminology defined in <xref target="RFC7575"/>.</t>
+  
+        <t>The following additional terms are used throughout this document:
+          <list style="symbols">
+          <t>Autonomic Device: identical to Autonomic Node.</t>
+          <t>Discovery: a process by which an ASA discovers peers
+          according to a specific discovery objective. The discovery results
+          may be different according to the different discovery objectives.
+          The discovered peers may later be used as negotiation
+          counterparts or as sources of synchronization data. </t>
+            
+          <t>Negotiation: a process by which two (or more) ASAs interact
+          iteratively to agree on parameter settings that best satisfy the
+          objectives of one or more ASAs.</t>
+
+          <t>State Synchronization: a process by which two (or more) ASAs
+          interact to agree on the current state of parameter
+          values stored in each ASA. This is a special case of negotiation
+          in which information is sent but the ASAs do not request
+          their peers to change parameter settings. All other definitions
+          apply to both negotiation and synchronization. </t>
+                    
+          <t>Technical Objective (usually abbreviated as Objective):
+          A technical objective is a configurable parameter or set of parameters
+          of some kind, which occurs in three contexts: Discovery, Negotiation
+          and Synchronization. In the protocol, an objective is represented by an
+          identifier (actually a GRASP option number) and if relevant a value.
+          Normally, a given objective will occur during discovery and negotiation,
+          or during discovery and synchronization, but not in all three contexts.
+          
+            <list style="symbols">
+            
+            <t>One ASA may support multiple independent objectives.</t>
+            
+            <t>The parameter described by a given objective is naturally based
+            on a specific service or function or action. It may in principle be
+            anything that can be set to a specific logical, numerical or string
+            value, or a more complex data structure, by a network node.
+            That node is generally expected to contain an ASA
+            which may itself manage other nodes.</t>
+
+            <t>Discovery Objective: if a node needs to synchronize or negotiate
+            a specific objective but does not know a peer that supports this objective,
+            it starts a discovery process. The objective is called a Discovery Objective
+            during this process.</t>
+            
+            <!-- A discovery objective may be in one-to-one correspondence
+            with a synchronization objective or a negotiation objective, or it may
+            correspond to a certain group of such objectives. -->
+          
+            <t>Synchronization Objective: an objective whose specific technical content
+            needs to be synchronized among two or more ASAs. </t>
+          
+            <t>Negotiation Objective: an objective whose specific technical content
+            needs to be decided in coordination with another ASA. </t>
+          
+            </list></t>
+          
+          <t>Discovery Initiator: an ASA that spontaneously starts discovery
+          by sending a discovery message referring to a specific discovery
+          objective.</t>
+
+          <t>Discovery Responder: a peer ASA which responds to the
+          discovery objective initiated by the discovery initiator.</t>
+          
+          <t>Synchronization Initiator: an ASA that spontaneously starts synchronization
+          by sending a request message referring to a specific synchronization
+          objective.</t>
+
+          <t>Synchronization Responder: a peer ASA which responds with the
+          value of a synchronization objective.</t>
+
+          <t>Negotiation Initiator: an ASA that spontaneously starts
+          negotiation by sending a request message referring to a specific
+          negotiation objective.</t>
+
+          <t>Negotiation Counterpart: a peer with which the Negotiation
+          Initiator negotiates a specific negotiation objective.</t>
+
+
+        </list></t>
+      </section> 
+
+      <section anchor="highlevel" title="High-Level Design Choices">
+         
+
+        <t>This section describes a behavior model and some considerations for
+        designing a generic signaling protocol initially supporting discovery,
+        synchronization and negotiation, which can
+        act as a platform for different technical objectives.</t>
+
+        <t>NOTE: An earlier version of this protocol used type-length-value
+        formats and was prototyped by Huawei
+        and the Beijing University of Posts and Telecommunications.</t>
+
+        <t><list style="symbols">
+            <t>A generic platform<vspace blankLines="1"/>
+            The protocol is designed as a generic platform, which
+            is independent from the synchronization or negotiation contents. It takes
+            care of the general intercommunication between
+            counterparts. The technical contents will vary according to the
+            various technical objectives and the different pairs of
+            counterparts.<vspace blankLines="1"/></t>
+            
+            <t>The protocol is expected to form part of an Autonomic Networking Infrastructure
+            <xref target="I-D.behringer-anima-reference-model"/>. It will provide services to
+            ASAs via a suitable application programming interface, which will reflect the
+            protocol elements but will not necessarily be in one-to-one correspondence to
+            them. It is expected that the protocol engine and each ASA will run as independent
+            asynchronous processes.<vspace blankLines="1"/></t>
+
+            <t>Security infrastructure and trust relationship<vspace blankLines="1"/>
+            Because this negotiation protocol may directly
+            cause changes to device configurations and bring significant
+            impacts to a running network, this protocol 
+            is assumed to run within an existing secure environment with
+            strong authentication.
+            <vspace blankLines="1"/>
+            On the other hand, a limited negotiation model
+            might be deployed based on a limited trust relationship. For
+            example, between two administrative domains, ASAs might also
+            exchange limited information and negotiate some particular
+            configurations based on a limited conventional or contractual
+            trust relationship.<vspace blankLines="1"/></t>
+
+            <t>Discovery, synchronization and negotiation are designed together.<vspace blankLines="1"/>
+            The discovery method and the synchronization and negotiation methods
+            are designed in the same way and can be combined when this is
+            useful. These processes can also be performed independently when appropriate.
+            
+            <list style="symbols">
+            <t>GRASP discovery is always available for efficient discovery of GRASP peers
+            and allows a rapid mode of operation described in <xref target="discmech"/>.
+            For some objectives, especially those concerned with application layer
+            services, another discovery mechanism such as the future DNS Service
+            Discovery <xref target="RFC7558"/> or
+            Service Location Protocol <xref target="RFC2608"/>
+            MAY be used. The choice is left to the designers of individual
+            ASAs.
+            </t>
+            </list><vspace blankLines="1"/></t>
+
+            <t>A uniform pattern for technical contents<vspace blankLines="1"/>
+            The synchronization and negotiation contents are defined
+            according to a uniform pattern. They could be carried either in simple
+            binary format or in payloads described by a
+            flexible language. The basic protocol design uses the Concise
+            Binary Object Representation (CBOR) <xref target="RFC7049"/>. 
+            The format is extensible for unknown future requirements. <vspace blankLines="1"/></t>
+
+            <t>A flexible model for synchronization<vspace blankLines="1"/>
+            GRASP supports bilateral synchronization, which could be used
+            to perform synchronization among a small number of nodes.
+            It also supports an unsolicited flooding mode when large groups of nodes,
+            possibly including all autonomic nodes, need data for the same
+            technical objective.
+                        
+            <list style="symbols">
+            <t>There may be some network parameters for which a more traditional flooding
+            mechanism such as DNCP <xref target="I-D.ietf-homenet-dncp"/>
+            <!-- <xref target="I-D.stenberg-anima-adncp"/>  --> is
+            considered more appropriate. GRASP can coexist with DNCP.
+            </t>
+            </list><vspace blankLines="1"/></t>
+            
+            <t>A simple initiator/responder model for negotiation<vspace blankLines="1"/>
+            Multi-party negotiations are too complicated to be modeled and
+            there might be too many dependencies among the parties to converge
+            efficiently. A simple initiator/responder model is more feasible
+            and can complete multi-party negotiations by indirect steps.
+            <vspace blankLines="1"/></t>
+
+            <t>Organizing of synchronization or negotiation content<vspace blankLines="1"/>
+            Naturally, the technical content will be
+            organized according to the relevant function or service. The
+            content from different functions or services is kept
+            independent from each other. They are not combined into a
+            single option or single session because these contents may be
+            negotiated or synchronized with different counterparts or may be
+            different in response time.<vspace blankLines="1"/></t>
+
+            <t>Self-aware network device<vspace blankLines="1"/>Every autonomic
+            device will be pre-loaded with various functions and ASAs and will be
+            aware of its own capabilities, typically decided by the hardware,
+            firmware or pre-installed software. Its exact role may depend on
+            Intent and on the surrounding network behaviors, which may include 
+            forwarding behaviors, aggregation properties, topology location, bandwidth,
+            tunnel or translation properties, etc. The surrounding topology will
+            depend on the network planning. Following an initial discovery phase,
+            the device properties and those of its neighbors are the
+            foundation of the synchronization or negotiation behavior of a specific
+            device. A device has no pre-configuration for the
+            particular network in which it is installed.<vspace blankLines="1"/></t>
+
+            <t>Requests and responses in negotiation procedures<vspace blankLines="1"/>
+            The initiator can negotiate with
+            its relevant negotiation counterpart ASAs, which may be
+            different according to the specific negotiation objective. It can request
+            relevant information from the negotiation counterpart so that it
+            can decide its local configuration to give the most coordinated
+            performance. It can request the negotiation counterpart to make a
+            matching configuration in order to set up a successful
+            communication with it. It can request certain simulation or
+            forecast results by sending some dry run conditions.
+            <vspace blankLines="1"/>Beyond the traditional yes/no answer, the
+            responder can reply with a suggested alternative if
+            its answer is 'no'. This would start a bi-directional negotiation
+            ending in a compromise between the two ASAs.<vspace blankLines="1"/></t>
+
+            <t>Convergence of negotiation procedures<vspace blankLines="1"/>
+            To enable convergence, when a responder makes a
+            suggestion of a changed condition in a negative reply, it should
+            be as close as possible to the original request or previous
+            suggestion. The suggested value of the third or later negotiation
+            steps should be chosen between the suggested values from the last
+            two negotiation steps. In any case there must be a mechanism to
+            guarantee convergence (or failure) in a small number of steps, such
+            as a timeout or maximum number of iterations.
+            <vspace blankLines="1"/>
+            
+            <list style="symbols">
+         
+            <t>End of negotiation<vspace blankLines="1"/>
+            A limited number of rounds, for example three, or a timeout, is needed
+            on each ASA for each negotiation objective. It may be an implementation
+            choice, a pre-configurable parameter, or network Intent.
+            These choices might vary between different types of ASA.
+            Therefore, the definition of each negotiation objective MUST clearly specify
+            this, so that the negotiation can always be terminated properly.
+            <vspace blankLines="1"/></t>
+            
+            <t>Failed negotiation<vspace blankLines="1"/>There must be a
+            well-defined procedure for concluding that a negotiation cannot
+            succeed, and if so deciding what happens next (deadlock
+            resolution, tie-breaking, or revert to best-effort
+            service). Again, this MUST be specified for individual
+            negotiation objectives, as an implementation choice, a pre-configurable
+            parameter, or network Intent.</t>
+            </list></t>
+          </list></t>
+      </section>
+ 
+      <section title="GRASP Protocol Basic Properties and Mechanisms">
+      
+        <section anchor="reqsec" title="Required External Security Mechanism">
+         <t>The protocol SHOULD run within a secure Autonomic Control Plane (ACP)
+         <xref target="I-D.behringer-anima-autonomic-control-plane"/>. The procedure
+         for establishing the ACP MUST provide an indication to GRASP that the
+         ACP has been established. </t>
+         
+         <t>If there is no ACP, the protocol
+         MUST use another form of strong authentication and SHOULD use a form
+         of strong encryption. TLS <xref target="RFC5246"/> or DTLS <xref target="RFC6347"/>
+         are RECOMMENDED for this purpose, based on a local Public Key Infrastructure (PKI)
+         <xref target="RFC5280"/> managed within the autonomic network itself. </t>
+         
+         <t>Link-local multicast is used for discovery messages. It is expected that the
+         ACP will handle these and distribute them securely to all on-link ACP nodes only.
+         However, in the absence of an ACP they cannot be secured.
+         Responses to discovery messages MUST be secured.</t>
+         
+         <t>During initialisation, before a node has joined the applicable trust 
+         infrastructure, e.g., <xref target="I-D.pritikin-anima-bootstrapping-keyinfra"/>,
+         it might be impossible to secure certain messages.
+         Such messages MUST be limited to the strictly necessary minimum.
+         A full analysis of the secure bootstrap process is out of scope for the
+         present document. </t>
+                   
+        </section> 
+        
+        <section title="Transport Layer Usage">
+        <t>The protocol is capable of running over UDP or TCP, except for link-local multicast
+        discovery messages, which can only run over UDP and MUST NOT be fragmented, and therefore
+        cannot exceed the link MTU size. </t>
+        <t>When running within a secure ACP,
+        UDP SHOULD be used for messages not exceeding the minimum IPv6 path MTU,
+        and TCP MUST be used for longer messages. In other words, IPv6 fragmentation
+        is avoided. If a node receives a UDP message but the reply is too long, it
+        MUST open a TCP connection to the peer for the reply.</t>
+        <t>When running without an ACP, TLS MUST be supported and used by default, except
+        for multicast discovery messages. DTLS MAY be supported as an alternative
+        but the details are out of scope for this document. </t> 
+        
+        <t>For all transport protocols, the GRASP protocol listens to the GRASP Listen Port
+        (<xref target="Constants"/>).</t>
+        </section>
+         
+               
+        <section anchor="discmech" title="Discovery Mechanism and Procedures">
+           
+
+          <t><list style="symbols">
+              <t>Separated discovery and negotiation mechanisms<list style="empty">
+                  <t>Although discovery and negotiation or synchronization are defined
+                  together in the GRASP, they are separated mechanisms. The discovery
+                  process could run independently from the negotiation or synchronization
+                  process. Upon receiving a discovery (<xref target="DiscoveryMessage"/>) or request
+                  (<xref target="RequestMessage"/>) message, the
+                  recipient ASA should return a message in which it either
+                  indicates itself as a discovery responder or diverts the
+                  initiator towards another more suitable ASA.</t>
+
+                  <t>The discovery action will normally be followed by
+                  a negotiation or synchronization action. The
+                  discovery results could be utilized by the negotiation
+                  protocol to decide which ASA the initiator will negotiate
+                  with.</t>
+                </list></t>
+
+              <t>Discovery Procedures<list style="empty">
+                  <t>Discovery starts as an on-link operation. The Divert option
+                  can tell the discovery initiator to contact an off-link
+                  ASA for that discovery objective. Every Discovery message is sent
+                  by a discovery initiator via UDP to the ALL_GRASP_NEIGHBOR multicast
+                  address (<xref target="Constants"/>). Every network
+                  device that supports the GRASP always listens to a well-known
+                  UDP port to capture the discovery messages.</t>
+
+                  <t>If an ASA in the neighbor device supports the requested discovery objective,
+                  it MAY respond with a Response message (<xref target="ResponseMessage"/>) with
+                  locator option(s). Otherwise, if the neighbor has cached information
+                  about an ASA that supports the requested discovery objective (usually
+                  because it discovered the same objective before), it SHOULD
+                  respond with a Response message with a Divert option pointing
+                  to the appropriate Discovery Responder.</t>
+                  
+                  <t>If no discovery response is received within a reasonable timeout
+                  (default GRASP_DEF_TIMEOUT milliseconds, <xref target="Constants"/>),
+                  the Discovery message MAY be repeated, with a newly generated
+                  Session ID (<xref target="SessionID"/>). An exponential backoff SHOULD be used
+                  for subsequent repetitions, in order to mitigate possible denial of service attacks.</t>
+
+                  <t>After a GRASP device successfully discovers a Discovery Responder
+                  supporting a specific objective, it MUST cache this
+                  information. This cache record MAY be used for future
+                  negotiation or synchronization, and SHOULD be passed on when appropriate
+                  as a Divert option to another Discovery Initiator. The cache lifetime
+                  is an implementation choice that MAY be modified by network Intent.</t>
+                  
+                  <t>If multiple Discovery Responders are found for the same objective, they
+                  SHOULD all be cached, unless this creates a resource shortage. The method
+                  of choosing between multiple responders is an implementation choice.</t>
+                  
+                  <t>A GRASP device with multiple link-layer interfaces (typically a router) MUST
+                  support discovery on all interfaces. If it receives a Discovery message
+                  on a given interface for a specific objective that it does not support and for
+                  which it has not previously discovered a Discovery Responder, it MUST relay
+                  the query by re-issuing the same Discovery message on its other interfaces.
+                  Before this, it MUST decrement the loop count within the objective, and 
+                  discard the Discovery message if the result is zero.
+                  Also, it MUST limit the total rate at which it relays discovery messages
+                  to a reasonable value, in order to mitigate possible denial of service attacks.
+                  It MUST cache the Session ID value of each relayed
+                  discovery message and, to prevent loops, MUST NOT relay a Discovery message
+                  which carries such a cached Session ID. 
+                  These precautions avoid discovery loops and mitigate potential overload.</t>
+                  
+                  <t>This relayed discovery mechanism, with caching of the results, 
+                  should be sufficient to support most network bootstrapping scenarios.</t>
+                </list></t>
+                
+                <t>A complete discovery process will start with multicast on the 
+                local link; a neighbor might divert it to an off-link destination,
+                which could be a default higher-level gateway in a hierarchical network.
+                Then discovery would continue with a unicast to that gateway; if that gateway
+                is still not the right counterpart, it should divert to another gateway,
+                which is in principle closer to the right counterpart. Finally the right
+                counterpart responds to start the negotiation or synchronization process.
+                </t>
+
+              <t>Rapid Mode (Discovery/Negotiation binding)<list style="empty">
+                  <t>A Discovery message MAY include one or more Negotiation
+                  Objective option(s). This allows a rapid mode of negotiation
+                  described in <xref target="negproc"/>. A similar mechanism
+                  is defined for synchronization in <xref target="synchproc"/>.</t>
+                </list></t>
+            </list></t>
+        </section>
+
+        <section anchor="negproc" title="Negotiation Procedures">
+           
+
+          <t>A negotiation initiator sends a negotiation request to a
+          counterpart ASA, including a specific negotiation objective. 
+          It may request the negotiation
+          counterpart to make a specific configuration. Alternatively, it may
+          request a certain simulation or forecast result by sending a dry run configuration.
+          The details, including the distinction between dry run and an actual
+          configuration change, will be defined separately for each type of negotiation
+          objective.</t>
+          
+          <t>If no reply message of any kind is received within a reasonable timeout
+          (default GRASP_DEF_TIMEOUT milliseconds, <xref target="Constants"/>),
+          the negotiation request MAY be repeated, with a newly generated
+          Session ID (<xref target="SessionID"/>). An exponential backoff SHOULD be used
+          for subsequent repetitions.</t>
+
+          <t>If the counterpart can immediately apply the requested
+          configuration, it will give an immediate positive (accept) answer.
+          This will end the negotiation phase immediately. Otherwise, it will
+          negotiate. It will reply with a proposed alternative configuration
+          that it can apply (typically, a configuration that uses fewer resources
+          than requested by the negotiation initiator). This will start a
+          bi-directional negotiation to reach a compromise between the two ASAs.</t>
+
+          <t>The negotiation procedure is ended when one of the negotiation
+          peers sends a Negotiation Ending message, which contains an accept
+          or decline option and does not need a response from the negotiation
+          peer. Negotiation may also end in failure (equivalent to a decline)
+          if a timeout is exceeded or a loop count is exceeded. </t>
+
+          <t>A negotiation procedure concerns one objective and one
+          counterpart. Both the initiator and the counterpart may take part in
+          simultaneous negotiations with various other ASAs, or in
+          simultaneous negotiations about different objectives. Thus, GRASP is
+          expected to be used in a multi-threaded mode. Certain negotiation
+          objectives may have restrictions on multi-threading, for example to
+          avoid over-allocating resources.</t>
+          
+          <t>Rapid Mode (Discovery/Negotiation linkage)<list style="empty">
+                  <t>A Discovery message MAY include a Negotiation
+                  Objective option. In this case the Discovery message also acts
+                  as a Request message to indicate to the Discovery Responder
+                  that it could directly reply to the Discovery Initiator with
+                  a Negotiation message for rapid processing, if it
+                  could act as the corresponding negotiation
+                  counterpart. However, the indication is only advisory not
+                  prescriptive. </t>
+
+                  <t>This rapid mode could reduce the interactions between
+                  nodes so that a higher efficiency could be achieved. This
+                  rapid negotiation function SHOULD be configured off by default
+                  and MAY be configured on or off by Intent.</t>
+                </list></t>          
+          
+        </section>
+         
+        
+        <section anchor="synchproc" title="Synchronization Procedure">
+         
+         <t>A synchronization initiator sends a synchronization request to a
+          counterpart, including a specific synchronization objective.
+          The counterpart responds with a Response
+          message containing the current value of the requested synchronization
+          objective. No further messages are needed. </t>
+          
+        <t>If no reply message of any kind is received within a reasonable timeout
+        (default GRASP_DEF_TIMEOUT milliseconds, <xref target="Constants"/>),
+        the negotiation request MAY be repeated, with a newly generated
+        Session ID (<xref target="SessionID"/>). An exponential backoff SHOULD be used
+        for subsequent repetitions.</t>
+                    
+        <t>In the case just described, the message exchange is unicast and
+         concerns only one synchronization objective. For large groups of nodes
+         requiring the same data, synchronization flooding is available. For this, 
+         a synchronization responder MAY send an unsolicited Response message containing
+         one or more Synchronization Objective option(s), if and only if the specification 
+         of those objectives permits it. This is sent as a multicast message to the 
+         ALL_GRASP_NEIGHBOR multicast address (<xref target="Constants"/>).
+         To ensure that flooding does not result in a loop, the originator of the Response message
+         MUST set the loop count in the objective to a suitable value (the default is GRASP_DEF_LOOPCT).
+         In this case a suitable mechanism is needed
+         to avoid excessive multicast traffic. This mechanism MUST be defined as part of the
+         specification of the synchronization objective(s) concerned. It might be a simple rate
+         limit or a more complex mechanism such as the Trickle algorithm <xref target="RFC6206"/>.</t> 
+         
+        <t>A GRASP device with multiple link-layer interfaces (typically a router) MUST
+        support synchronization flooding on all interfaces. If it receives a multicast
+        unsolicited Response message on a given interface, it MUST relay
+        it by re-issuing the same Response message on its other interfaces.
+        Before this, it MUST decrement the loop count within the objective, and 
+        discard the Response message if the result is zero.  
+        Also, it MUST limit the total rate at which it relays Response messages
+        to a reasonable value, in order to mitigate possible denial of service attacks.
+        It MUST cache the Session ID value of each relayed
+        Response message and, to prevent loops, MUST NOT relay a Response message
+        which carries such a cached Session ID. These precautions avoid synchronization loops
+        and mitigate potential overload.</t>
+        
+        <t>Note that this mechanism is unreliable in the case of sleeping nodes. Sleeping nodes
+        that require an objective subject to synchronization flooding SHOULD periodically
+        initiate normal synchronization for that objective. </t>
+         
+          <t>Rapid Mode (Discovery/Synchronization linkage)<list style="empty">
+                  <t>A Discovery message MAY include one or more Synchronization
+                  Objective option(s). In this case the Discovery message also acts
+                  as a Request message to indicate to the Discovery Responder
+                  that it could directly reply to the Discovery Initiator with
+                  a Response message with synchronization data for rapid processing,
+                  if the discovery target supports the corresponding synchronization
+                  objective(s). However, the indication is only advisory not
+                  prescriptive.</t>
+
+                  <t>This rapid mode could reduce the interactions between
+                  nodes so that a higher efficiency could be achieved. This
+                  rapid synchronization function SHOULD be configured off by default
+                  and MAY be configured on or off by Intent.</t>
+                </list></t>
+        
+        </section>
+         
+      </section>
+      
+      <section title="High Level Deployment Model">
+      <t>It is expected that a GRASP implementation will reside in an autonomic node
+      that also contains both the appropriate security environment (preferably the ACP)
+      and one or more Autonomic Service Agents (ASAs). In the minimal case of a single-purpose
+      device, these three components might be fully integrated. A more common model is expected
+      to be a multi-purpose device capable of containing several ASAs. In this case it is expected
+      that the ACP, GRASP and the ASAs will be implemented as separate processes, which are
+      probably multi-threaded to support asynchronous operation. In this case well defined
+      Application Programming Interfaces (APIs) will be needed between the ACP and GRASP, and
+      between GRASP and the ASAs. For further details of possible deployment models, see
+      <xref target="I-D.behringer-anima-reference-model"/>.
+      </t>
+      </section>
+       
+
+      <section anchor="Constants" title="GRASP Constants">
+         
+
+        <t><list style="symbols">
+            <t>ALL_GRASP_NEIGHBOR<vspace blankLines="1"/>A link-local
+            scope multicast address used by a GRASP-enabled device to discover
+            GRASP-enabled neighbor (i.e., on-link) devices . All devices that
+            support GRASP are members of this multicast group.<list style="symbols">
+                <t>IPv6 multicast address: TBD1</t>
+
+                <t>IPv4 multicast address: TBD2</t>
+              </list></t>
+
+            <t>GRASP Listen Port (TBD3)<vspace blankLines="1"/>A UDP and TCP port that
+            every GRASP-enabled network device always listens to.</t>
+            
+            <t>GRASP_DEF_TIMEOUT (60000 milliseconds)<vspace blankLines="1"/>The default timeout used to
+            determine that a discovery etc. has failed to complete.</t>
+            
+            <t>GRASP_DEF_LOOPCT (6)<vspace blankLines="1"/>The default loop count used to
+            determine that a negotiation has failed to complete, and to avoid looping messages.</t>
+          </list></t>
+      </section>
+
+  
+      <section anchor="SessionID" title="Session Identifier (Session ID)">
+         
+
+        <t>This is an up to 24-bit opaque value used to distinguish multiple sessions between
+        the same two devices. A new Session ID MUST be generated for every
+        new Discovery or Request message, and for every unsolicited Response message.
+        All follow-up messages in the same 
+        discovery, synchronization or negotiation procedure, which is initiated
+        by the request message, MUST carry the same Session ID.</t>
+
+        <t>The Session ID SHOULD have a very low collision rate locally. It
+        MUST be generated by a pseudo-random algorithm using a locally generated seed
+        which is unlikely to be used by any other device in the same
+        network <xref target="RFC4086"/>.</t>
+      </section>
+
+       
+
+      <section anchor="GRASPMessages" title="GRASP Messages">
+         
+
+        <t>This section defines the GRASP message format and message types.
+        Message types not listed here are reserved for future use. </t>
+
+        <section title="GRASP Message Format">
+           
+          <t>GRASP messages share an identical header format and a
+          variable format area for options. GRASP message headers and options
+          are transmitted in Concise Binary Object Representation (CBOR) 
+          <xref target="RFC7049"/>. In this specification, they are described
+          using CBOR data definition language (CDDL)
+          <xref target="I-D.greevenbosch-appsawg-cbor-cddl"/>.
+          Fragmentary CDDL is used to describe each item in this section. A complete and normative
+          CDDL specification of GRASP is given in <xref target="cddl"/>.
+          </t>
+          <t>Every GRASP message carries a Session ID (<xref target="SessionID"/>).
+          Options are then presented serially in the options field.</t>
+          
+          <t>In fragmentary CDDL, every GRASP message follows the pattern:</t>
+          
+          <t><figure>
+              <artwork><![CDATA[
+  message /= [MESSAGE_TYPE, session-id, *option]
+          
+  MESSAGE_TYPE = ; a defined constant
+  session-id =   0..16777215
+  option /=      ; one of the options defined below
+  ]]></artwork>
+          </figure></t>
+          
+        </section>
+
+        <section anchor="DiscoveryMessage" title="Discovery Message">
+        <t>In fragmentary CDDL, a Discovery message follows the pattern:</t>
+          
+          <t><figure>
+              <artwork><![CDATA[
+  discovery-message = [M_DISCOVERY, session-id, objective]
+     
+  M_DISCOVERY =  ; a defined constant
+  session-id =   0..16777215
+  objective /=   ; defined below
+  ]]></artwork>
+          </figure></t>
+          
+          
+          <t>
+          A discovery initiator sends a Discovery message
+               to initiate a discovery process.
+               </t><t>
+
+               The discovery initiator sends the Discovery 
+               messages to the link-local ALL_GRASP_NEIGHBOR multicast
+               address for discovery, and stores the discovery 
+               results (including responding discovery objectives and
+               corresponding unicast addresses or FQDNs).
+               </t><t>
+
+               A Discovery message MUST include exactly one of the following:
+               <list style="symbols">
+               <t>a discovery objective option (<xref target="ObjOption"/>).
+               Its loop count must be set to a suitable value to prevent discovery
+               loops (default value is GRASP_DEF_LOOPCT).
+               </t>
+
+               <t>a negotiation objective option (<xref target="ObjOption"/>) to indicate 
+               to the discovery target that it MAY directly reply to 
+               the discovery initiatior with a Negotiation message for 
+               rapid processing, if it could act as the corresponding negotiation counterpart.
+               The sender of such a Discovery message MUST initialize
+               a negotiation timer and loop count in the same way as a Request message
+               (<xref target="RequestMessage"/>).
+               </t>
+               <t>one or more synchronization objective options (<xref target="ObjOption"/>)
+               to indicate to the discovery
+               target that it MAY directly reply to the discovery initiator with a Response message
+               for rapid processing, if it could act as the corresponding synchronization counterpart.</t>
+               </list></t>
+        </section>
+
+        <section anchor="ResponseMessage" title="Response Message">
+          <t>In fragmentary CDDL, a Response message follows the pattern:</t>
+          
+          <t><figure>
+              <artwork><![CDATA[
+  response-message = [M_RESPONSE, session-id, 
+                      +locator-option / divert-option / objective]
+          
+  M_RESPONSE =       ; a defined constant
+  session-id =       0..16777215
+  locator-option /=  ; defined below
+  divert-option =    ; defined below
+  objective /=       ; defined below
+  ]]></artwork>
+          </figure></t>
+          
+          <t>
+          A node which receives a Discovery message sends a 
+               Response message to respond to a discovery. It MUST
+               contain the same Session ID as the Discovery message.
+               It MAY include a copy of the discovery objective from
+               the Discovery message.
+               </t><t>
+
+               If the responding node supports the discovery objective 
+               of the discovery, it MUST include at least one kind of 
+               locator option (<xref target="LocatorOption"/>) to indicate its own 
+               location. A combination of multiple kinds of locator 
+               options (e.g. IP address option + FQDN option) is also 
+               valid.
+               </t><t>
+
+               If the responding node itself does not support the discovery 
+               objective, but it knows the locator of the discovery 
+               objective, then it SHOULD respond to the discovery message with a 
+               divert option (<xref target="DivertOption"/>) embedding a locator 
+               option or a combination of multiple kinds of locator
+               options which indicate the locator(s) of the discovery 
+               objective.
+               </t><t>
+  
+               A node which receives a synchronization request 
+               sends a Response message with the synchronization
+               data, <!-- A node MAY send an unsolicited Response Message
+               with synchronization data and this MAY be sent to the
+               link-local ALL_GRASP_NEIGHBOR multicast address, in accordance
+               with the rules in <xref target="synchproc"/>. 
+               If the response contains synchronization data, this will 
+               be -->in the form of GRASP Option(s) for the specific
+               synchronization objective(s).</t>
+        </section>
+
+         
+
+        <section anchor="RequestMessage" title="Request Message">
+           
+          <t>In fragmentary CDDL, a Request message follows the pattern:</t>
+          
+          <t><figure>
+              <artwork><![CDATA[
+  discovery-message = [M_REQUEST, session-id, objective]
+          
+  M_REQUEST =    ; a defined constant
+  session-id =   0..16777215
+  objective /=   ; defined below
+  ]]></artwork>
+          </figure></t>
+          <t>
+          A negotiation or synchronization requesting node
+               sends the Request message to the unicast address (directly
+               stored or resolved from the FQDN) of the negotiation or
+               synchronization counterpart (selected from the discovery
+               results).</t>
+               <t>A request message MUST include the relevant objective option, with the requested
+               value in the case of negotiation. </t>
+               <t>When an initiator sends a Request message, it MUST initialize a negotiation timer
+               for the new negotiation thread with the value GRASP_DEF_TIMEOUT milliseconds. Unless this 
+               timeout is modified by a Confirm-waiting message (<xref target="ConfirmWaitingMessage"/>),
+               the initiator will consider that the negotiation has failed when the timer expires. </t>
+               <t>When an initiator sends a Request message, it MUST initialize the loop count
+               of the objective option with a value defined in the specification of the option
+               or, if no such value is specified, with GRASP_DEF_LOOPCT. </t>
+        </section>
+
+         
+
+        <section anchor="NegotiationMessage" title="Negotiation Message">
+           
+
+          <t>In fragmentary CDDL, a Negotiation message follows the pattern:</t>
+          
+          <t><figure>
+              <artwork><![CDATA[
+  discovery-message = [M_NEGOTIATE, session-id, objective]
+          
+  M_NEGOTIATE =  ; a defined constant
+  session-id =   0..16777215
+  objective /=   ; defined below
+  ]]></artwork>
+          </figure></t>
+          <t>A negotiation counterpart sends a Negotiation
+               message in response to a Request message, a 
+               Negotiation message, or a Discovery message
+               in Rapid Mode. A negotiation process MAY
+               include multiple steps.</t>
+               
+               <t>The Negotiation message MUST include the relevant Negotiation Objective option,
+               with its value updated according to progress in the negotiation. The sender
+               MUST decrement the loop count by 1. If the loop count becomes zero both parties
+               will consider that the negotiation has failed.</t>
+        </section>
+
+         
+
+        <section anchor="NegotiationEndingMessage" title="Negotiation-ending Message">
+           
+
+          <t>In fragmentary CDDL, a Negotiation-ending message follows the pattern:</t>
+          
+          <t><figure>
+              <artwork><![CDATA[
+  end-message = [M_END, session-id, accept-option / decline-option]
+          
+  M_END =          ; a defined constant
+  session-id =     0..16777215
+  accept-option =  ; defined below
+  decline-option   ; defined below
+  ]]></artwork>
+          </figure></t>
+          <t>
+               A negotiation counterpart sends an Negotiation-ending
+               message to close the negotiation. It MUST contain 
+               one, but only one of accept/decline option, 
+               defined in <xref target="AcceptOption"/> and <xref target="DeclineOption"/>.
+               It could be sent either by the 
+               requesting node or the responding node.</t>
+        </section>
+
+         
+
+        <section anchor="ConfirmWaitingMessage" title="Confirm-waiting Message">
+        
+          <t>In fragmentary CDDL, a Confirm-waiting message follows the pattern:</t>
+
+          <t><figure>
+              <artwork><![CDATA[
+  wait-message = [M_WAIT, session-id, waiting-time-option]
+          
+  M_WAIT =              ; a defined constant
+  session-id =          0..16777215
+  waiting-time-option = ; defined below
+  ]]></artwork>
+          </figure></t>
+          <t>
+               A responding node sends a Confirm-waiting message to
+               indicate the requesting node to wait for a further
+               negotiation response. It might be that the local
+               process needs more time or that the negotiation 
+               depends on another triggered negotiation. This
+               message MUST NOT include any other options than the
+               Waiting Time Option (<xref target="WaitingTimeOption"/>).</t>
+        </section>
+
+         
+      </section>
+
+       
+
+      <section anchor="GRASPOptions" title="GRASP General Options">
+         
+
+        <t>This section defines the GRASP general options for the negotiation
+        and synchronization protocol signaling. Additional option types are reserved for GRASP general
+        options defined in the future.</t>
+
+        <section title="Format of GRASP Options">
+           
+           <t>GRASP options are CBOR objects that MUST start with an unsigned integer identifying 
+           the specific option type carried in this option. Apart from that the only format requirement
+           is each option MUST be a well-formed CBOR object. In general a CBOR array format is RECOMMENDED
+           to limit overhead.</t>
+           
+          <t>GRASP options are usually scoped by using encapsulation. However, this is not a
+          requirement</t>
+          
+        </section>
+
+         
+
+        <section anchor="DivertOption" title="Divert Option">
+           
+
+          <t>The Divert option is used to redirect a GRASP request to another
+          node, which may be more appropriate for the intended negotiation or synchronization. It
+          may redirect to an entity that is known as a specific negotiation or synchronization
+          counterpart (on-link or off-link) or a default gateway. The divert
+          option MUST only be encapsulated in Response messages.
+          If found elsewhere, it SHOULD be silently ignored.</t>
+
+          <t>In fragmentary CDDL, the Divert option follows the pattern:</t>
+
+          <t><figure>
+              <artwork><![CDATA[
+  divert-option = [O_DIVERT, +locator-option]
+          
+  O_DIVERT =       ; a defined constant
+  locator-option = ; defined below
+  ]]></artwork>
+          </figure></t>
+          
+
+        <t>The embedded Locator Option(s) (<xref target="LocatorOption"/>)
+        point to diverted destination target(s) in response to a Discovery message. </t>
+        
+        <t>Note: Currently the need for this option is disputed. It might be removed or modified.</t>
+
+        </section>
+
+         
+
+        <section anchor="AcceptOption" title="Accept Option">
+           
+
+          <t>The accept option is used to indicate to the negotiation counterpart
+          that the proposed negotiation content is accepted.</t>
+
+          <t>The accept option MUST only be encapsulated in Negotiation-ending
+          messages. If found elsewhere, it SHOULD be silently ignored.</t>
+
+          <t>In fragmentary CDDL, the Accept option follows the pattern:</t>
+
+          <t><figure>
+              <artwork><![CDATA[
+  accept-option = [O_ACCEPT]
+          
+  O_ACCEPT =       ; a defined constant
+  ]]></artwork>
+          </figure></t>
+        </section>
+
+         
+
+        <section anchor="DeclineOption" title="Decline Option">
+           
+
+          <t>The decline option is used to indicate to the negotiation
+          counterpart the proposed negotiation content is declined and end the
+          negotiation process.</t>
+
+          <t>The decline option MUST only be encapsulated in
+          Negotiation-ending messages. If found elsewhere, it SHOULD be
+          silently ignored.</t>
+
+          <t>In fragmentary CDDL, the Decline option follows the pattern:</t>
+
+          <t><figure>
+              <artwork><![CDATA[
+  decline-option = [O_DECLINE]
+          
+  O_DECLINE =       ; a defined constant
+  ]]></artwork>
+          </figure></t>
+          <t>Notes: there are scenarios where a negotiation counterpart wants
+          to decline the proposed negotiation content and continue the
+          negotiation process. For these scenarios, the negotiation
+          counterpart SHOULD use a Negotiate message, with either an objective
+          option that contains a data field set
+          to indicate a meaningless initial value, or a specific objective
+          option that provides further conditions for convergence.</t>
+        </section>
+
+         
+
+        <section anchor="WaitingTimeOption" title="Waiting Time Option ">
+           
+
+          <t>The waiting time option is used to indicate that the negotiation
+          counterpart needs to wait for a further negotiation response, since
+          the processing might need more time than usual or it might depend on
+          another triggered negotiation.</t>
+
+          <t>The waiting time option MUST only be encapsulated in
+          Confirm-waiting messages. If found elsewhere, it SHOULD be silently
+          ignored. When received, its value overwrites the negotiation timer
+          (<xref target="RequestMessage"/>).</t>
+
+          <t>The counterpart SHOULD send a Negotiation, Negotiation-Ending or another
+          Confirm-waiting message before the negotiation timer expires. If
+          not, the initiator MUST abandon or restart the negotiation
+          procedure, to avoid an indefinite wait.</t>
+          
+          <t>In fragmentary CDDL, the Waiting-time option follows the pattern:</t>
+
+          <t><figure>
+              <artwork><![CDATA[
+  waiting-time-option = [O_WAITING, option-waiting-time]
+          
+  O_WAITING =           ; a defined constant
+  option-waiting-time = 0..4294967295 ; in milliseconds
+  ]]></artwork>
+          </figure></t>
+        </section>
+        
+        <section anchor="IDOption" title="Device Identity Option">
+           
+
+          <t>The Device Identity option carries the identities of the sender 
+          and of the domain(s) that it belongs to. </t>
+
+          <t>In fragmentary CDDL, the Device Identity option follows the pattern:</t>
+
+          <t><figure>
+              <artwork><![CDATA[
+  option-device-id = [O_DEVICE_ID, bytes]
+          
+  O_DEVICE_ID =   ; a defined constant
+  ]]></artwork>
+          </figure></t>
+          <t> The option contains a variable-length field containing the device identity
+          and one or more domain identities. The format is not yet defined.
+          </t>
+          <t>Note: Currently this option is a placeholder. It might be removed or modified.</t>
+
+        </section>
+
+         
+
+        <section anchor="LocatorOption" title="Locator Options">
+           
+
+          <t>These locator options are used to present reachability information for an ASA,
+          a device or an interface. They are Locator IPv4 Address
+          Option, Locator IPv6 Address Option, Locator FQDN (Fully
+          Qualified Domain Name) Option and Uniform Resource Locator Option.</t>
+          
+          <t>Note: It is assumed that all locators are in scope throughout
+          the GRASP domain. GRASP is not intended to work across disjoint addressing
+          or naming realms. </t>
+
+          <section title="Locator IPv4 address option">
+
+            <t>In fragmentary CDDL, the IPv4 address option follows the pattern:</t>
+
+          <t><figure>
+              <artwork><![CDATA[
+  ipv4-locator-option = bytes .size 4
+  ]]></artwork>
+          </figure></t>
+          
+          <t>The content of this option is a binary IPv4 address.</t>
+
+          <t>Note: If an operator has internal network address translation for IPv4,
+          this option MUST NOT be used within the Divert option.</t>
+          </section>
+
+          <section title="Locator IPv6 address option">
+             
+          <t>In fragmentary CDDL, the IPv6 address option follows the pattern:</t>
+
+          <t><figure>
+              <artwork><![CDATA[
+  ipv6-locator-option = bytes .size 16
+  ]]></artwork>
+          </figure></t>
+          
+          <t>The content of this option is a binary IPv6 address.</t>
+          
+          <t>Note: A link-local IPv6 address MUST NOT be used when
+            this option is used within the Divert option.</t>
+          </section>
+
+           
+
+          <section title="Locator FQDN option">
+             
+
+          <t>In fragmentary CDDL, the FQDN option follows the pattern:</t>
+
+          <t><figure>
+              <artwork><![CDATA[
+  fqdn-locator-option = [O_FQDN_LOCATOR, text]
+          
+  O_FQDN_LOCATOR =   ; a defined constant
+  ]]></artwork>
+          </figure></t>
+          
+          <t>The content of this option is the Fully Qualified Domain Name of the target.
+          </t>
+          <t>Note: Any FQDN which might not be valid throughout the network in question,
+          such as a Multicast DNS name <xref target="RFC6762"/>, MUST NOT be used when
+          this option is used within the Divert option.</t>
+          </section>
+          
+          <section title="Locator URL option">
+             
+
+            <t>In fragmentary CDDL, the URL option follows the pattern:</t>
+
+          <t><figure>
+              <artwork><![CDATA[
+  url-locator-option = [O_URL_LOCATOR, text]
+          
+  O_URL_LOCATOR =   ; a defined constant
+  ]]></artwork>
+          </figure></t>
+          
+          <t>The content of this option is the Uniform Resource Locator of the target
+          <xref target="RFC3986"/>.
+          </t>
+          <t>Note: Any URL which might not be valid throughout the network in question,
+          such as one based on a Multicast DNS name <xref target="RFC6762"/>, MUST NOT be used when
+          this option is used within the Divert option.</t>
+          </section>
+
+           
+        </section>
+
+         
+
+        <!---->
+      </section>
+
+       
+     <section title="Objective Options">
+      <section anchor="ObjOption" title="Format of Objective Options">
+       
+        <t>An objective option is used to identify objectives for
+        the purposes of discovery, negotiation or synchronization.
+        All objectives must follow one of two common formats as follows,
+        described in fragmentary CDDL:</t>
+
+        <t><figure>
+            <artwork><![CDATA[
+  generic-obj = [objective-name, objective-flags, loop-count, ?any]
+  vendor-obj = [{"PEN":pen}, objective-name, objective-flags, 
+                loop-count, ?any]
+           
+  objective-name = tstr
+  pen = 0..4294967295
+  loop-count = 0..255
+  objective-flags \=     ; defined below
+  ]]></artwork>
+          </figure></t>
+          
+          <t>All objectives are identified by a unique name which is a UTF-8 string. 
+          The names of generic objectives MUST be registered with IANA.</t>
+          
+          <t>The name "PEN" and the value following it MUST be prepended to indicate vendor-defined
+          objectives. The associated value uniquely identifies the enterprise
+          that defines the option, in the form of a registered 32 bit Private Enterprise Number (PEN)
+          <xref target="I-D.liang-iana-pen"/>. There is no default value for this field.
+          Note that it is not used during discovery. It MUST be verified during negotiation
+          or synchronization.</t>
+          
+          <t>The 'loop-count' field is used for terminating negotiation as described in
+          <xref target="NegotiationMessage"/>. It is also used for terminating discovery as
+          described in <xref target="discmech"/>, and for terminating flooding as described in FLOODING. 
+          </t>
+          <t>
+          The 'any' field is to express the actual value of a negotiation
+          or synchronization objective. Its format is defined in the
+          specification of the objective and may be a single value
+          or a data structure of any kind. It is optional because it is optional
+          in a Discovery or Response message.</t>
+         </section>
+
+         <section title="Objective flags">
+
+         <t>An objective may be relevant for discovery, negotiation or
+         synchronization. This is expressed in the objective by logical flags:</t>
+         <t><figure>
+        <artwork><![CDATA[
+  objective-flags = uint .bits objective-flag
+  objective-flag = &(
+  D: 0 ; valid for discovery only
+  N: 1 ; valid for discovery and negotiation
+  S: 2 ; valid for discovery and synchronization
+  )
+  ]]></artwork>
+          </figure></t>
+         </section>
+
+      <section anchor="ConsOption" title="General Considerations for Objective Options">
+         
+        
+        <t>As mentioned above, generic Objective Options MUST be assigned a unique name.
+        As long as vendor-defined Objective Options start with a valid PEN, this document
+        does not restrict their choice of name, but the vendor SHOULD publish the names in use. </t>
+        
+        <t>All Objective Options MUST respect the CBOR patterns defined above as "generic-obj"
+        or "vendor-obj" and MUST replace the "any" field with a valid CBOR data definition
+        for the relevant use case and application. </t>
+        
+        <t>An Objective Option that contains no additional
+        fields beyond its "loop-count" can only be a discovery objective and MUST only be used
+        in Discovery and Response messages.</t>
+        
+        <t>The Negotiation Objective Options contain negotiation objectives,
+        which vary according to different functions/services. They MUST
+        be carried by Discovery, Request or Negotiation Messages only. The negotiation
+        initiator MUST set the initial "loop-count" to a value specified in the
+        specification of the objective or, if no such value is specified, to 
+        GRASP_DEF_LOOPCT.</t>
+
+        <t>For most scenarios, there should be initial values in the
+        negotiation requests. Consequently, the Negotiation Objective options MUST
+        always be completely presented in a Request message, or in a Discovery
+        message in rapid mode. If there is no
+        initial value, the bits in the value field SHOULD all be set to
+        indicate a meaningless value, unless this is inappropriate for the
+        specific negotiation objective.</t>
+        
+        <t>Synchronization Objective Options are similar, but MUST be carried
+        by Discovery, Request or Response messages only. They include
+        value fields only in Response messages. </t>
+        </section>
+        <section title="Organizing of Objective Options">
+           
+          <t>Generic objective options MUST be specified in documents
+          available to the public and MUST be designed to use either
+          the negotiation or the synchronization mechanism described above.
+          </t> 
+
+          <t>As noted earlier, one negotiation objective is handled by each
+          GRASP negotiation thread. Therefore, a negotiation objective, which is
+          based on a specific function or action, SHOULD be organized as a single
+          GRASP option. It is NOT RECOMMENDED to organize multiple negotiation
+          objectives into a single option, nor to split a single function
+          or action into multiple negotiation objectives. </t>
+          
+          <t>A synchronization objective SHOULD also be organized 
+          as a single GRASP option.</t>
+          
+          <t>Some objectives will support more than one operational mode.
+          An example is a negotiation objective with both a "dry run" mode
+          (where the negotiation is to find out whether the other end can in fact
+          make the requested change without problems) and a "live" mode. Such
+          modes will be defined in the specification of such an objective. These
+          objectives SHOULD include flags indicating the
+          applicable mode(s).</t>
+          
+          <t>An objective may have multiple parameters. Parameters
+          can be categorized into two classes: the obligatory ones presented as
+          fixed fields; and the optional ones presented in CBOR sub-options or
+          some other form of data structure embedded in CBOR. The format might be
+          inherited from an existing management or configuration protocol,
+          the objective option acting as a carrier for that format.
+          The data structure might be defined in a formal language, but that is a 
+          matter for the specifications of individual objectives.
+          There are many candidates, according to the context, such as ABNF, RBNF,
+          XML Schema, possibly YANG, etc. The GRASP protocol itself is agnostic on
+          these questions. </t>
+          
+          <t>It is NOT RECOMMENDED to split parameters in a single objective into
+          multiple options, unless they have different response periods. An
+          exception scenario may also be described by split objectives.</t>
+          
+          <t>All objectives MUST support GRASP discovery. However, as mentioned
+          in <xref target="highlevel"/>, it is acceptable for an ASA to use an alternative method
+          of discovery. </t>
+          
+          <t>Normally, a GRASP objective will refer to specific technical parameters
+          as explained in <xref target="terms"/>. However, it is acceptable to define
+          an abstract objective for the purpose of managing or coordinating ASAs. 
+          It is also acceptable to define a special-purpose objective for purposes
+          such as trust bootstrapping or formation of the ACP.</t>
+        </section>
+
+        <section title="Experimental and Example Objective Options">
+           
+          <t>The names "EX0" through "EX9" have been reserved for experimental options.
+          Multiple names have been assigned because a single experiment
+          may use multiple options simultaneously. These experimental options
+          are highly likely to have different meanings when used for different
+          experiments. Therefore, they SHOULD NOT be used without an explicit
+          human decision and SHOULD NOT be used in unmanaged networks such as
+          home networks.</t>
+          <t>These names are also RECOMMENDED for use in documentation 
+          examples.</t>
+        </section>
+       </section>
+         
+      </section>
+
+       
+
+      <section title="Open Issues">
+         
+
+        <t>There are various unresolved design questions that are worthy of more work
+        in the near future, as listed below (statically numbered in historical order
+        for reference purposes,
+        with the resolved issues retained for reference):
+
+           <list style="symbols">
+            <t>1. UDP vs TCP: For now, this specification suggests UDP and TCP as
+            message transport mechanisms. This is not clarified yet. UDP
+            is good for short conversations, is necessary for multicast discovery,
+            and generally fits the discovery and divert scenarios
+            well. However, it will cause problems with large messages. TCP is good
+            for stable and long sessions, with a little bit of time
+            consumption during the session establishment stage. If messages
+            exceed a reasonable MTU, a TCP mode will be required in any case.
+            This question may be affected by the security discussion.
+            <vspace blankLines="1"/>
+            RESOLVED by specifying UDP for short message and TCP for longer one.
+            <vspace blankLines="1"/></t>
+
+            <t>2. DTLS or TLS vs built-in security mechanism. For now, this
+            specification has chosen a PKI based built-in security mechanism
+            based on asymmetric cryptography. However, (D)TLS might be chosen as security solution
+            to avoid duplication of effort. It also allows essentially similar security for short
+            messages over UDP and longer ones over TCP. The implementation trade-offs are different.
+            The current approach requires expensive asymmetric cryptographic calculations
+            for every message. (D)TLS has startup overheads but cheaper crypto per message.
+            DTLS is less mature than TLS.
+            <vspace blankLines="1"/>
+            RESOLVED by specifying external security (ACP or (D)TLS).
+            <vspace blankLines="1"/>
+            </t>
+            
+            <t>The following open issues apply only if the current security model is retained:
+            <list style="symbols">
+            <t>2.1. For replay protection, GRASP currently requires every participant to have an
+            NTP-synchronized clock. Is this OK for low-end devices, and how does
+            it work during device bootstrapping?
+            We could take the Timestamp out of signature option, to become
+            an independent and OPTIONAL (or RECOMMENDED) option.</t>
+            
+             <t>2.2. The Signature Option states that this option
+            could be any place in a message. Wouldn't it be better to specify a position
+            (such as the end)? That would be much simpler to implement. </t>
+            
+            </list>RESOLVED by changing security model.</t>
+            
+            <t>3. DoS Attack Protection needs work.
+            <vspace blankLines="1"/>
+            RESOLVED by adding text.<vspace blankLines="1"/></t>  
+
+              
+            <t>4. Should we consider preferring a text-based approach to
+            discovery (after the initial discovery needed for bootstrapping)? 
+            This could be a complementary mechanism for multicast based discovery, especially 
+            for a very large autonomic network. Centralized registration could be automatically
+            deployed incrementally. At the very first stage, the repository could be empty; 
+            then it could be filled in by the objectives discovered by different devices (for example
+            using Dynamic DNS Update). The more records are stored in the repository, the less the 
+            multicast-based discovery is needed. However, if we adopt such a mechanism, there would be
+            challenges: stateful solution, and security. 
+            <vspace blankLines="1"/>
+            RESOLVED for now by adding optional use of DNS-SD by ASAs.<vspace blankLines="1"/>
+            </t> 
+            
+            <t>5. Need to expand description of the minimum requirements for
+            the specification of an individual discovery, synchronization or
+            negotiation objective. 
+            <vspace blankLines="1"/>
+            RESOLVED for now by extra wording.</t>
+
+            <t>6. Use case and protocol walkthrough. A description of how a node starts up,
+            performs discovery, and conducts negotiation and synchronisation for a sample
+            use case would help readers to understand the applicability of this specification.
+            Maybe it should be an artificial use case or maybe a simple real one, based on
+            a conceptual API. However, the authors have not yet decided whether to have a
+            separate document or have it in the protocol document. 
+            <vspace blankLines="1"/>
+            RESOLVED: recommend a separate document.</t>
+            
+            <t>7. Cross-check against other ANIMA WG documents for consistency and gaps.</t>
+            
+            <t>8. Consideration of ADNCP proposal.
+            <vspace blankLines="1"/>
+            RESOLVED by adding optional use of DNCP for flooding-type synchronization.
+            <vspace blankLines="1"/></t> 
+            
+            <t>9. Clarify how a GDNP instance knows whether it is running inside the ACP. (Sheng)
+            <vspace blankLines="1"/>
+            RESOLVED by improved text.<vspace blankLines="1"/></t>
+            
+            <t>10. Clarify how a non-ACP GDNP instance initiates (D)TLS. (Sheng)
+            <vspace blankLines="1"/>
+            RESOLVED by improved text and declaring DTLS out of scope for this draft.
+            <vspace blankLines="1"/></t>
+            <t>11. Clarify how UDP/TCP choice is made. (Sheng) [Like DNS? - Brian]
+            <vspace blankLines="1"/>
+            RESOLVED by improved text.<vspace blankLines="1"/></t>
+            
+            
+            <t>12. Justify that IP address within ACP or (D)TLS environment is sufficient to
+            prove AN identity; or explain how Device Identity Option is used. (Sheng)
+            <vspace blankLines="1"/>
+            RESOLVED for now: we assume that all ASAs in a device are trusted
+            as soon as the device is trusted, so they share credentials. In that case
+            the Device Identity Option is useless. This needs to be reviewed later.<vspace blankLines="1"/></t>
+            
+            <t>13. Emphasise that negotiation/synchronization are independent from discovery,
+            although the rapid discovery mode includes the first step of a negotiation/synchronization. 
+            (Sheng) 
+            <vspace blankLines="1"/>
+            RESOLVED by improved text. <vspace blankLines="1"/></t>
+            
+            <t>14. Do we need an unsolicited flooding mechanism for discovery (for discovery results
+            that everyone needs), to reduce scaling impact of flooding discovery messages? (Toerless)
+            <vspace blankLines="1"/>
+            RESOLVED: Yes, added to requirements and solution. <vspace blankLines="1"/></t>
+            
+            <t>15. Do we need flag bits in Objective Options to distinguish distinguish Synchronization
+            and Negotiation "Request" or rapid mode "Discovery" messages? (Bing)
+            <vspace blankLines="1"/>
+            RESOLVED: yes, work on the API showed that these flags are essential. </t> 
+            
+            <t>16. (Related to issue 14). Should we revive the "unsolicited Response" for flooding
+            synchronisation data? This has to be done carefully due to the well-known issues with
+            flooding, but it could be useful, e.g. for Intent distribution, where DNCP doesn't
+            seem applicable.
+            <vspace blankLines="1"/>
+            RESOLVED: Yes, see #14.            
+            </t>
+            
+            <t>17. Ensure that the discovery mechanism is completely proof against loops 
+            and protected against duplicate responses.
+            <vspace blankLines="1"/>
+            RESOLVED: Added loop count mechanism.            
+            </t>
+            
+            <t>18. Discuss the handling of multiple valid discovery responses.</t>
+            
+            <t>19. Should we use a text-oriented format such as JSON/CBOR instead of 
+            native binary TLV format?
+            <vspace blankLines="1"/>
+            RESOLVED: Yes, changed to CBOR </t>
+            
+            <t>20. Is the Divert option needed? If a discovery response provides a valid
+            IP address or FQDN, the recipient doesn't gain any extra knowledge from the Divert.
+            On the other hand, the presence of Divert informs the receiver that the target
+            is off-link, which might be useful sometimes.</t>
+            
+            <t>21. Rename the protocol as GRASP (GeneRic Autonomic Signaling Protocol)?
+            <vspace blankLines="1"/>
+            RESOLVED: Yes, name changed.</t>
+            
+            <t>22. Does discovery mechanism scale robustly as needed? Need hop limit on relaying?
+            <vspace blankLines="1"/>
+            RESOLVED: Added hop limit.</t>
+
+            <t>23. Need more details on TTL for caching discovery responses. 
+            <vspace blankLines="1"/>
+            RESOLVED: Done.</t>
+
+            <t>24. Do we need "fast withdrawal" of discovery responses? </t>
+
+            <t>25. Does GDNP discovery meet the needs of multi-hop DNS-SD? </t>
+
+            <t>26. Add a URL type to the locator options (for security bootstrap)
+            <vspace blankLines="1"/>
+            RESOLVED: Done. </t>
+            
+            <t>27. Security of unsolicited Response multicasts (<xref target="synchproc"/>).</t>
+            
+            <t>28. Does ACP support multicast?</t>
+            
+            <t>29. PEN is used to distinguish vendor options. Would it be better to use
+            a domain name? Anything unique will do.</t>
+            
+            <t>30. Does response to discovery require randomized delays to mitigate amplification attacks? </t>
+            
+            <t>31. We have specified repeats for failed discovery etc. Is that sufficient to deal with sleeping nodes?</t>
+            
+            </list></t>
+      </section>
+
+
+    <section anchor="security" title="Security Considerations">
+      <t>It is obvious that a successful attack on negotiation-enabled nodes
+      would be extremely harmful, as such nodes might end up with a completely
+      undesirable configuration that would also adversely affect their peers.
+      GRASP nodes and messages therefore require full protection. </t>
+
+      <t>- Authentication<list style="hanging">
+          <t>A cryptographically authenticated identity for each device is
+          needed in an autonomic network. It is not safe to assume that a
+          large network is physically secured against interference or that all
+          personnel are trustworthy. Each autonomic node MUST be capable
+          of proving its identity and authenticating its messages. GRASP
+          relies on a separate external certificate-based security mechanism to support
+          authentication, data integrity protection, and anti-replay protection.</t>
+
+          <t>Since GRASP is intended to be deployed in a single administrative
+          domain operating its own trust anchor and CA, there is
+          no need for a trusted public third party. In a network requiring
+          "air gap" security, such a dependency would be unacceptable. </t>
+          
+          <t>If GRASP is used temporarily without an external security mechanism,
+          for example during system bootstrap (<xref target="reqsec"/>),
+          the Session ID (<xref target="SessionID"/>) will act as a nonce to
+          provide limited protection against third parties injecting responses.
+          A full analysis of the secure bootstrap process is out of scope for the
+          present document. </t>
+        </list></t>
+
+      <t>- Privacy and confidentiality<list style="hanging">
+          <t>Generally speaking, no personal information is expected to be
+          involved in the signaling protocol, so there should be no direct
+          impact on personal privacy. Nevertheless, traffic flow paths, VPNs,
+          etc. could be negotiated, which could be of interest for traffic
+          analysis. Also, operators generally want to conceal details of their
+          network topology and traffic density from outsiders. Therefore,
+          since insider attacks cannot be excluded in a large 
+          network, the security mechanism for the protocol MUST
+          provide message confidentiality.</t>
+        </list></t>
+
+      <t>- DoS Attack Protection<list style="hanging">
+          <t>GRASP discovery partly relies on insecure link-local multicast. Since
+          routers participating in GRASP sometimes relay discovery messages from one link
+          to another, this could be a vector for denial of service attacks. Relevant
+          mitigations are specified in <xref target="discmech"/>. Additionally,
+          it is of great importance that firewalls prevent any GRASP messages
+          from entering the domain from an untrusted source. </t>
+        </list></t>
+        
+      <t>- Security during bootstrap and discovery<list style="hanging">
+          <t>A node cannot authenticate GRASP traffic from other nodes until it
+          has identified the trust anchor and can validate certificates for other
+          nodes. Also, until it has succesfully enrolled
+          <xref target="I-D.pritikin-anima-bootstrapping-keyinfra"/> it cannot
+          assume that other nodes are able to authenticate its own traffic.
+          Therefore, GRASP discovery during the bootstrap phase for a new device
+          will inevitably be insecure and GRASP synchronization and negotiation
+          will be impossible until enrollment is complete.</t>
+        </list></t>
+    </section>
+    
+    <section anchor="cddl" title="CDDL Specification of GRASP">
+    <t><figure>
+    <artwork><![CDATA[
+<CODE BEGINS>
+
+grasp-message = message
+
+session-id = 0..16777215
+; that is up to 24 bits
+
+message /= discovery-message
+discovery-message = [M_DISCOVERY, session-id, objective]
+
+message /= response-message
+response-message = [M_RESPONSE, session-id, +locator-option] 
+                 / [M_RESPONSE, session-id, divert-option / objective] 
+; split to satisfy CDDL tool
+
+message /= request-message
+request-message = [M_REQUEST, session-id, objective]
+
+message /= negotiation-message
+negotiation-message = [M_NEGOTIATE, session-id, objective]
+
+message /= end-message
+end-message = [M_END, session-id, (accept-option / decline-option)]
+
+message /= wait-message
+wait-message = [M_WAIT, session-id, waiting-time-option]
+
+divert-option = [O_DIVERT, +locator-option]
+
+accept-option = [O_ACCEPT]
+
+decline-option = [O_DECLINE]
+
+waiting-time-option = [O_WAITING, option-waiting-time]
+option-waiting-time = 0..4294967295 ; in milliseconds
+
+option-device-id = [O_DEVICE_ID, bytes]
+
+locator-option /= ipv4-locator-option
+ipv4-locator-option = bytes .size 4
+; this is simpler than [O_IPv4_LOCATOR, bytes .size 4]
+
+locator-option /= ipv6-locator-option
+ipv6-locator-option = bytes .size 16
+
+locator-option /= fqdn-locator-option
+fqdn-locator-option = [O_FQDN_LOCATOR, text]
+
+locator-option /= url-locator-option
+url-locator-option = [O_URL_LOCATOR, text]
+
+objective-flags = uint .bits objective-flag
+
+objective-flag = &(
+D: 0
+N: 1
+S: 2
+)
+
+; D means valid for discovery only
+; N means valid for discovery and negotiation
+; S means valid for discovery and synchronization
+
+objective /= generic-obj
+generic-obj = [objective-name, objective-flags, loop-count, ?any]
+
+objective /= vendor-obj
+vendor-obj = [{"PEN":pen}, objective-name, objective-flags, 
+              loop-count, ?any]
+
+; A PEN is used to distinguish vendor-specific options.
+
+pen = 0..4294967295
+objective-name = tstr
+loop-count = 0..255
+
+; Constants
+
+M_DISCOVERY = 1
+M_RESPONSE = 2
+M_REQUEST = 3
+M_NEGOTIATE = 4
+M_END = 5
+M_WAIT = 6
+
+O_DIVERT = 100
+O_ACCEPT = 101
+O_DECLINE = 102
+O_WAITING = 103
+O_DEVICE_ID = 104
+O_FQDN_LOCATOR = 105
+O_URL_LOCATOR = 106
+
+
+<CODE ENDS>
+    ]]></artwork>
+    </figure></t>
+    </section>
+
+    <section anchor="iana" title="IANA Considerations">
+      <t><xref target="Constants"/> defines the following link-local multicast
+      addresses, which have been assigned by IANA for use by GRASP:</t>
+
+      <t><list style="hanging">
+          <t hangText="ALL_GRASP_NEIGHBOR multicast address">(IPv6): (TBD1).
+          Assigned in the IPv6 Link-Local Scope Multicast Addresses registry.</t>
+
+          <t hangText="ALL_GRASP_NEIGHBOR multicast address">(IPv4): (TBD2).
+          Assigned in the IPv4 Multicast Local Network Control Block.
+          <vspace blankLines="1"/>
+          (Note in draft: alternatively, we could use 224.0.0.1, currently
+          defined as All Systems on this Subnet.)</t>
+        </list></t>
+
+      <t><xref target="Constants"/> defines the following UDP and TCP port,
+      which has been assigned by IANA for use by GRASP:</t>
+
+      <t><list style="hanging">
+          <t hangText="GRASP Listen Port:">(TBD3)</t>
+        </list></t>
+
+      <t>This document defines the General Discovery and Negotiation
+      Protocol (GRASP). The IANA is requested to create a GRASP Parameter Registry.
+      The IANA is also requested to add two new registry tables to the newly-created
+      GRASP Parameter Registry. The two tables are the GRASP Messages and Options Table and 
+      the GRASP Objective Names Table.</t>
+
+      <t>GRASP Messages and Options Table. The values in this table are names paired with decimal
+      integers. Future values MUST be assigned using the Standards Action policy
+      defined by <xref target="RFC5226"/>. The following initial values are assigned by this document:</t>
+
+      <t><figure>
+          <artwork><![CDATA[ M_DISCOVERY = 1
+ M_RESPONSE = 2
+ M_REQUEST = 3
+ M_NEGOTIATE = 4
+ M_END = 5
+ M_WAIT = 6
+
+ O_DIVERT = 100
+ O_ACCEPT = 101
+ O_DECLINE = 102
+ O_WAITING = 103
+ O_DEVICE_ID = 104
+ O_FQDN_LOCATOR = 105
+ O_URL_LOCATOR = 106
+]]></artwork>
+        </figure>
+        </t>
+        
+        <t>GRASP Objective Names Table. The values in this table are UTF-8 strings.
+        Future values MUST be assigned using the Specification Required policy
+        defined by <xref target="RFC5226"/>.
+        The following initial values are assigned by this document:</t>
+
+      <t><figure>
+          <artwork><![CDATA[ EX0
+ EX1
+ EX2
+ EX3
+ EX4
+ EX5
+ EX6
+ EX7
+ EX8
+ EX9
+ PEN
+]]></artwork>
+        </figure>
+        </t>
+     
+    </section>
+
+    <section anchor="ack" title="Acknowledgements">
+    
+      <t>A major contribution to the original version of this document was made by Sheng Jiang.</t>
+      
+      <t>Valuable comments were received from
+      Michael Behringer,
+      Jeferson Campos Nobre,
+      Laurent Ciavaglia,
+      Zongpeng Du,
+      Yu Fu,
+      Zhenbin Li,
+      Dimitri Papadimitriou,
+      Pierre Peloso,
+      Reshad Rahman,
+      Michael Richardson,
+      Markus Stenberg,
+      Rene Struik,
+      Dacheng Zhang,
+      and other participants in the NMRG research group
+      and the ANIMA working group.</t>
+
+      <t>This document was produced using the xml2rfc tool <xref target="RFC2629"/>.</t>
+    </section>
+
+    <section anchor="changes" title="Change log [RFC Editor: Please remove]">
+    
+    <t>draft-ietf-anima-grasp-01, 2015-09-25:
+      <vspace blankLines="1"/>
+      Updated requirements after list discussion.
+      <vspace blankLines="1"/>
+      Changed from TLV to CBOR format - many detailed changes, added co-author.
+      <vspace blankLines="1"/>
+      Tightened up loop count and timeouts for various cases.
+      <vspace blankLines="1"/>
+      Various other clarifications.
+      </t>
+    
+    <t>draft-ietf-anima-grasp-00, 2015-08-14:
+      <vspace blankLines="1"/>
+      File name and protocol name changed following WG adoption.
+      <vspace blankLines="1"/>
+      Added URL locator type.
+      </t>
+    
+    <t>draft-carpenter-anima-gdn-protocol-04, 2015-06-21:
+      <vspace blankLines="1"/>
+      Tuned wording around hierarchical structure.
+      <vspace blankLines="1"/>
+      Changed "device" to "ASA" in many places. 
+      <vspace blankLines="1"/>
+      Reformulated requirements to be clear that the ASA is the main customer 
+      for signaling.
+      <vspace blankLines="1"/>
+      Added requirement for flooding unsolicited synch, and added it to protocol spec.
+      Recognized DNCP as alternative for flooding synch data.
+      <vspace blankLines="1"/>
+      Requirements clarified, expanded and rearranged following design team discussion.
+      <vspace blankLines="1"/>
+      Clarified that GDNP discovery must not
+      be a prerequisite for GDNP negotiation or synchronization (resolved issue 13).
+      <vspace blankLines="1"/>
+      Specified flag bits for objective options (resolved issue 15).
+      <vspace blankLines="1"/>
+      Clarified usage of ACP vs TLS/DTLS and TCP vs UDP (resolved issues 9,10,11).
+      <vspace blankLines="1"/>
+      Updated DNCP description from latest DNCP draft.
+      <vspace blankLines="1"/>
+      Editorial improvements.</t>
+      <t>draft-carpenter-anima-gdn-protocol-03, 2015-04-20:
+      <vspace blankLines="1"/>
+      Removed intrinsic security, required external security
+      <vspace blankLines="1"/>
+      Format changes to allow DNCP co-existence
+      <vspace blankLines="1"/>
+      Recognized DNS-SD as alternative discovery method.
+      <vspace blankLines="1"/>
+      Editorial improvements</t>
+      <t>draft-carpenter-anima-gdn-protocol-02, 2015-02-19:
+      <vspace blankLines="1"/>
+      Tuned requirements to clarify scope,
+      <vspace blankLines="1"/>
+      Clarified relationship between types of objective,
+      <vspace blankLines="1"/>
+      Clarified that objectives may be simple values or complex data structures,
+      <vspace blankLines="1"/>
+      Improved description of objective options,
+      <vspace blankLines="1"/>
+      Added loop-avoidance mechanisms (loop count and default timeout,
+      limitations on discovery relaying and on unsolicited responses),
+      <vspace blankLines="1"/>
+      Allow multiple discovery objectives in one response,
+      <vspace blankLines="1"/>
+      Provided for missing or multiple discovery responses,
+      <vspace blankLines="1"/>
+      Indicated how modes such as "dry run" should be supported,
+      <vspace blankLines="1"/>
+      Minor editorial and technical corrections and clarifications,
+      <vspace blankLines="1"/>
+      Reorganized future work list. </t>
+      <t>draft-carpenter-anima-gdn-protocol-01, restructured the logical flow of the document,
+      updated to describe synchronization completely, add unsolicited responses, numerous corrections
+      and clarifications, expanded future work list, 2015-01-06. </t>
+      <t>draft-carpenter-anima-gdn-protocol-00, combination
+      of draft-jiang-config-negotiation-ps-03 and
+      draft-jiang-config-negotiation-protocol-02, 2014-10-08.</t>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      
+      <?rfc include='reference.RFC.2119'?>
+      <?rfc include='reference.RFC.5280'?>
+      <?rfc include='reference.RFC.4086'?>
+      <?rfc include='reference.RFC.5246'?>
+      <?rfc include='reference.RFC.6347'?>
+      <?rfc include='reference.RFC.3986'?>
+      <?rfc include='reference.RFC.7049'?>
+      <?rfc include='reference.I-D.greevenbosch-appsawg-cbor-cddl'?>
+    </references>
+
+    <references title="Informative References">
+      
+      <?rfc include='reference.RFC.2629'?>
+      <?rfc include='reference.RFC.5226'?>
+      <?rfc include='reference.RFC.6733'?>
+      <?rfc include='reference.RFC.2865'?>
+      <?rfc include='reference.RFC.4861'?>
+      <?rfc include='reference.RFC.5971'?>
+      <?rfc include='reference.RFC.6241'?>
+      <?rfc include='reference.RFC.3209'?>
+      <?rfc include='reference.RFC.2205'?>
+      <?rfc include='reference.RFC.3416'?>
+      <?rfc include='reference.RFC.3315'?>
+      <?rfc include='reference.RFC.6887'?>
+      <?rfc include='reference.RFC.6762'?>
+      <?rfc include='reference.RFC.6763'?>
+      <?rfc include='reference.RFC.2608'?>
+      <?rfc include='reference.RFC.6206'?>
+      <?rfc include='reference.RFC.7228'?>
+      <?rfc include='reference.RFC.7575'?>
+      <?rfc include='reference.RFC.7576'?>
+      <?rfc include='reference.RFC.7558'?>
+
+      <?rfc include='reference.I-D.ietf-homenet-hncp'?>
+      <?rfc include='reference.I-D.stenberg-anima-adncp'?>
+      <?rfc include='reference.I-D.ietf-homenet-dncp'?>
+      <?rfc include='reference.I-D.ietf-netconf-restconf'?>
+      <?rfc include='reference.I-D.chaparadza-intarea-igcp'?>
+      <?rfc include='reference.I-D.behringer-anima-reference-model'?>
+      <?rfc include='reference.I-D.pritikin-anima-bootstrapping-keyinfra'?>
+      <?rfc include='reference.I-D.behringer-anima-autonomic-control-plane'?>
+      <?rfc include='reference.I-D.eckert-anima-stable-connectivity'?>
+      <?rfc include='reference.I-D.liang-iana-pen'?>
+
+    </references>
+    
+ <section anchor="current" title="Capability Analysis of Current Protocols">
+      <t>This appendix discusses various existing protocols with properties
+      related to the above negotiation and synchronisation requirements. The
+      purpose is to evaluate whether any existing protocol, or a simple
+      combination of existing protocols, can meet those requirements.</t>
+
+      <t>Numerous protocols include some form of discovery, but these all appear to be very
+      specific in their applicability. Service Location Protocol (SLP) 
+      <xref target="RFC2608"/> provides service discovery for managed networks,
+      but requires configuration of its own servers. DNS-SD <xref target="RFC6763"/>
+      combined with mDNS <xref target="RFC6762"/> provides service discovery for
+      small networks with a single link layer. <xref target="RFC7558"/>
+      aims to extend this to larger autonomous networks but this is not yet
+      standardized. However, both SLP and DNS-SD appear to
+      target primarily application layer services, not the layer 2 and 3 objectives
+      relevant to basic network configuration. Both SLP and DNS-SD are text-based protocols. </t>
+
+      <t>Routing protocols are mainly one-way information announcements. The
+      receiver makes independent decisions based on the received information
+      and there is no direct feedback information to the announcing peer. This
+      remains true even though the protocol is used in both directions between
+      peer routers; there is state synchronization, but no negotiation, and
+      each peer runs its route calculations independently.</t>
+
+      <t>Simple Network Management Protocol (SNMP) <xref target="RFC3416"/> uses
+      a command/response model not well suited for peer negotiation. Network Configuration
+      Protocol (NETCONF) <xref target="RFC6241"/> uses an RPC model that does allow positive or
+      negative responses from the target system, but this is still not
+      adequate for negotiation.</t>
+
+      <t>There are various existing protocols that have elementary negotiation
+      abilities, such as Dynamic Host Configuration Protocol for IPv6 (DHCPv6)
+      <xref target="RFC3315"/>, Neighbor Discovery (ND) <xref target="RFC4861"/>,
+      Port Control Protocol (PCP) <xref target="RFC6887"/>, Remote Authentication
+      Dial In User Service (RADIUS) <xref target="RFC2865"/>, Diameter <xref target="RFC6733"/>,
+      etc. Most of them are configuration or
+      management protocols. However, they either provide only a simple
+      request/response model in a master/slave context or very limited
+      negotiation abilities.</t>
+
+      <t>There are some signaling protocols with an element of negotiation.
+      For example Resource ReSerVation Protocol (RSVP) <xref target="RFC2205"/>
+      was designed for negotiating quality of service
+      parameters along the path of a unicast or multicast flow. RSVP is a very
+      specialised protocol aimed at end-to-end flows. However, it has some
+      flexibility, having been extended for MPLS label distribution <xref target="RFC3209"/>.
+      A more generic design is General Internet
+      Signalling Transport (GIST) <xref target="RFC5971"/>, but it is
+      complex, tries to solve many problems, and is also aimed at per-flow
+      signaling across many hops rather than at device-to-device signaling.
+      However, we cannot completely exclude extended RSVP or GIST as a
+      synchronization and negotiation protocol. They do not appear to be
+      directly useable for peer discovery.</t>
+
+      <t>We now consider two protocols that are works in progress at the time
+      of this writing. Firstly, RESTCONF <xref target="I-D.ietf-netconf-restconf"/>
+      is a protocol intended to
+      convey NETCONF information expressed in the YANG language via HTTP,
+      including the ability to transit HTML intermediaries. While this is a
+      powerful approach in the context of centralised configuration of a
+      complex network, it is not well adapted to efficient interactive
+      negotiation between peer devices, especially simple ones that are
+      unlikely to include YANG processing already.</t>
+
+      <t>Secondly, we consider Distributed Node Consensus Protocol (DNCP) 
+      <xref target="I-D.ietf-homenet-dncp"/>. This is defined as a generic form
+      of state synchronization protocol, with a proposed usage profile being the 
+      Home Networking Control Protocol (HNCP) <xref target="I-D.ietf-homenet-hncp"/>
+      for configuring Homenet routers. A specific application of DNCP for autonomic
+      networking was proposed in <xref target="I-D.stenberg-anima-adncp"/>.
+      </t>
+      <t>DNCP "is designed to provide a way for each participating node to
+         publish a set of TLV (Type-Length-Value) tuples, and to provide a
+         shared and common view about the data published... DNCP is most suitable
+         for data that changes only infrequently... If constant rapid
+         state changes are needed, the preferable choice is to use an
+         additional point-to-point channel..."</t>
+      <t>Specific features of DNCP include:
+      <list style="symbols">
+          <t>Every participating node has a unique node identifier.</t>
+          
+          <t>DNCP messages are encoded as a sequence of TLV objects, sent over
+          unicast UDP or TCP, with or without (D)TLS security.</t>
+          
+          <t>Multicast is used only for discovery of DNCP neighbors
+          when lower security is acceptable.</t>
+          
+          <t>Synchronization of state is maintained by a flooding process using the Trickle algorithm.
+          There is no bilateral synchronization or negotiation capability.</t>
+
+          <t>The HNCP profile of DNCP is designed to operate between directly connected neighbors
+          on a shared link using UDP and link-local IPv6 addresses.</t>
+        </list>
+      DNCP does not meet the needs of a general negotiation protocol, because it is designed
+      specifically for flooding synchronization. Also, in its HNCP profile it is limited to link-local
+      messages and to IPv6. However, at the minimum it is a
+      very interesting test case for this style of interaction between devices
+      without needing a central authority, and it is a proven method of network-wide state
+      synchronization by flooding.</t>
+
+      <t>A proposal was made some years ago for an IP based Generic Control Protocol
+      (IGCP) <xref target="I-D.chaparadza-intarea-igcp"/>. This was aimed
+      at information exchange and negotiation but not directly at peer
+      discovery. However, it has many points in common with the present work.</t>
+
+      <t>None of the above solutions appears to completely meet the needs of
+      generic discovery, state synchronization and negotiation in a single solution.
+      Many of the protocols assume that they are working in a traditional
+      top-down or north-south scenario, rather than a fluid peer-to-peer
+      scenario. Most of them are specialized in one way or another. As a result, 
+      we have not identified a combination of existing protocols that meets the
+      requirements in <xref target="reqts"/>. Also, we have not identified a path
+      by which one of the existing protocols could be extended to meet the
+      requirements.
+      </t>
+    </section>
+
+    <!-- current -->
+    
+  </back>
+</rfc>
