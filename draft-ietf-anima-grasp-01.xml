@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="25" month="September" year="2015"/>
+    <date day="29" month="September" year="2015"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -1052,8 +1052,8 @@
           
           <t><figure>
               <artwork><![CDATA[
-  response-message = [M_RESPONSE, session-id, 
-                      +locator-option / divert-option / objective]
+  response-message = [M_RESPONSE, session-id,
+                     (+locator-option // divert-option // objective)]
           
   M_RESPONSE =       ; a defined constant
   session-id =       0..16777215
@@ -1894,9 +1894,8 @@ message /= discovery-message
 discovery-message = [M_DISCOVERY, session-id, objective]
 
 message /= response-message
-response-message = [M_RESPONSE, session-id, +locator-option] 
-                 / [M_RESPONSE, session-id, divert-option / objective] 
-; split to satisfy CDDL tool
+response-message = [M_RESPONSE, session-id,
+                   (+locator-option // divert-option // objective)]
 
 message /= request-message
 request-message = [M_REQUEST, session-id, objective]
@@ -2082,7 +2081,7 @@ O_URL_LOCATOR = 106
 
     <section anchor="changes" title="Change log [RFC Editor: Please remove]">
     
-    <t>draft-ietf-anima-grasp-01, 2015-09-25:
+    <t>draft-ietf-anima-grasp-01, 2015-09-29:
       <vspace blankLines="1"/>
       Updated requirements after list discussion.
       <vspace blankLines="1"/>
