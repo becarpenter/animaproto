@@ -217,7 +217,7 @@
         with the rest of the network and join an authentication mechanism. Although
         this will inevitably start with a discovery action, it is a special case
         precisely because trust is not yet established. This topic
-        is the subject of <xref target="I-D.pritikin-anima-bootstrapping-keyinfra"/>.
+        is the subject of <xref target="I-D.ietf-anima-bootstrapping-keyinfra"/>.
         We require that once trust has been established for a device,
         all ASAs within the device inherit the device's credentials and are also trusted.</t>
         <t>
@@ -325,7 +325,7 @@
           However, these can only be features of individual ASAs. 
           Another document <xref target="I-D.eckert-anima-stable-connectivity"/> discusses how
           such agents may be linked into conventional OAM systems via an Autonomic Control Plane
-          <xref target="I-D.behringer-anima-autonomic-control-plane"/>. </t>
+          <xref target="I-D.ietf-anima-autonomic-control-plane"/>. </t>
           </list></t>
         
         <t>16. The protocol will be able to deal with a wide variety of
@@ -650,7 +650,7 @@
       
         <section anchor="reqsec" title="Required External Security Mechanism">
          <t>The protocol SHOULD run within a secure Autonomic Control Plane (ACP)
-         <xref target="I-D.behringer-anima-autonomic-control-plane"/>. The procedure
+         <xref target="I-D.ietf-anima-autonomic-control-plane"/>. The procedure
          for establishing the ACP MUST provide an indication to GRASP that the
          ACP has been established. </t>
          
@@ -666,7 +666,7 @@
          Responses to discovery messages MUST be secured.</t>
          
          <t>During initialisation, before a node has joined the applicable trust 
-         infrastructure, e.g., <xref target="I-D.pritikin-anima-bootstrapping-keyinfra"/>,
+         infrastructure, e.g., <xref target="I-D.ietf-anima-bootstrapping-keyinfra"/>,
          it might be impossible to secure certain messages.
          Such messages MUST be limited to the strictly necessary minimum.
          A full analysis of the secure bootstrap process is out of scope for the
@@ -1872,7 +1872,7 @@
           <t>A node cannot authenticate GRASP traffic from other nodes until it
           has identified the trust anchor and can validate certificates for other
           nodes. Also, until it has succesfully enrolled
-          <xref target="I-D.pritikin-anima-bootstrapping-keyinfra"/> it cannot
+          <xref target="I-D.ietf-anima-bootstrapping-keyinfra"/> it cannot
           assume that other nodes are able to authenticate its own traffic.
           Therefore, GRASP discovery during the bootstrap phase for a new device
           will inevitably be insecure and GRASP synchronization and negotiation
@@ -2205,8 +2205,8 @@ O_URL_LOCATOR = 106
       <?rfc include='reference.I-D.ietf-netconf-restconf'?>
       <?rfc include='reference.I-D.chaparadza-intarea-igcp'?>
       <?rfc include='reference.I-D.behringer-anima-reference-model'?>
-      <?rfc include='reference.I-D.pritikin-anima-bootstrapping-keyinfra'?>
-      <?rfc include='reference.I-D.behringer-anima-autonomic-control-plane'?>
+      <?rfc include='reference.I-D.ietf-anima-bootstrapping-keyinfra'?>
+      <?rfc include='reference.I-D.ietf-anima-autonomic-control-plane'?>
       <?rfc include='reference.I-D.eckert-anima-stable-connectivity'?>
       <?rfc include='reference.I-D.liang-iana-pen'?>
 
