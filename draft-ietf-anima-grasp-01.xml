@@ -650,9 +650,8 @@
       
         <section anchor="reqsec" title="Required External Security Mechanism">
          <t>The protocol SHOULD run within a secure Autonomic Control Plane (ACP)
-         <xref target="I-D.ietf-anima-autonomic-control-plane"/>. The procedure
-         for establishing the ACP MUST provide an indication to GRASP that the
-         ACP has been established. </t>
+         <xref target="I-D.ietf-anima-autonomic-control-plane"/>. The ACP MUST provide
+         a status indicator to inform GRASP that the ACP is operational. </t>
          
          <t>If there is no ACP, the protocol
          MUST use another form of strong authentication and SHOULD use a form
@@ -852,7 +851,7 @@
           
         <t>If no reply message of any kind is received within a reasonable timeout
         (default GRASP_DEF_TIMEOUT milliseconds, <xref target="Constants"/>),
-        the negotiation request MAY be repeated, with a newly generated
+        the synchronization request MAY be repeated, with a newly generated
         Session ID (<xref target="SessionID"/>). An exponential backoff SHOULD be used
         for subsequent repetitions.</t>
                     
@@ -914,8 +913,9 @@
       device, these three components might be fully integrated. A more common model is expected
       to be a multi-purpose device capable of containing several ASAs. In this case it is expected
       that the ACP, GRASP and the ASAs will be implemented as separate processes, which are
-      probably multi-threaded to support asynchronous operation. In this case well defined
-      Application Programming Interfaces (APIs) will be needed between the ACP and GRASP, and
+      probably multi-threaded to support asynchronous operation. It is expected that GRASP
+      will access the ACP by using a typical socket interface. Well defined
+      Application Programming Interfaces (APIs) will be needed
       between GRASP and the ASAs. For further details of possible deployment models, see
       <xref target="I-D.behringer-anima-reference-model"/>.
       </t>
@@ -935,7 +935,7 @@
                 <t>IPv4 multicast address: TBD2</t>
               </list></t>
 
-            <t>GRASP Listen Port (TBD3)<vspace blankLines="1"/>A UDP and TCP port that
+            <t>GRASP_LISTEN_PORT (TBD3)<vspace blankLines="1"/>A UDP and TCP port that
             every GRASP-enabled network device always listens to.</t>
             
             <t>GRASP_DEF_TIMEOUT (60000 milliseconds)<vspace blankLines="1"/>The default timeout used to
@@ -1577,8 +1577,14 @@
           objectives into a single option, nor to split a single function
           or action into multiple negotiation objectives. </t>
           
-          <t>A synchronization objective SHOULD also be organized 
-          as a single GRASP option.</t>
+          <t>It is important to understand that GRASP negotiation does not 
+          support transactional integrity. If transactional integrity is needed for
+          a specific objective, this must be ensured by the ASA. For example, an ASA
+          might need to ensure that it only participates in one negotiation thread
+          at the same time. Such an ASA would need to stop listening for incoming
+          negotiation requests before generating an outgoing negotiation request.</t>
+          
+          <t>A synchronization objective SHOULD be organized as a single GRASP option.</t>
           
           <t>Some objectives will support more than one operational mode.
           An example is a negotiation objective with both a "dry run" mode
@@ -1815,6 +1821,9 @@
             
             <t>31. We have specified repeats for failed discovery etc. Is that sufficient to deal with sleeping nodes?</t>
             
+            <t>32. We have one-to-one synchronization and flooding synchronization. Do we also need
+            selective flooding to a subset of nodes?</t>
+            
             </list></t>
       </section>
 
@@ -2000,7 +2009,7 @@ O_URL_LOCATOR = 106
       which has been assigned by IANA for use by GRASP:</t>
 
       <t><list style="hanging">
-          <t hangText="GRASP Listen Port:">(TBD3)</t>
+          <t hangText="GRASP_LISTEN_PORT:">(TBD3)</t>
         </list></t>
 
       <t>This document defines the General Discovery and Negotiation
