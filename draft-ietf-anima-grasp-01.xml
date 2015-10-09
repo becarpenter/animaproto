@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="29" month="September" year="2015"/>
+    <date day="9" month="October" year="2015"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -2090,7 +2090,7 @@ O_URL_LOCATOR = 106
 
     <section anchor="changes" title="Change log [RFC Editor: Please remove]">
     
-    <t>draft-ietf-anima-grasp-01, 2015-09-29:
+    <t>draft-ietf-anima-grasp-01, 2015-10-09:
       <vspace blankLines="1"/>
       Updated requirements after list discussion.
       <vspace blankLines="1"/>
@@ -2098,7 +2098,9 @@ O_URL_LOCATOR = 106
       <vspace blankLines="1"/>
       Tightened up loop count and timeouts for various cases.
       <vspace blankLines="1"/>
-      Various other clarifications.
+      Noted that GRASP does not provide transactional integrity.
+      <vspace blankLines="1"/>
+      Various other clarifications and editorial fixes.
       </t>
     
     <t>draft-ietf-anima-grasp-00, 2015-08-14:
