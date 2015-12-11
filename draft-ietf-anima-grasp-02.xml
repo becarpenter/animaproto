@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="26" month="November" year="2015"/>
+    <date day="11" month="December" year="2015"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -230,8 +230,8 @@
         The protocol must be capable of supporting such discovery during initialisation,
         as well as discovery during ongoing operation.</t>
         </list></t>
-        <t>D8. The discovery process must not generate excessive (multicast) traffic and 
-        must take account of sleeping nodes in the case of a resource-constrained network
+        <t>D8. The discovery process must not generate excessive traffic and 
+        must take account of sleeping nodes in the case of a constrained-node network
         <xref target="RFC7228"/>. </t>
         <t>D9. There must be a mechanism for handling stale discovery results.</t>
       </section>
@@ -352,7 +352,7 @@
         <t>T3. To be a generic platform, the protocol payload format should be 
         independent of the transport protocol or IP version.
         In particular, it should be able to run over IPv6 or IPv4.
-        However, some functions, such as multicasting or broadcasting on
+        However, some functions, such as multicasting on
         a link, might need to be IP version dependent. In case of doubt, IPv6 should
         be preferred.</t>
           
@@ -382,8 +382,8 @@
         <t>T9. The protocol needs to be fully secured against forged messages and
         man-in-the middle attacks, and secured as much as reasonably possible
         against denial of service attacks. It needs to be capable of
-        encryption in order to resist unwanted monitoring, although this
-        capability may not be required in all deployments. However, it is not
+        encryption in order to resist unwanted monitoring<!--, although this
+        capability may not be required in all deployments-->. However, it is not
         required that the protocol itself provides these security features; it may
         depend on an existing secure environment. </t>
         
@@ -654,7 +654,7 @@
         <section anchor="reqsec" title="Required External Security Mechanism">
          <t>The protocol SHOULD run within a secure Autonomic Control Plane (ACP)
          <xref target="I-D.ietf-anima-autonomic-control-plane"/>. The ACP MUST
-         carry all messages securely, including link-local multicast. The ACP MUST provide
+         carry all messages securely, including link-local multicast if possible. The ACP MUST provide
          a status indicator to inform GRASP that the ACP is operational. </t>
          
          <t>If there is no ACP, the protocol
@@ -671,7 +671,11 @@
          functions except discovery if there is neither an operational ACP nor an operational
          (D)TLS environment. </t>
          
-         <t>Link-local multicast is used for discovery messages. It is expected that the
+         <t>As mentioned in <xref target="highlevel"/>, limited GRASP operations might be
+         performed across an administrative domain boundary by mutual agreement. Such operations
+         MUST be authenticated and SHOULD be encrypted. TLS is RECOMMENDED for this purpose.</t>
+         
+         <t>Link-local multicast is used for discovery messages. It is preferred that the
          ACP will handle these and distribute them securely to all on-link ACP nodes only.
          However, in the absence of an ACP they cannot be secured.
          Responses to discovery messages MUST be secured, with one exception.</t>
@@ -713,8 +717,8 @@
                   <t>Although discovery and negotiation or synchronization are defined
                   together in the GRASP, they are separated mechanisms. The discovery
                   process could run independently from the negotiation or synchronization
-                  process. Upon receiving a discovery (<xref target="DiscoveryMessage"/>) or request
-                  (<xref target="RequestMessage"/>) message, the
+                  process. Upon receiving a discovery (<xref target="DiscoveryMessage"/>)
+                  <!-- or request (<xref target="RequestMessage"/>)--> message, the
                   recipient ASA should return a message in which it either
                   indicates itself as a discovery responder or diverts the
                   initiator towards another more suitable ASA.</t>
@@ -724,6 +728,11 @@
                   discovery results could be utilized by the negotiation
                   protocol to decide which ASA the initiator will negotiate
                   with.</t>
+                  
+                  <t>It is entirely possible to use GRASP discovery without a subsequent
+                  negotiation or synchronization action. In this case, the discovered objective
+                  is simply used as a name and any subsequent operations between the peers are
+                  outside the scope of GRASP.</t>
                 </list></t>
 
               <t>Discovery Procedures<list style="empty">
@@ -796,8 +805,8 @@
                 </t>
 
               <t>Rapid Mode (Discovery/Negotiation binding)<list style="empty">
-                  <t>A Discovery message MAY include one or more Negotiation
-                  Objective option(s). This allows a rapid mode of negotiation
+                  <t>A Discovery message MAY include a Negotiation
+                  Objective option. This allows a rapid mode of negotiation
                   described in <xref target="negproc"/>. A similar mechanism
                   is defined for synchronization in <xref target="synchproc"/>.</t>
                 </list></t>
@@ -850,7 +859,7 @@
           a peer to insert latency in a negotiation process if necessary
           (<xref target="ConfirmWaitingMessage"/>).</t>
           
-          <t>Rapid Mode (Discovery/Negotiation linkage)<list style="empty">
+          <section anchor="rapidneg" title="Rapid Mode (Discovery/Negotiation Linkage)">
                   <t>A Discovery message MAY include a Negotiation
                   Objective option. In this case the Discovery message also acts
                   as a Request message to indicate to the Discovery Responder
@@ -864,12 +873,12 @@
                   nodes so that a higher efficiency could be achieved. This
                   rapid negotiation function SHOULD be configured off by default
                   and MAY be configured on or off by Intent.</t>
-                </list></t>          
+          </section>          
           
         </section>
          
         
-        <section anchor="synchproc" title="Synchronization Procedure">
+        <section anchor="synchproc" title="Synchronization and Flooding Procedure">
          
          <t>A synchronization initiator sends a synchronization request to a
           counterpart, including a specific synchronization objective.
@@ -883,14 +892,15 @@
         Session ID (<xref target="SessionID"/>). An exponential backoff SHOULD be used
         for subsequent repetitions.</t>
                     
+        <section anchor="flooding" title="Flooding">
         <t>In the case just described, the message exchange is unicast and
          concerns only one synchronization objective. For large groups of nodes
          requiring the same data, synchronization flooding is available. For this, 
-         a synchronization responder MAY send an unsolicited Response message containing
+         a flooding initiator MAY send an unsolicited Flood message containing
          one or more Synchronization Objective option(s), if and only if the specification 
          of those objectives permits it. This is sent as a multicast message to the 
          ALL_GRASP_NEIGHBOR multicast address (<xref target="Constants"/>).
-         To ensure that flooding does not result in a loop, the originator of the Response message
+         To ensure that flooding does not result in a loop, the originator of the Flood message
          MUST set the loop count in the objective to a suitable value (the default is GRASP_DEF_LOOPCT).
          In this case a suitable mechanism is needed
          to avoid excessive multicast traffic. This mechanism MUST be defined as part of the
@@ -899,40 +909,41 @@
          
         <t>A GRASP device with multiple link-layer interfaces (typically a router) MUST
         support synchronization flooding on all interfaces. If it receives a multicast
-        unsolicited Response message on a given interface, it MUST relay
-        it by re-issuing the same Response message on its other interfaces.
+        Flood message on a given interface, it MUST relay
+        it by re-issuing the same Flood message on its other interfaces.
         Before this, it MUST decrement the loop count within the objective, and 
-        discard the Response message if the result is zero.  
-        Also, it MUST limit the total rate at which it relays Response messages
+        discard the Flood message if the result is zero.  
+        Also, it MUST limit the total rate at which it relays Flood messages
         to a reasonable value, in order to mitigate possible denial of service attacks.
         It MUST cache the Session ID value of each relayed
-        Response message and, to prevent loops, MUST NOT relay a Response message
+        Flood message and, to prevent loops, MUST NOT relay a Flood message
         which carries such a cached Session ID. These precautions avoid synchronization loops
         and mitigate potential overload.</t>
         
         <t>Note that this mechanism is unreliable in the case of sleeping nodes. Sleeping nodes
-        that require an objective subject to synchronization flooding SHOULD periodically
+        that require an objective subject to flooding SHOULD periodically
         initiate normal synchronization for that objective. </t>
         
         <t>The multicast messages for synchronization flooding are subject to the security
         rules in <xref target="reqsec"/>. In practice this means that they MUST NOT be transmitted
         and MUST be ignored on receipt unless there is an operational ACP.</t>
-         
-          <t>Rapid Mode (Discovery/Synchronization linkage)<list style="empty">
-                  <t>A Discovery message MAY include one or more Synchronization
-                  Objective option(s). In this case the Discovery message also acts
+        </section>
+        
+        <section anchor="rapidsynch" title="Rapid Mode (Discovery/Synchronization Linkage)">
+                  <t>A Discovery message MAY include a Synchronization
+                  Objective option. In this case the Discovery message also acts
                   as a Request message to indicate to the Discovery Responder
                   that it could directly reply to the Discovery Initiator with
                   a Response message with synchronization data for rapid processing,
                   if the discovery target supports the corresponding synchronization
-                  objective(s). However, the indication is only advisory not
+                  objective. However, the indication is only advisory not
                   prescriptive.</t>
 
                   <t>This rapid mode could reduce the interactions between
                   nodes so that a higher efficiency could be achieved. This
                   rapid synchronization function SHOULD be configured off by default
                   and MAY be configured on or off by Intent.</t>
-                </list></t>
+        </section>
         
         </section>
          
@@ -983,16 +994,20 @@
          
 
         <t>This is an up to 24-bit opaque value used to distinguish multiple sessions between
-        the same two devices. A new Session ID MUST be generated for every
-        new Discovery or Request message, and for every unsolicited Response message.
-        All follow-up messages in the same 
-        discovery, synchronization or negotiation procedure, which is initiated
-        by the request message, MUST carry the same Session ID.</t>
+        the same two devices. A new Session ID MUST be generated by the initiator for every
+        new Discovery, Flood or Request message. All follow-up messages in the same 
+        discovery, synchronization, flooding or negotiation procedure MUST carry the same Session ID.</t>
 
         <t>The Session ID SHOULD have a very low collision rate locally. It
         MUST be generated by a pseudo-random algorithm using a locally generated seed
         which is unlikely to be used by any other device in the same
         network <xref target="RFC4086"/>.</t>
+        
+        <t>However, there is a finite probability that two nodes might generate the same
+        Session ID value. For that reason, when a Session ID is communicated via GRASP, the
+        receiving node MUST tag it with the initiator's IP address to allow disambiguation.
+        Multicast GRASP messages and their responses, which may be relayed between links,
+        therefore include a field that carries the initiator's global IP address.</t>
       </section>
 
        
@@ -1021,10 +1036,11 @@
           
           <t><figure>
               <artwork><![CDATA[
-  message /= [MESSAGE_TYPE, session-id, *option]
+  message /= [MESSAGE_TYPE, session-id, ?initiator, *option]
           
   MESSAGE_TYPE = ; a defined constant
   session-id =   0..16777215
+  initiator /=   ; defined below
   option /=      ; one of the options defined below
   ]]></artwork>
           </figure></t>
@@ -1040,10 +1056,11 @@
           
           <t><figure>
               <artwork><![CDATA[
-  discovery-message = [M_DISCOVERY, session-id, objective]
+  discovery-message = [M_DISCOVERY, session-id, initiator, objective]
      
   M_DISCOVERY =  ; a defined constant
   session-id =   0..16777215
+  initiator /=   ; defined below
   objective /=   ; defined below
   ]]></artwork>
           </figure></t>
@@ -1059,6 +1076,13 @@
                address for discovery, and stores the discovery 
                results (including responding discovery objectives and
                corresponding unicast addresses or FQDNs).
+               </t><t>
+               The message includes a globally unique IP address of the
+               initiator, for the sole purpose of disambiguating the Session ID
+               in other nodes. If for some reason the initiator does not
+               have a globally unique IP address, it MUST create a dummy
+               address for this purpose that is highly likely to be
+               unique, for example using <xref target="RFC7217"/>.
                </t><t>
 
                A Discovery message MUST include exactly one of the following:
@@ -1089,11 +1113,12 @@
           
           <t><figure>
               <artwork><![CDATA[
-  response-message = [M_RESPONSE, session-id,
-                     (+locator-option // divert-option // objective)]
+  response-message = [M_RESPONSE, session-id, initiator,
+                   (+locator-option // divert-option // objective)]
           
   M_RESPONSE =       ; a defined constant
   session-id =       0..16777215
+  initiator /=       ; defined below
   locator-option /=  ; defined below
   divert-option =    ; defined below
   objective /=       ; defined below
@@ -1103,7 +1128,7 @@
           <t>
           A node which receives a Discovery message sends a 
                Response message to respond to a discovery. It MUST
-               contain the same Session ID as the Discovery message.
+               contain the same Session ID and initiator as the Discovery message.
                It MAY include a copy of the discovery objective from
                the Discovery message.
                </t><t>
@@ -1127,16 +1152,34 @@
   
                A node which receives a synchronization request 
                sends a Response message with the synchronization
-               data, <!-- A node MAY send an unsolicited Response Message
-               with synchronization data and this MAY be sent to the
-               link-local ALL_GRASP_NEIGHBOR multicast address, in accordance
-               with the rules in <xref target="synchproc"/>. 
-               If the response contains synchronization data, this will 
-               be -->in the form of GRASP Option(s) for the specific
+               data, in the form of GRASP Option(s) for the specific
                synchronization objective(s).</t>
         </section>
 
-         
+      <section anchor="FloodMessage" title="Flood Message">
+          <t>In fragmentary CDDL, a Flood message follows the pattern:</t>
+          
+          <t><figure>
+              <artwork><![CDATA[
+  flood-message = [M_FLOOD, session-id, initiator, +objective]
+          
+  M_FLOOD    =       ; a defined constant
+  session-id =       0..16777215
+  initiator /=       ; defined below
+  objective /=       ; defined below
+  ]]></artwork>
+          </figure></t>
+          
+          <t>
+          A node MAY initiate flooding by sending an unsolicited Flood Message
+          with synchronization data. This MAY be sent to the
+          link-local ALL_GRASP_NEIGHBOR multicast address, in accordance
+          with the rules in <xref target="synchproc"/>. The initiator
+          addres is provided as described for Discovery messages.
+          The synchronization data will be in the form of GRASP Option(s) for specific
+          synchronization objective(s).</t>
+        </section>
+ 
 
         <section anchor="RequestMessage" title="Request Message">
            
@@ -1144,7 +1187,7 @@
           
           <t><figure>
               <artwork><![CDATA[
-  discovery-message = [M_REQUEST, session-id, objective]
+  request-message = [M_REQUEST, session-id, objective]
           
   M_REQUEST =    ; a defined constant
   session-id =   0..16777215
@@ -1342,7 +1385,7 @@
           <t><figure>
               <artwork><![CDATA[
   decline-option = [O_DECLINE, ?reason]
-  reason = tstr  ;optional error message
+  reason = text  ;optional error message
           
   O_DECLINE =       ; a defined constant
   ]]></artwork>
@@ -1517,35 +1560,45 @@
        
         <t>An objective option is used to identify objectives for
         the purposes of discovery, negotiation or synchronization.
-        All objectives must follow one of two common formats as follows,
+        All objectives MUST be in the following format,
         described in fragmentary CDDL:</t>
 
         <t><figure>
             <artwork><![CDATA[
-  generic-obj = [objective-name, objective-flags, loop-count, ?any]
-  vendor-obj = [{"PEN":pen}, objective-name, objective-flags, 
-                loop-count, ?any]
+  objective = [objective-name, objective-flags, loop-count, ?any]
            
-  objective-name = tstr
-  pen = 0..4294967295
+  objective-name = text
   loop-count = 0..255
   objective-flags \=     ; defined below
   ]]></artwork>
           </figure></t>
           
-          <t>All objectives are identified by a unique name which is a UTF-8 string. 
-          The names of generic objectives MUST be registered with IANA.</t>
+          <t>All objectives are identified by a unique name which is a case-sensitive UTF-8 string. </t>
           
-          <t>The name "PEN" and the value following it MUST be prepended to indicate vendor-defined
-          objectives. The associated value uniquely identifies the enterprise
-          that defines the option, in the form of a registered 32 bit Private Enterprise Number (PEN)
-          <xref target="I-D.liang-iana-pen"/>. There is no default value for this field.
-          Note that it is not used during discovery. It MUST be verified during negotiation
-          or synchronization.</t>
+          <t>The names of generic objectives MUST NOT include a colon (":")
+          and MUST be registered with IANA (<xref target="iana"/>).</t>
+          
+          <t>The names of privately defined objectives MUST include at least one colon (":"). 
+          The string preceding the last colon in the name MUST be globally unique and in some
+          way identify the entity or person defining the objective. The following three methods
+          MAY be used to create such a globally unique string:
+          <list style="numbers">
+          <t>The unique string is a decimal number representing a registered 32 bit Private Enterprise
+          Number (PEN) <xref target="I-D.liang-iana-pen"/> that uniquely identifies the enterprise
+          defining the objective.</t>
+          <t>The unique string is a fully qualified domain name that uniquely identifies the entity or person
+          defining the objective.</t>
+          <t>The unique string is an email address that uniquely identifies the entity or person
+          defining the objective.</t>
+          </list> 
+          
+          The GRASP protocol treats the objective name as an opaque string. For example, "EX1", "411:EX1", 
+          "example.com:EX1", "example.org:EX1 and "user@example.org:EX1" would be five different objectives.</t>
           
           <t>The 'loop-count' field is used for terminating negotiation as described in
           <xref target="NegotiationMessage"/>. It is also used for terminating discovery as
-          described in <xref target="discmech"/>, and for terminating flooding as described in FLOODING. 
+          described in <xref target="discmech"/>, and for terminating flooding as described in
+          <xref target="flooding"/>. 
           </t>
           <t>
           The 'any' field is to express the actual value of a negotiation
@@ -1574,12 +1627,12 @@
       <section anchor="ConsOption" title="General Considerations for Objective Options">
          
         
-        <t>As mentioned above, generic Objective Options MUST be assigned a unique name.
-        As long as vendor-defined Objective Options start with a valid PEN, this document
-        does not restrict their choice of name, but the vendor SHOULD publish the names in use. </t>
+        <t>As mentioned above, Objective Options MUST be assigned a unique name.
+        As long as privately defined Objective Options obey the rules above, this document
+        does not restrict their choice of name, but the entity or person concerned SHOULD publish the names in use. </t>
         
-        <t>All Objective Options MUST respect the CBOR patterns defined above as "generic-obj"
-        or "vendor-obj" and MUST replace the "any" field with a valid CBOR data definition
+        <t>All Objective Options MUST respect the CBOR patterns defined above as "objective"
+        and MUST replace the "any" field with a valid CBOR data definition
         for the relevant use case and application. </t>
         
         <t>An Objective Option that contains no additional
@@ -1602,13 +1655,13 @@
         specific negotiation objective.</t>
         
         <t>Synchronization Objective Options are similar, but MUST be carried
-        by Discovery, Request or Response messages only. They include
-        value fields only in Response messages. </t>
+        by Discovery, Request, Response or Flood messages only. They include
+        value fields only in Response or Flood messages. </t>
         </section>
         <section title="Organizing of Objective Options">
            
           <t>Generic objective options MUST be specified in documents
-          available to the public and MUST be designed to use either
+          available to the public and SHOULD be designed to use either
           the negotiation or the synchronization mechanism described above.
           </t> 
 
@@ -1684,7 +1737,7 @@
       <section title="Open Issues">
       
         <t>RFC Editor: This section should be deleted except for any items not marked
-        as resolved.</t>
+        as resolved, which should be retained and renumbered.</t>
 
         <t>There are various unresolved design questions that are worthy of more work
         in the near future, as listed below (statically numbered in historical order
@@ -1872,7 +1925,10 @@
             RESOLVED: added this as a requirement on the ACP.</t>
             
             <t>29. PEN is used to distinguish vendor options. Would it be better to use
-            a domain name? Anything unique will do.</t>
+            a domain name? Anything unique will do.
+            <vspace blankLines="1"/>
+            RESOLVED: Simplified this by removing PEN field and changing naming rules
+            for objectives.</t>
             
             <t>30. Does response to discovery require randomized delays to mitigate amplification attacks? 
             <vspace blankLines="1"/>
@@ -1903,7 +1959,9 @@
             RESOLVED: Done.</t>
             
             <t>36. Reconsider CBOR definition for PEN syntax.
-            ( objective-name = text / [pen, text] ; pen = uint )</t>
+            ( objective-name = text / [pen, text] ; pen = uint )
+            <vspace blankLines="1"/>
+            RESOLVED: See issue 29.</t>
             
             <t>37. Are URI locators really needed?
             <vspace blankLines="1"/>
@@ -1911,7 +1969,9 @@
             addresses are the normal case (same for FQDN locators).</t>
             
             <t>38. Is Session ID sufficient to identify relayed responses?
-            Isn't the originator's address needed too?</t>
+            Isn't the originator's address needed too?
+            <vspace blankLines="1"/>
+            RESOLVED: Yes, this is needed for multicast messages and their responses.</t>
             
             <t>39. Clarify that a node will contain one GRASP instance supporting multiple ASAs.
             <vspace blankLines="1"/>
@@ -1928,7 +1988,12 @@
             <t>42. Do we need a feature whereby an ASA can bypass the ACP and use the data plane
             for efficiency/throughput?</t>
             
-            <t>43. Rapid mode synchronization - one or multiple objectives?</t>
+            <t>43. Rapid mode synchronization and negotiation is currently limited to a single objectives
+            for simplicity of design and implementation. A future consideration is to allow multiple
+            objectives in rapid mode for greater efficiency. </t>
+            
+            <t>44. In requirement T9, the words that encryption "may not be required in all deployments"
+            were removed. Is that OK?.</t>
             
             
             </list></t>
@@ -2014,11 +2079,14 @@ session-id = 0..16777215
 ; that is up to 24 bits
 
 message /= discovery-message
-discovery-message = [M_DISCOVERY, session-id, objective]
+discovery-message = [M_DISCOVERY, session-id, initiator, objective]
 
 message /= response-message
-response-message = [M_RESPONSE, session-id,
-                   (+locator-option // divert-option // objective)]
+response-message = [M_RESPONSE, session-id, initiator,
+                   (+locator-option // divert-option // objective)] 
+
+message /= flood-message
+flood-message = [M_FLOOD, session-id, initiator, +objective]
 
 message /= request-message
 request-message = [M_REQUEST, session-id, objective]
@@ -2027,7 +2095,7 @@ message /= negotiation-message
 negotiation-message = [M_NEGOTIATE, session-id, objective]
 
 message /= end-message
-end-message = [M_END, session-id, (accept-option / decline-option)]
+end-message = [M_END, session-id, accept-option / decline-option ]
 
 message /= wait-message
 wait-message = [M_WAIT, session-id, waiting-time-option]
@@ -2037,7 +2105,7 @@ divert-option = [O_DIVERT, +locator-option]
 accept-option = [O_ACCEPT]
 
 decline-option = [O_DECLINE, ?reason]
-reason = tstr  ;optional error message
+reason = text  ;optional error message
 
 waiting-time-option = [O_WAITING, option-waiting-time]
 option-waiting-time = 0..4294967295 ; in milliseconds
@@ -2057,6 +2125,8 @@ fqdn-locator-option = [O_FQDN_LOCATOR, text]
 locator-option /= uri-locator-option
 uri-locator-option = [O_URI_LOCATOR, text]
 
+initiator = ipv4-locator-option / ipv6-locator-option
+
 objective-flags = uint .bits objective-flag
 
 objective-flag = &(
@@ -2069,20 +2139,13 @@ S: 2
 ; N means valid for discovery and negotiation
 ; S means valid for discovery and synchronization
 
-objective /= generic-obj
-generic-obj = [objective-name, objective-flags, loop-count, ?any]
+objective = [objective-name, objective-flags, loop-count, ?any]
 
-objective /= vendor-obj
-vendor-obj = [{"PEN":pen}, objective-name, objective-flags, 
-              loop-count, ?any]
+objective-name = text ;see specification for uniqueness rules
 
-; A PEN is used to distinguish vendor-specific options.
-
-pen = 0..4294967295
-objective-name = tstr
 loop-count = 0..255
 
-; Constants
+; Constants for message types and option types
 
 M_DISCOVERY = 1
 M_RESPONSE = 2
@@ -2090,6 +2153,7 @@ M_REQUEST = 3
 M_NEGOTIATE = 4
 M_END = 5
 M_WAIT = 6
+M_FLOOD = 7
 
 O_DIVERT = 100
 O_ACCEPT = 101
@@ -2172,7 +2236,6 @@ O_URI_LOCATOR = 106
  EX7
  EX8
  EX9
- PEN
 ]]></artwork>
         </figure>
         </t>
@@ -2206,17 +2269,30 @@ O_URI_LOCATOR = 106
 
     <section anchor="changes" title="Change log [RFC Editor: Please remove]">
     
-    <t>draft-ietf-anima-grasp-02, 2015-11-26:
+    <t>draft-ietf-anima-grasp-02, 2015-12-11:
       <vspace blankLines="1"/>
       Resolved numerous issues according to WG discussions.
       <vspace blankLines="1"/>
       Renumbered requirements, added D9.
       <vspace blankLines="1"/>
-      Protocol change: only allow one objective in rapid mode synchronization.
+      Protocol change: only allow one objective in rapid mode.
       <vspace blankLines="1"/>
       Protocol change: added optional error string to DECLINE option.
       <vspace blankLines="1"/>
+      Protocol change: removed statement that seemed to say that a Request not preceded
+      by a Discovery should cause a Discovery response. That made no sense, because there
+      is no way the initiator would know where to send the Request.
+      <vspace blankLines="1"/>
+      Protocol change: Removed PEN option from vendor objectives, changed naming rule
+      accordingly.
+      <vspace blankLines="1"/>
+      Protocol change: Added FLOOD message to simplify coding.
+      <vspace blankLines="1"/>
+      Protocol change:  Added initiator id to DISCOVER, RESPONSE and FLOOD messages.
+      <vspace blankLines="1"/>
       Renamed URL locator type as URI locator type.
+      <vspace blankLines="1"/>
+      Update CDDL definition.
       <vspace blankLines="1"/>
       Various other clarifications and editorial fixes.
       </t>
@@ -2315,6 +2391,7 @@ O_URI_LOCATOR = 106
       <?rfc include='reference.RFC.6347'?>
       <?rfc include='reference.RFC.3986'?>
       <?rfc include='reference.RFC.7049'?>
+      <?rfc include='reference.RFC.7217'?>
       <?rfc include='reference.I-D.greevenbosch-appsawg-cbor-cddl'?>
     </references>
 
