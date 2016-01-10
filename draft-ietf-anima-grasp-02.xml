@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="11" month="December" year="2015"/>
+    <date day="10" month="January" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -731,8 +731,8 @@
                   
                   <t>It is entirely possible to use GRASP discovery without a subsequent
                   negotiation or synchronization action. In this case, the discovered objective
-                  is simply used as a name and any subsequent operations between the peers are
-                  outside the scope of GRASP.</t>
+                  is simply used as a name during the discovery process and any subsequent
+                  operations between the peers are outside the scope of GRASP.</t>
                 </list></t>
 
               <t>Discovery Procedures<list style="empty">
@@ -781,9 +781,10 @@
                   support discovery on all interfaces. If it receives a Discovery message
                   on a given interface for a specific objective that it does not support and for
                   which it has not previously discovered a Discovery Responder, it MUST relay
-                  the query by re-issuing the same Discovery message on its other interfaces.
+                  the query by re-issuing a Discovery message on its other interfaces.
+                  The relayed message MAY have a different Session ID.
                   Before this, it MUST decrement the loop count within the objective, and 
-                  discard the Discovery message if the result is zero.
+                  MUST NOT relay the Discovery message if the result is zero.
                   Also, it MUST limit the total rate at which it relays discovery messages
                   to a reasonable value, in order to mitigate possible denial of service attacks.
                   It MUST cache the Session ID value of each relayed
@@ -882,8 +883,8 @@
          
          <t>A synchronization initiator sends a synchronization request to a
           counterpart, including a specific synchronization objective.
-          The counterpart responds with a Response
-          message containing the current value of the requested synchronization
+          The counterpart responds with a Synchronization message (<xref target="SynchMessage"/>)
+          containing the current value of the requested synchronization
           objective. No further messages are needed. </t>
           
         <t>If no reply message of any kind is received within a reasonable timeout
@@ -901,7 +902,7 @@
          of those objectives permits it. This is sent as a multicast message to the 
          ALL_GRASP_NEIGHBOR multicast address (<xref target="Constants"/>).
          To ensure that flooding does not result in a loop, the originator of the Flood message
-         MUST set the loop count in the objective to a suitable value (the default is GRASP_DEF_LOOPCT).
+         MUST set the loop count in the objectives to a suitable value (the default is GRASP_DEF_LOOPCT).
          In this case a suitable mechanism is needed
          to avoid excessive multicast traffic. This mechanism MUST be defined as part of the
          specification of the synchronization objective(s) concerned. It might be a simple rate
@@ -910,9 +911,10 @@
         <t>A GRASP device with multiple link-layer interfaces (typically a router) MUST
         support synchronization flooding on all interfaces. If it receives a multicast
         Flood message on a given interface, it MUST relay
-        it by re-issuing the same Flood message on its other interfaces.
-        Before this, it MUST decrement the loop count within the objective, and 
-        discard the Flood message if the result is zero.  
+        it by re-issuing a Flood message on its other interfaces.
+        The relayed message MAY have a different Session ID.
+        Before this, it MUST decrement the loop count within the objective, and  
+        MUST NOT relay the Flood message if the result is zero.  
         Also, it MUST limit the total rate at which it relays Flood messages
         to a reasonable value, in order to mitigate possible denial of service attacks.
         It MUST cache the Session ID value of each relayed
@@ -922,7 +924,7 @@
         
         <t>Note that this mechanism is unreliable in the case of sleeping nodes. Sleeping nodes
         that require an objective subject to flooding SHOULD periodically
-        initiate normal synchronization for that objective. </t>
+        request unicast synchronization for that objective. </t>
         
         <t>The multicast messages for synchronization flooding are subject to the security
         rules in <xref target="reqsec"/>. In practice this means that they MUST NOT be transmitted
@@ -934,7 +936,7 @@
                   Objective option. In this case the Discovery message also acts
                   as a Request message to indicate to the Discovery Responder
                   that it could directly reply to the Discovery Initiator with
-                  a Response message with synchronization data for rapid processing,
+                  a Synchronization message <xref target="SynchMessage"/> with synchronization data for rapid processing,
                   if the discovery target supports the corresponding synchronization
                   objective. However, the indication is only advisory not
                   prescriptive.</t>
@@ -995,8 +997,8 @@
 
         <t>This is an up to 24-bit opaque value used to distinguish multiple sessions between
         the same two devices. A new Session ID MUST be generated by the initiator for every
-        new Discovery, Flood or Request message. All follow-up messages in the same 
-        discovery, synchronization, flooding or negotiation procedure MUST carry the same Session ID.</t>
+        new Discovery, Flood or Request message. All responses and follow-up messages in the same 
+        discovery, synchronization or negotiation procedure MUST carry the same Session ID.</t>
 
         <t>The Session ID SHOULD have a very low collision rate locally. It
         MUST be generated by a pseudo-random algorithm using a locally generated seed
@@ -1032,7 +1034,7 @@
           <t>Every GRASP message carries a Session ID (<xref target="SessionID"/>).
           Options are then presented serially in the options field.</t>
           
-          <t>In fragmentary CDDL, every GRASP message follows the pattern:</t>
+          <t>In fragmentary CDDL, every GRASP message (except the no-operation message) follows the pattern:</t>
           
           <t><figure>
               <artwork><![CDATA[
@@ -1075,14 +1077,14 @@
                messages to the link-local ALL_GRASP_NEIGHBOR multicast
                address for discovery, and stores the discovery 
                results (including responding discovery objectives and
-               corresponding unicast addresses or FQDNs).
+               corresponding unicast addresses, FQDNs or URIs).
                </t><t>
                The message includes a globally unique IP address of the
                initiator, for the sole purpose of disambiguating the Session ID
                in other nodes. If for some reason the initiator does not
-               have a globally unique IP address, it MUST create a dummy
+               have a globally unique IP address, it MUST use a link-local
                address for this purpose that is highly likely to be
-               unique, for example using <xref target="RFC7217"/>.
+               unique, for example using <xref target="RFC7217"/>. 
                </t><t>
 
                A Discovery message MUST include exactly one of the following:
@@ -1103,7 +1105,7 @@
                </t>
                <t>a synchronization objective option (<xref target="ObjOption"/>).
                This is used both for the purpose of discovery and to indicate to the discovery
-               target that it MAY directly reply to the discovery initiator with a Response message
+               target that it MAY directly reply to the discovery initiator with a Synchronization message
                for rapid processing, if it could act as the corresponding synchronization counterpart.</t>
                </list></t>
         </section>
@@ -1114,7 +1116,7 @@
           <t><figure>
               <artwork><![CDATA[
   response-message = [M_RESPONSE, session-id, initiator,
-                   (+locator-option // divert-option // objective)]
+                    (+locator-option // divert-option), ?objective)]
           
   M_RESPONSE =       ; a defined constant
   session-id =       0..16777215
@@ -1148,38 +1150,10 @@
                option or a combination of multiple kinds of locator
                options which indicate the locator(s) of the discovery 
                objective.
-               </t><t>
-  
-               A node which receives a synchronization request 
-               sends a Response message with the synchronization
-               data, in the form of GRASP Option(s) for the specific
-               synchronization objective(s).</t>
+               </t>
         </section>
 
-      <section anchor="FloodMessage" title="Flood Message">
-          <t>In fragmentary CDDL, a Flood message follows the pattern:</t>
-          
-          <t><figure>
-              <artwork><![CDATA[
-  flood-message = [M_FLOOD, session-id, initiator, +objective]
-          
-  M_FLOOD    =       ; a defined constant
-  session-id =       0..16777215
-  initiator /=       ; defined below
-  objective /=       ; defined below
-  ]]></artwork>
-          </figure></t>
-          
-          <t>
-          A node MAY initiate flooding by sending an unsolicited Flood Message
-          with synchronization data. This MAY be sent to the
-          link-local ALL_GRASP_NEIGHBOR multicast address, in accordance
-          with the rules in <xref target="synchproc"/>. The initiator
-          addres is provided as described for Discovery messages.
-          The synchronization data will be in the form of GRASP Option(s) for specific
-          synchronization objective(s).</t>
-        </section>
- 
+   
 
         <section anchor="RequestMessage" title="Request Message">
            
@@ -1209,6 +1183,8 @@
                <t>When an initiator sends a Request message, it MUST initialize the loop count
                of the objective option with a value defined in the specification of the option
                or, if no such value is specified, with GRASP_DEF_LOOPCT. </t>
+               <t>If a node receives a Request message for an objective for which no ASA is currently
+               listening, it MUST immediately close the relevant socket to indicate this to the initiator.</t>
         </section>
 
          
@@ -1259,7 +1235,7 @@
           <t>
                A negotiation counterpart sends an Negotiation-ending
                message to close the negotiation. It MUST contain 
-               one, but only one of accept/decline option, 
+               either an accept or a decline option, 
                defined in <xref target="AcceptOption"/> and <xref target="DeclineOption"/>.
                It could be sent either by the 
                requesting node or the responding node.</t>
@@ -1273,21 +1249,92 @@
 
           <t><figure>
               <artwork><![CDATA[
-  wait-message = [M_WAIT, session-id, waiting-time-option]
+  wait-message = [M_WAIT, session-id, waiting-time]
           
   M_WAIT =              ; a defined constant
   session-id =          0..16777215
-  waiting-time-option = ; defined below
+  waiting-time =        0..4294967295 ; in milliseconds
   ]]></artwork>
           </figure></t>
           <t>
-               A responding node sends a Confirm-waiting message to
-               indicate the requesting node to wait for a further
-               negotiation response. It might be that the local
-               process needs more time or that the negotiation 
-               depends on another triggered negotiation. This
-               message MUST NOT include any other options than the
-               Waiting Time Option (<xref target="WaitingTimeOption"/>).</t>
+          A responding node sends a Confirm-waiting message to
+          ask the requesting node to wait for a further
+          negotiation response. It might be that the local
+          process needs more time or that the negotiation 
+          depends on another triggered negotiation. This
+          message MUST NOT include any other options.
+          When received, the waiting time value overwrites 
+          and restarts the current negotiation timer
+          (<xref target="RequestMessage"/>).</t>
+
+          <t>The responding node SHOULD send a Negotiation, Negotiation-Ending or another
+          Confirm-waiting message before the negotiation timer expires. If
+          not, the initiator MUST abandon or restart the negotiation
+          procedure, to avoid an indefinite wait.</t>
+        </section>
+        
+        <section anchor="SynchMessage" title="Synchronization Message">
+          <t>In fragmentary CDDL, a Synchronization message follows the pattern:</t>
+          
+          <t><figure>
+              <artwork><![CDATA[
+  synch-message = [M_SYNCH, session-id, objective]
+          
+  M_SYNCH    =       ; a defined constant
+  session-id =       0..16777215
+  objective /=       ; defined below
+  ]]></artwork>
+          </figure></t>
+          
+          <t>A node which receives a synchronization Request, or
+             a Discovery message in Rapid Mode, sends back a unicast Synchronization
+             message with the synchronization data, in the form of a GRASP Option for the specific
+             synchronization objective present in the Request.</t>          
+         
+        </section>
+        
+        
+        <section anchor="FloodMessage" title="Flood Message">
+          <t>In fragmentary CDDL, a Flood message follows the pattern:</t>
+          
+          <t><figure>
+              <artwork><![CDATA[
+  flood-message = [M_FLOOD, session-id, initiator, +objective]
+          
+  M_FLOOD    =       ; a defined constant
+  session-id =       0..16777215
+  initiator /=       ; defined below
+  objective /=       ; defined below
+  ]]></artwork>
+          </figure></t>
+          
+          <t>
+          A node MAY initiate flooding by sending an unsolicited Flood Message
+          with synchronization data. This MAY be sent to the
+          link-local ALL_GRASP_NEIGHBOR multicast address, in accordance
+          with the rules in <xref target="synchproc"/>. The initiator
+          address is provided as described for Discovery messages.
+          The synchronization data will be in the form of GRASP Option(s) for specific
+          synchronization objective(s).</t>
+          
+          <t>A node that receives a Flood message SHOULD cache the received objectives for
+          use by local ASAs.</t>
+        </section>
+        
+        <section anchor="NoOpMessage" title="No Operation Message">
+          <t>In fragmentary CDDL, a No Operation message follows the pattern:</t>
+          
+          <t><figure>
+              <artwork><![CDATA[
+  noop-message = [M_NOOP]
+          
+  M_NOOP    =       ; a defined constant
+  ]]></artwork>
+          </figure></t>
+          
+          <t>
+          This message MAY be sent by an implementation that for practical reasons needs to
+          activate a socket. It MUST be silently ignored by a recipient.</t>
         </section>
 
          
@@ -1401,36 +1448,6 @@
 
          
 
-        <section anchor="WaitingTimeOption" title="Waiting Time Option ">
-           
-
-          <t>The waiting time option is used to indicate that the negotiation
-          counterpart needs to wait for a further negotiation response, since
-          the processing might need more time than usual or it might depend on
-          another triggered negotiation.</t>
-
-          <t>The waiting time option MUST only be encapsulated in
-          Confirm-waiting messages. If found elsewhere, it SHOULD be silently
-          ignored. When received, its value overwrites the negotiation timer
-          (<xref target="RequestMessage"/>).</t>
-
-          <t>The counterpart SHOULD send a Negotiation, Negotiation-Ending or another
-          Confirm-waiting message before the negotiation timer expires. If
-          not, the initiator MUST abandon or restart the negotiation
-          procedure, to avoid an indefinite wait.</t>
-          
-          <t>In fragmentary CDDL, the Waiting-time option follows the pattern:</t>
-
-          <t><figure>
-              <artwork><![CDATA[
-  waiting-time-option = [O_WAITING, option-waiting-time]
-          
-  O_WAITING =           ; a defined constant
-  option-waiting-time = 0..4294967295 ; in milliseconds
-  ]]></artwork>
-          </figure></t>
-        </section>
-        
         <section anchor="IDOption" title="Device Identity Option">
            
 
@@ -1495,8 +1512,11 @@
           
           <t>The content of this option is a binary IPv6 address.</t>
           
-          <t>Note: A link-local IPv6 address MUST NOT be used when
-            this option is used within the Divert option.</t>
+          <t>Note 1: The IPv6 address MUST normally have global scope. Exceptionally, during node bootstrap,
+          a link-local address MAY be used for specific objectives only.</t>
+          
+          <t>Note 2: A link-local IPv6 address MUST NOT be used when
+            this option is included in a Divert option.</t>
           </section>
 
            
@@ -1610,15 +1630,15 @@
 
          <section title="Objective flags">
 
-         <t>An objective may be relevant for discovery, negotiation or
-         synchronization. This is expressed in the objective by logical flags:</t>
+         <t>An objective may be relevant for discovery only, for discovery and negotiation, or
+         for discovery and synchronization. This is expressed in the objective by logical flags:</t>
          <t><figure>
         <artwork><![CDATA[
   objective-flags = uint .bits objective-flag
   objective-flag = &(
-  D: 0 ; valid for discovery only
-  N: 1 ; valid for discovery and negotiation
-  S: 2 ; valid for discovery and synchronization
+  F_DISC: 0 ; valid for discovery only
+  F_NEG: 1 ; valid for discovery and negotiation
+  F_SYNCH: 2 ; valid for discovery and synchronization
   )
   ]]></artwork>
           </figure></t>
@@ -1982,18 +2002,22 @@
             RESOLVED: Done.</t>
             
             <t>41. What happens if an ASA cannot conveniently use one of the GRASP mechanisms?
-            Do we add message type to GRASP, or simply pass the discovery results to the ASA so
-            that it can open its own socket?</t>
+            Do we (a) add a message type to GRASP, or (b) simply pass the discovery results to the ASA so
+            that it can open its own socket?<vspace blankLines="1"/>
+            RESOLVED: Both would be possible, but (b) is preferred.</t>
             
             <t>42. Do we need a feature whereby an ASA can bypass the ACP and use the data plane
-            for efficiency/throughput?</t>
+            for efficiency/throughput? This would require discovery to return non-ACP addresses
+            and would evade ACP security. </t>
             
-            <t>43. Rapid mode synchronization and negotiation is currently limited to a single objectives
+            <t>43. Rapid mode synchronization and negotiation is currently limited to a single objective
             for simplicity of design and implementation. A future consideration is to allow multiple
             objectives in rapid mode for greater efficiency. </t>
             
             <t>44. In requirement T9, the words that encryption "may not be required in all deployments"
             were removed. Is that OK?.</t>
+            
+            <t>45. Device Identity Option is unused. Can we remove it completely?.</t>
             
             
             </list></t>
@@ -2031,8 +2055,8 @@
       <t>- Authorization and Roles<list style="hanging">
          <t>The GRASP protocol is agnostic about the role of individual ASAs and about
          which objectives a particular ASA is authorized to support. It SHOULD apply
-         precautions such as allowing only one ASA in a given node to support a given
-         objective, but otherwise authorization is out of scope. </t>
+         obvious precautions such as allowing only one ASA in a given node to modify
+         a given objective, but otherwise authorization is out of scope. </t>
          </list></t>
          
       <t>- Privacy and confidentiality<list style="hanging">
@@ -2078,12 +2102,18 @@ grasp-message = message
 session-id = 0..16777215
 ; that is up to 24 bits
 
+message /= noop-message
+noop-message = [M_NOOP]
+
 message /= discovery-message
 discovery-message = [M_DISCOVERY, session-id, initiator, objective]
 
-message /= response-message
+message /= response-message ;response to Discovery
 response-message = [M_RESPONSE, session-id, initiator,
-                   (+locator-option // divert-option // objective)] 
+                   (+locator-option // divert-option), ?objective]
+
+message /= synch-message ;response to Synchronization request
+synch-message = [M_SYNCH, session-id, objective] 
 
 message /= flood-message
 flood-message = [M_FLOOD, session-id, initiator, +objective]
@@ -2130,14 +2160,10 @@ initiator = ipv4-locator-option / ipv6-locator-option
 objective-flags = uint .bits objective-flag
 
 objective-flag = &(
-D: 0
-N: 1
-S: 2
+  F_DISC: 0 ; valid for discovery only
+  F_NEG: 1 ; valid for discovery and negotiation
+  F_SYNCH: 2 ; valid for discovery and synchronization
 )
-
-; D means valid for discovery only
-; N means valid for discovery and negotiation
-; S means valid for discovery and synchronization
 
 objective = [objective-name, objective-flags, loop-count, ?any]
 
@@ -2147,21 +2173,22 @@ loop-count = 0..255
 
 ; Constants for message types and option types
 
+M_NOOP = 0
 M_DISCOVERY = 1
 M_RESPONSE = 2
 M_REQUEST = 3
 M_NEGOTIATE = 4
 M_END = 5
 M_WAIT = 6
-M_FLOOD = 7
+M_SYNCH = 7
+M_FLOOD = 8
 
 O_DIVERT = 100
 O_ACCEPT = 101
 O_DECLINE = 102
-O_WAITING = 103
-O_DEVICE_ID = 104
-O_FQDN_LOCATOR = 105
-O_URI_LOCATOR = 106
+O_FQDN_LOCATOR = 103
+O_URI_LOCATOR = 104
+O_DEVICE_ID = 105
 
 
 <CODE ENDS>
@@ -2202,7 +2229,8 @@ O_URI_LOCATOR = 106
       defined by <xref target="RFC5226"/>. The following initial values are assigned by this document:</t>
 
       <t><figure>
-          <artwork><![CDATA[ M_DISCOVERY = 1
+          <artwork><![CDATA[ M_NOOP = 0
+ M_DISCOVERY = 1
  M_RESPONSE = 2
  M_REQUEST = 3
  M_NEGOTIATE = 4
@@ -2212,10 +2240,9 @@ O_URI_LOCATOR = 106
  O_DIVERT = 100
  O_ACCEPT = 101
  O_DECLINE = 102
- O_WAITING = 103
- O_DEVICE_ID = 104
- O_FQDN_LOCATOR = 105
- O_URI_LOCATOR = 106
+ O_FQDN_LOCATOR = 103
+ O_URI_LOCATOR = 104
+ O_DEVICE_ID = 105
 ]]></artwork>
         </figure>
         </t>
@@ -2269,7 +2296,7 @@ O_URI_LOCATOR = 106
 
     <section anchor="changes" title="Change log [RFC Editor: Please remove]">
     
-    <t>draft-ietf-anima-grasp-02, 2015-12-11:
+    <t>draft-ietf-anima-grasp-02, 2016-01-10:
       <vspace blankLines="1"/>
       Resolved numerous issues according to WG discussions.
       <vspace blankLines="1"/>
@@ -2288,11 +2315,21 @@ O_URI_LOCATOR = 106
       <vspace blankLines="1"/>
       Protocol change: Added FLOOD message to simplify coding.
       <vspace blankLines="1"/>
+      Protocol change: Added SYNCH message to simplify coding.
+      <vspace blankLines="1"/>
       Protocol change:  Added initiator id to DISCOVER, RESPONSE and FLOOD messages.
+      <vspace blankLines="1"/>
+      Protocol change: Require that discovered addresses must be global (except during bootstrap).
+      <vspace blankLines="1"/>
+      Protocol change: Receiver of REQUEST message must close socket if no ASA is listening for the objective.
+      <vspace blankLines="1"/>
+      Protocol change: Simplified Waiting message.
+      <vspace blankLines="1"/>
+      Protocol change: Added No Operation message.
       <vspace blankLines="1"/>
       Renamed URL locator type as URI locator type.
       <vspace blankLines="1"/>
-      Update CDDL definition.
+      Updated CDDL definition.
       <vspace blankLines="1"/>
       Various other clarifications and editorial fixes.
       </t>
