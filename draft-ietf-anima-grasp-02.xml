@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="10" month="January" year="2016"/>
+    <date day="13" month="January" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -653,9 +653,9 @@
       
         <section anchor="reqsec" title="Required External Security Mechanism">
          <t>The protocol SHOULD run within a secure Autonomic Control Plane (ACP)
-         <xref target="I-D.ietf-anima-autonomic-control-plane"/>. The ACP MUST
-         carry all messages securely, including link-local multicast if possible. The ACP MUST provide
-         a status indicator to inform GRASP that the ACP is operational. </t>
+         <xref target="I-D.ietf-anima-autonomic-control-plane"/>. The ACP is assumed
+         to carry all messages securely, including link-local multicast if possible.
+         A GRASP implementation MUST verify whether the ACP is operational. </t>
          
          <t>If there is no ACP, the protocol
          MUST use another form of strong authentication and SHOULD use a form
@@ -675,9 +675,9 @@
          performed across an administrative domain boundary by mutual agreement. Such operations
          MUST be authenticated and SHOULD be encrypted. TLS is RECOMMENDED for this purpose.</t>
          
-         <t>Link-local multicast is used for discovery messages. It is preferred that the
+         <t>Link-local multicast is used for discovery messages. <!-- It is preferred that the
          ACP will handle these and distribute them securely to all on-link ACP nodes only.
-         However, in the absence of an ACP they cannot be secured.
+         However, in the absence of an ACP they cannot be secured. -->
          Responses to discovery messages MUST be secured, with one exception.</t>
          
          <t>The exception is that during initialisation, before a node has joined the applicable trust 
@@ -861,19 +861,19 @@
           (<xref target="ConfirmWaitingMessage"/>).</t>
           
           <section anchor="rapidneg" title="Rapid Mode (Discovery/Negotiation Linkage)">
-                  <t>A Discovery message MAY include a Negotiation
-                  Objective option. In this case the Discovery message also acts
-                  as a Request message to indicate to the Discovery Responder
-                  that it could directly reply to the Discovery Initiator with
-                  a Negotiation message for rapid processing, if it
-                  could act as the corresponding negotiation
-                  counterpart. However, the indication is only advisory not
-                  prescriptive. </t>
+             <t>A Discovery message MAY include a Negotiation
+             Objective option. In this case the Discovery message also acts
+             as a Request message to indicate to the Discovery Responder
+             that it could directly reply to the Discovery Initiator with
+             a Negotiation message for rapid processing, if it
+             could act as the corresponding negotiation
+             counterpart. However, the indication is only advisory not
+             prescriptive. </t>
 
-                  <t>This rapid mode could reduce the interactions between
-                  nodes so that a higher efficiency could be achieved. This
-                  rapid negotiation function SHOULD be configured off by default
-                  and MAY be configured on or off by Intent.</t>
+             <t>This rapid mode could reduce the interactions between
+             nodes so that a higher efficiency could be achieved. This
+             rapid negotiation function SHOULD be configured off by default
+             and MAY be configured on or off by Intent.</t>
           </section>          
           
         </section>
@@ -932,19 +932,19 @@
         </section>
         
         <section anchor="rapidsynch" title="Rapid Mode (Discovery/Synchronization Linkage)">
-                  <t>A Discovery message MAY include a Synchronization
-                  Objective option. In this case the Discovery message also acts
-                  as a Request message to indicate to the Discovery Responder
-                  that it could directly reply to the Discovery Initiator with
-                  a Synchronization message <xref target="SynchMessage"/> with synchronization data for rapid processing,
-                  if the discovery target supports the corresponding synchronization
-                  objective. However, the indication is only advisory not
-                  prescriptive.</t>
+             <t>A Discovery message MAY include a Synchronization
+             Objective option. In this case the Discovery message also acts
+             as a Request message to indicate to the Discovery Responder
+             that it could directly reply to the Discovery Initiator with
+             a Synchronization message <xref target="SynchMessage"/> with synchronization data for rapid processing,
+             if the discovery target supports the corresponding synchronization
+             objective. However, the indication is only advisory not
+             prescriptive.</t>
 
-                  <t>This rapid mode could reduce the interactions between
-                  nodes so that a higher efficiency could be achieved. This
-                  rapid synchronization function SHOULD be configured off by default
-                  and MAY be configured on or off by Intent.</t>
+             <t>This rapid mode could reduce the interactions between
+             nodes so that a higher efficiency could be achieved. This
+             rapid synchronization function SHOULD be configured off by default
+             and MAY be configured on or off by Intent.</t>
         </section>
         
         </section>
@@ -1029,27 +1029,33 @@
           using CBOR data definition language (CDDL)
           <xref target="I-D.greevenbosch-appsawg-cbor-cddl"/>.
           Fragmentary CDDL is used to describe each item in this section. A complete and normative
-          CDDL specification of GRASP is given in <xref target="cddl"/>.
+          CDDL specification of GRASP is given in <xref target="cddl"/>, including constants such
+          as message types.
           </t>
-          <t>Every GRASP message carries a Session ID (<xref target="SessionID"/>).
+          <t>Every GRASP message, except the No Operation message, carries a Session ID (<xref target="SessionID"/>).
           Options are then presented serially in the options field.</t>
           
-          <t>In fragmentary CDDL, every GRASP message (except the no-operation message) follows the pattern:</t>
+          <t>In fragmentary CDDL, every GRASP message follows the pattern:</t>
           
           <t><figure>
               <artwork><![CDATA[
-  message /= [MESSAGE_TYPE, session-id, ?initiator, *option]
-          
-  MESSAGE_TYPE = ; a defined constant
-  session-id =   0..16777215
-  initiator /=   ; defined below
-  option /=      ; one of the options defined below
+  grasp-message = (message .within message-structure) / noop-message
+
+  message-structure = [MESSAGE_TYPE, session-id, +grasp-option]
+
+  MESSAGE_TYPE = 1..255
+  session-id = 0..16777215 ;up to 24 bits
+  grasp-option = any
   ]]></artwork>
           </figure></t>
           
           <t>The MESSAGE_TYPE indicates the type of the message and thus defines 
           the expected options.  Any options received that are not consistent with
           the MESSAGE_TYPE SHOULD be silently discarded. </t>
+          
+          <t>The No Operation (noop) message is  described in <xref target="noop"/>.</t>
+          <t>The various MESSAGE_TYPE values are defined in <xref target="cddl"/>.</t>
+          <t>All other message elements are described below and formally defined in <xref target="cddl"/>.</t>
           
         </section>
 
@@ -1059,18 +1065,13 @@
           <t><figure>
               <artwork><![CDATA[
   discovery-message = [M_DISCOVERY, session-id, initiator, objective]
-     
-  M_DISCOVERY =  ; a defined constant
-  session-id =   0..16777215
-  initiator /=   ; defined below
-  objective /=   ; defined below
   ]]></artwork>
           </figure></t>
           
           
           <t>
           A discovery initiator sends a Discovery message
-               to initiate a discovery process.
+               to initiate a discovery process for a particular objective option.
                </t><t>
 
                The discovery initiator sends the Discovery 
@@ -1079,7 +1080,7 @@
                results (including responding discovery objectives and
                corresponding unicast addresses, FQDNs or URIs).
                </t><t>
-               The message includes a globally unique IP address of the
+               The 'initiator' field in the message is a globally unique IP address of the
                initiator, for the sole purpose of disambiguating the Session ID
                in other nodes. If for some reason the initiator does not
                have a globally unique IP address, it MUST use a link-local
@@ -1090,7 +1091,7 @@
                A Discovery message MUST include exactly one of the following:
                <list style="symbols">
                <t>a discovery objective option (<xref target="ObjOption"/>).
-               Its loop count must be set to a suitable value to prevent discovery
+               Its loop count MUST be set to a suitable value to prevent discovery
                loops (default value is GRASP_DEF_LOOPCT).
                </t>
 
@@ -1106,7 +1107,9 @@
                <t>a synchronization objective option (<xref target="ObjOption"/>).
                This is used both for the purpose of discovery and to indicate to the discovery
                target that it MAY directly reply to the discovery initiator with a Synchronization message
-               for rapid processing, if it could act as the corresponding synchronization counterpart.</t>
+               for rapid processing, if it could act as the corresponding synchronization counterpart.
+               Its loop count MUST be set to a suitable value to prevent discovery
+               loops (default value is GRASP_DEF_LOOPCT).</t>
                </list></t>
         </section>
 
@@ -1117,40 +1120,33 @@
               <artwork><![CDATA[
   response-message = [M_RESPONSE, session-id, initiator,
                     (+locator-option // divert-option), ?objective)]
-          
-  M_RESPONSE =       ; a defined constant
-  session-id =       0..16777215
-  initiator /=       ; defined below
-  locator-option /=  ; defined below
-  divert-option =    ; defined below
-  objective /=       ; defined below
   ]]></artwork>
           </figure></t>
           
           <t>
-          A node which receives a Discovery message sends a 
-               Response message to respond to a discovery. It MUST
-               contain the same Session ID and initiator as the Discovery message.
-               It MAY include a copy of the discovery objective from
-               the Discovery message.
-               </t><t>
+          A node which receives a Discovery message SHOULD send a 
+          Response message if and only if it can respond to the discovery. It MUST
+          contain the same Session ID and initiator as the Discovery message.
+          It MAY include a copy of the discovery objective from
+          the Discovery message.
+          </t><t>
 
-               If the responding node supports the discovery objective 
-               of the discovery, it MUST include at least one kind of 
-               locator option (<xref target="LocatorOption"/>) to indicate its own 
-               location. A combination of multiple kinds of locator 
-               options (e.g. IP address option + FQDN option) is also 
-               valid.
-               </t><t>
+          If the responding node supports the discovery objective 
+          of the discovery, it MUST include at least one kind of 
+          locator option (<xref target="LocatorOption"/>) to indicate its own 
+          location. A sequence of multiple kinds of locator 
+          options (e.g. IP address option + FQDN option) is also 
+          valid.
+          </t><t>
 
-               If the responding node itself does not support the discovery 
-               objective, but it knows the locator of the discovery 
-               objective, then it SHOULD respond to the discovery message with a 
-               divert option (<xref target="DivertOption"/>) embedding a locator 
-               option or a combination of multiple kinds of locator
-               options which indicate the locator(s) of the discovery 
-               objective.
-               </t>
+          If the responding node itself does not support the discovery 
+          objective, but it knows the locator of the discovery 
+          objective, then it SHOULD respond to the discovery message with a 
+          divert option (<xref target="DivertOption"/>) embedding a locator 
+          option or a combination of multiple kinds of locator
+          options which indicate the locator(s) of the discovery 
+          objective.
+          </t>
         </section>
 
    
@@ -1162,29 +1158,25 @@
           <t><figure>
               <artwork><![CDATA[
   request-message = [M_REQUEST, session-id, objective]
-          
-  M_REQUEST =    ; a defined constant
-  session-id =   0..16777215
-  objective /=   ; defined below
   ]]></artwork>
           </figure></t>
           <t>
           A negotiation or synchronization requesting node
-               sends the Request message to the unicast address (directly
-               stored or resolved from the FQDN) of the negotiation or
-               synchronization counterpart (selected from the discovery
-               results).</t>
-               <t>A request message MUST include the relevant objective option, with the requested
-               value in the case of negotiation. </t>
-               <t>When an initiator sends a Request message, it MUST initialize a negotiation timer
-               for the new negotiation thread with the value GRASP_DEF_TIMEOUT milliseconds. Unless this 
-               timeout is modified by a Confirm-waiting message (<xref target="ConfirmWaitingMessage"/>),
-               the initiator will consider that the negotiation has failed when the timer expires. </t>
-               <t>When an initiator sends a Request message, it MUST initialize the loop count
-               of the objective option with a value defined in the specification of the option
-               or, if no such value is specified, with GRASP_DEF_LOOPCT. </t>
-               <t>If a node receives a Request message for an objective for which no ASA is currently
-               listening, it MUST immediately close the relevant socket to indicate this to the initiator.</t>
+          sends the Request message to the unicast address (directly
+          stored or resolved from an FQDN) of the negotiation or
+          synchronization counterpart (selected from the discovery
+          results).</t>
+          <t>A request message MUST include the relevant objective option, with the requested
+          value in the case of negotiation. </t>
+          <t>When an initiator sends a Request message, it MUST initialize a negotiation timer
+          for the new negotiation thread with the value GRASP_DEF_TIMEOUT milliseconds. Unless this 
+          timeout is modified by a Confirm-waiting message (<xref target="ConfirmWaitingMessage"/>),
+          the initiator will consider that the negotiation has failed when the timer expires. </t>
+          <t>When an initiator sends a Request message, it MUST initialize the loop count
+          of the objective option with a value defined in the specification of the option
+          or, if no such value is specified, with GRASP_DEF_LOOPCT. </t>
+          <t>If a node receives a Request message for an objective for which no ASA is currently
+          listening, it MUST immediately close the relevant socket to indicate this to the initiator.</t>
         </section>
 
          
@@ -1197,22 +1189,18 @@
           <t><figure>
               <artwork><![CDATA[
   discovery-message = [M_NEGOTIATE, session-id, objective]
-          
-  M_NEGOTIATE =  ; a defined constant
-  session-id =   0..16777215
-  objective /=   ; defined below
   ]]></artwork>
           </figure></t>
           <t>A negotiation counterpart sends a Negotiation
-               message in response to a Request message, a 
-               Negotiation message, or a Discovery message
-               in Rapid Mode. A negotiation process MAY
-               include multiple steps.</t>
-               
-               <t>The Negotiation message MUST include the relevant Negotiation Objective option,
-               with its value updated according to progress in the negotiation. The sender
-               MUST decrement the loop count by 1. If the loop count becomes zero both parties
-               will consider that the negotiation has failed.</t>
+          message in response to a Request message, a 
+          Negotiation message, or a Discovery message
+          in Rapid Mode. A negotiation process MAY
+          include multiple steps.</t>
+          
+          <t>The Negotiation message MUST include the relevant Negotiation Objective option,
+          with its value updated according to progress in the negotiation. The sender
+          MUST decrement the loop count by 1. If the loop count becomes zero the message
+          MUST NOT be sent. In this case the negotiation session has failed and will time out.</t>
         </section>
 
          
@@ -1225,20 +1213,15 @@
           <t><figure>
               <artwork><![CDATA[
   end-message = [M_END, session-id, accept-option / decline-option]
-          
-  M_END =          ; a defined constant
-  session-id =     0..16777215
-  accept-option =  ; defined below
-  decline-option   ; defined below
   ]]></artwork>
           </figure></t>
           <t>
-               A negotiation counterpart sends an Negotiation-ending
-               message to close the negotiation. It MUST contain 
-               either an accept or a decline option, 
-               defined in <xref target="AcceptOption"/> and <xref target="DeclineOption"/>.
-               It could be sent either by the 
-               requesting node or the responding node.</t>
+          A negotiation counterpart sends an Negotiation-ending
+          message to close the negotiation. It MUST contain 
+          either an accept or a decline option, 
+          defined in <xref target="AcceptOption"/> and <xref target="DeclineOption"/>.
+          It could be sent either by the 
+          requesting node or the responding node.</t>
         </section>
 
          
@@ -1250,9 +1233,6 @@
           <t><figure>
               <artwork><![CDATA[
   wait-message = [M_WAIT, session-id, waiting-time]
-          
-  M_WAIT =              ; a defined constant
-  session-id =          0..16777215
   waiting-time =        0..4294967295 ; in milliseconds
   ]]></artwork>
           </figure></t>
@@ -1279,10 +1259,6 @@
           <t><figure>
               <artwork><![CDATA[
   synch-message = [M_SYNCH, session-id, objective]
-          
-  M_SYNCH    =       ; a defined constant
-  session-id =       0..16777215
-  objective /=       ; defined below
   ]]></artwork>
           </figure></t>
           
@@ -1300,11 +1276,6 @@
           <t><figure>
               <artwork><![CDATA[
   flood-message = [M_FLOOD, session-id, initiator, +objective]
-          
-  M_FLOOD    =       ; a defined constant
-  session-id =       0..16777215
-  initiator /=       ; defined below
-  objective /=       ; defined below
   ]]></artwork>
           </figure></t>
           
@@ -1315,20 +1286,19 @@
           with the rules in <xref target="synchproc"/>. The initiator
           address is provided as described for Discovery messages.
           The synchronization data will be in the form of GRASP Option(s) for specific
-          synchronization objective(s).</t>
+          synchronization objective(s). The loop count(s) MUST be set to a suitable
+          value to prevent flood loops (default value is GRASP_DEF_LOOPCT).</t>
           
           <t>A node that receives a Flood message SHOULD cache the received objectives for
           use by local ASAs.</t>
         </section>
         
-        <section anchor="NoOpMessage" title="No Operation Message">
+        <section anchor="noop" title="No Operation Message">
           <t>In fragmentary CDDL, a No Operation message follows the pattern:</t>
           
           <t><figure>
               <artwork><![CDATA[
   noop-message = [M_NOOP]
-          
-  M_NOOP    =       ; a defined constant
   ]]></artwork>
           </figure></t>
           
@@ -1352,9 +1322,10 @@
         <section title="Format of GRASP Options">
            
            <t>GRASP options are CBOR objects that MUST start with an unsigned integer identifying 
-           the specific option type carried in this option. Apart from that the only format requirement
-           is each option MUST be a well-formed CBOR object. In general a CBOR array format is RECOMMENDED
-           to limit overhead.</t>
+           the specific option type carried in this option. These option types are formally
+           defined in <xref target="cddl"/>. Apart from that the only format requirement
+           is that each option MUST be a well-formed CBOR object. In general a CBOR array format
+           is RECOMMENDED to limit overhead.</t>
            
           <t>GRASP options are usually scoped by using encapsulation. However, this is not a
           requirement</t>
@@ -1378,17 +1349,12 @@
           <t><figure>
               <artwork><![CDATA[
   divert-option = [O_DIVERT, +locator-option]
-          
-  O_DIVERT =       ; a defined constant
-  locator-option = ; defined below
   ]]></artwork>
           </figure></t>
           
 
         <t>The embedded Locator Option(s) (<xref target="LocatorOption"/>)
         point to diverted destination target(s) in response to a Discovery message. </t>
-        
-        <t>Note: Currently the need for this option is disputed. It might be removed or modified.</t>
 
         </section>
 
@@ -1408,8 +1374,6 @@
           <t><figure>
               <artwork><![CDATA[
   accept-option = [O_ACCEPT]
-          
-  O_ACCEPT =       ; a defined constant
   ]]></artwork>
           </figure></t>
         </section>
@@ -1433,11 +1397,9 @@
               <artwork><![CDATA[
   decline-option = [O_DECLINE, ?reason]
   reason = text  ;optional error message
-          
-  O_DECLINE =       ; a defined constant
   ]]></artwork>
           </figure></t>
-          <t>Notes: there are scenarios where a negotiation counterpart wants
+          <t>Note: there are scenarios where a negotiation counterpart wants
           to decline the proposed negotiation content and continue the
           negotiation process. For these scenarios, the negotiation
           counterpart SHOULD use a Negotiate message, with either an objective
@@ -1459,8 +1421,6 @@
           <t><figure>
               <artwork><![CDATA[
   option-device-id = [O_DEVICE_ID, bytes]
-          
-  O_DEVICE_ID =   ; a defined constant
   ]]></artwork>
           </figure></t>
           <t> The option contains a variable-length field containing the device identity
@@ -1478,7 +1438,7 @@
           <t>These locator options are used to present reachability information for an ASA,
           a device or an interface. They are Locator IPv4 Address
           Option, Locator IPv6 Address Option, Locator FQDN (Fully
-          Qualified Domain Name) Option and Uniform Resource Locator Option.</t>
+          Qualified Domain Name) Option and Uniform Resource Identifier Option.</t>
           
           <t>Note: It is assumed that all locators are in scope throughout
           the GRASP domain. GRASP is not intended to work across disjoint addressing
@@ -1529,8 +1489,6 @@
           <t><figure>
               <artwork><![CDATA[
   fqdn-locator-option = [O_FQDN_LOCATOR, text]
-          
-  O_FQDN_LOCATOR =   ; a defined constant
   ]]></artwork>
           </figure></t>
           
@@ -1551,8 +1509,6 @@
           <t><figure>
               <artwork><![CDATA[
   uri-locator-option = [O_URI_LOCATOR, text]
-          
-  O_URI_LOCATOR =   ; a defined constant
   ]]></artwork>
           </figure></t>
           
@@ -1589,7 +1545,6 @@
            
   objective-name = text
   loop-count = 0..255
-  objective-flags \=     ; defined below
   ]]></artwork>
           </figure></t>
           
@@ -1615,6 +1570,8 @@
           The GRASP protocol treats the objective name as an opaque string. For example, "EX1", "411:EX1", 
           "example.com:EX1", "example.org:EX1 and "user@example.org:EX1" would be five different objectives.</t>
           
+          <t>The 'objective-flags' field is described below.</t>
+          
           <t>The 'loop-count' field is used for terminating negotiation as described in
           <xref target="NegotiationMessage"/>. It is also used for terminating discovery as
           described in <xref target="discmech"/>, and for terminating flooding as described in
@@ -1636,9 +1593,9 @@
         <artwork><![CDATA[
   objective-flags = uint .bits objective-flag
   objective-flag = &(
-  F_DISC: 0 ; valid for discovery only
-  F_NEG: 1 ; valid for discovery and negotiation
-  F_SYNCH: 2 ; valid for discovery and synchronization
+  F_DISC: 0   ; valid for discovery only
+  F_NEG: 1    ; valid for discovery and negotiation
+  F_SYNCH: 2  ; valid for discovery and synchronization
   )
   ]]></artwork>
           </figure></t>
@@ -1903,12 +1860,14 @@
             <t>19. Should we use a text-oriented format such as JSON/CBOR instead of 
             native binary TLV format?
             <vspace blankLines="1"/>
-            RESOLVED: Yes, changed to CBOR </t>
+            RESOLVED: Yes, changed to CBOR. </t>
             
             <t>20. Is the Divert option needed? If a discovery response provides a valid
             IP address or FQDN, the recipient doesn't gain any extra knowledge from the Divert.
             On the other hand, the presence of Divert informs the receiver that the target
-            is off-link, which might be useful sometimes.</t>
+            is off-link, which might be useful sometimes.
+            <vspace blankLines="1"/>
+            RESOLVED: Decided to keep Divert option. </t>
             
             <t>21. Rename the protocol as GRASP (GeneRic Autonomic Signaling Protocol)?
             <vspace blankLines="1"/>
@@ -1936,13 +1895,12 @@
             <vspace blankLines="1"/>
             RESOLVED: Done, later renamed as URI. </t>
             
-            <t>27. Security of unsolicited Response multicasts (<xref target="synchproc"/>).
+            <t>27. Security of Flood multicasts (<xref target="flooding"/>).
             <vspace blankLines="1"/>
             RESOLVED: added text.</t>
             
-            <t>28. Does ACP support link-local multicast?
-            <vspace blankLines="1"/>
-            RESOLVED: added this as a requirement on the ACP.</t>
+            <t>28. Does ACP support secure link-local multicast?
+            </t>
             
             <t>29. PEN is used to distinguish vendor options. Would it be better to use
             a domain name? Anything unique will do.
@@ -2018,6 +1976,14 @@
             were removed. Is that OK?.</t>
             
             <t>45. Device Identity Option is unused. Can we remove it completely?.</t>
+            
+            <t>46. The 'initiator' field in DISCOVER, RESPONSE and FLOOD messages is intended to assist
+            in loop prevention. However, we also have the loop count for that. It would be simpler to
+            remove the initiator, making message parsing more uniform. Is that OK?</t>
+            
+            <t>47. REQUEST is a dual purpose message (request negotiation or request synchronization).
+            Would it be better to split this into two different messages (and adjust various
+            message names accordingly)?</t>
             
             
             </list></t>
@@ -2097,13 +2063,13 @@
     <artwork><![CDATA[
 <CODE BEGINS>
 
-grasp-message = message
+grasp-message = (message .within message-structure) / noop-message
 
-session-id = 0..16777215
-; that is up to 24 bits
+message-structure = [MESSAGE_TYPE, session-id, +grasp-option]
 
-message /= noop-message
-noop-message = [M_NOOP]
+MESSAGE_TYPE = 0..255
+session-id = 0..16777215 ;up to 24 bits
+grasp-option = any
 
 message /= discovery-message
 discovery-message = [M_DISCOVERY, session-id, initiator, objective]
@@ -2128,7 +2094,9 @@ message /= end-message
 end-message = [M_END, session-id, accept-option / decline-option ]
 
 message /= wait-message
-wait-message = [M_WAIT, session-id, waiting-time-option]
+wait-message = [M_WAIT, session-id, waiting-time]
+
+noop-message = [M_NOOP]
 
 divert-option = [O_DIVERT, +locator-option]
 
@@ -2137,8 +2105,7 @@ accept-option = [O_ACCEPT]
 decline-option = [O_DECLINE, ?reason]
 reason = text  ;optional error message
 
-waiting-time-option = [O_WAITING, option-waiting-time]
-option-waiting-time = 0..4294967295 ; in milliseconds
+waiting-time = 0..4294967295 ; in milliseconds
 
 option-device-id = [O_DEVICE_ID, bytes]
 
@@ -2160,10 +2127,10 @@ initiator = ipv4-locator-option / ipv6-locator-option
 objective-flags = uint .bits objective-flag
 
 objective-flag = &(
-  F_DISC: 0 ; valid for discovery only
-  F_NEG: 1 ; valid for discovery and negotiation
-  F_SYNCH: 2 ; valid for discovery and synchronization
-)
+ F_DISC: 0   ; valid for discovery only
+ F_NEG: 1    ; valid for discovery and negotiation
+ F_SYNCH: 2  ; valid for discovery and synchronization
+ )
 
 objective = [objective-name, objective-flags, loop-count, ?any]
 
@@ -2296,7 +2263,7 @@ O_DEVICE_ID = 105
 
     <section anchor="changes" title="Change log [RFC Editor: Please remove]">
     
-    <t>draft-ietf-anima-grasp-02, 2016-01-10:
+    <t>draft-ietf-anima-grasp-02, 2016-01-13:
       <vspace blankLines="1"/>
       Resolved numerous issues according to WG discussions.
       <vspace blankLines="1"/>
@@ -2317,7 +2284,8 @@ O_DEVICE_ID = 105
       <vspace blankLines="1"/>
       Protocol change: Added SYNCH message to simplify coding.
       <vspace blankLines="1"/>
-      Protocol change:  Added initiator id to DISCOVER, RESPONSE and FLOOD messages.
+      Protocol change: Added initiator id to DISCOVER, RESPONSE and FLOOD messages.
+      But also allowed the relay process for DISCOVER and FLOOD to regenerate a Session ID.
       <vspace blankLines="1"/>
       Protocol change: Require that discovered addresses must be global (except during bootstrap).
       <vspace blankLines="1"/>
