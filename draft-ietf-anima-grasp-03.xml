@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="9" month="February" year="2016"/>
+    <date day="24" month="February" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -2358,7 +2358,7 @@ O_URI_LOCATOR = 104
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
     
-    <t>draft-ietf-anima-grasp-03, 2016-02-09:
+    <t>draft-ietf-anima-grasp-03, 2016-02-24:
       <vspace blankLines="1"/>
       Protocol change: Removed initiator field from certain messages and adjusted relaying requirement
       to simplify loop detection. Also clarified narrative explanation of discovery relaying.
@@ -2372,7 +2372,7 @@ O_URI_LOCATOR = 104
       <vspace blankLines="1"/>
       New text about multicast insecurity in Security Considerations.
       <vspace blankLines="1"/>
-      Various other clarifications and editorial fixes.
+      Various other clarifications and editorial fixes, including moving some material to Appendix.
       
     </t>
     <t>draft-ietf-anima-grasp-02, 2016-01-13:
