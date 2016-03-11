@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="8" month="March" year="2016"/>
+    <date day="11" month="March" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -753,13 +753,14 @@
                   <t>Discovery starts as an on-link operation. The Divert option
                   can tell the discovery initiator to contact an off-link
                   ASA for that discovery objective. Every Discovery message is sent
-                  by a discovery initiator via UDP to the ALL_GRASP_NEIGHBOR multicast
-                  address (<xref target="Constants"/>). Every network
+                  by a discovery initiator via UDP to the ALL_GRASP_NEIGHBOR link-local
+                  multicast address (<xref target="Constants"/>). Every network
                   device that supports the GRASP always listens to a well-known
                   UDP port to capture the discovery messages.</t>
 
                   <t>If an ASA in the neighbor device supports the requested discovery objective,
-                  it MAY respond with a Discovery Response message (<xref target="ResponseMessage"/>) with
+                  it MAY respond to the link-local multicast with a unicast Discovery Response
+                  message (<xref target="ResponseMessage"/>) with
                   locator option(s). Otherwise, if the neighbor has cached information
                   about an ASA that supports the requested discovery objective (usually
                   because it discovered the same objective before), it SHOULD
@@ -795,19 +796,26 @@
                   support discovery on all interfaces. If it receives a Discovery message
                   on a given interface for a specific objective that it does not support and for
                   which it has not previously cached a Discovery Responder, it MUST relay
-                  the query by re-issuing a Discovery message on its other interfaces.
-                  The relayed discovery message MUST have the same Session ID as the incoming
-                  discovery message and MUST be tagged with the IP address of its original initiator. </t>
+                  the query by re-issuing a Discovery message as a link-local multicast on its other
+                  interfaces. The relayed discovery message MUST have the same Session ID as the incoming
+                  discovery message and MUST be tagged with the IP address of its original initiator.
+                  Since the relay device is unaware of the timeout set by the original
+                  initiator it SHOULD set a timeout at least equal to GRASP_DEF_TIMEOUT milliseconds.</t>
                   
                   <t>The relaying device MUST decrement the loop count within the objective, and 
                   MUST NOT relay the Discovery message if the result is zero.
                   Also, it MUST limit the total rate at which it relays discovery messages
                   to a reasonable value, in order to mitigate possible denial of service attacks.
                   It MUST cache the Session ID value and initiator address of each relayed
-                  discovery message until the discovery process has ended or timed out.
+                  Discovery message until any Discovery Responses have arrived or 
+                  the discovery process has timed out.
                   To prevent loops, it MUST NOT relay a Discovery message
                   which carries a given cached Session ID and initiator address more than once.
                   These precautions avoid discovery loops and mitigate potential overload.</t>
+                  
+                  <t>The discovery results received by the relaying device MUST in turn be
+                  sent as a Discovery Response message to the Discovery message that caused
+                  the relay action.</t>
                   
                   <t>This relayed discovery mechanism, with caching of the results, 
                   should be sufficient to support most network bootstrapping scenarios.</t>
@@ -2378,7 +2386,7 @@ O_URI_LOCATOR = 104
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-    <t>draft-ietf-anima-grasp-04, 2016-03-08:
+    <t>draft-ietf-anima-grasp-04, 2016-03-11:
       <vspace blankLines="1"/>
       Protocol change: Restored initiator field in certain messages and adjusted relaying rules
       to provide complete loop detection.
