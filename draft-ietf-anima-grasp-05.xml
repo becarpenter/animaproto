@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="5" month="May" year="2016"/>
+    <date day="13" month="May" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -471,9 +471,10 @@
           by sending a discovery message referring to a specific discovery
           objective.</t>
 
-          <t>Discovery Responder: a peer ASA which supports the
-          discovery objective initiated by the discovery initiator
-          and therefore is indicated in a discovery response.</t>
+          <t>Discovery Responder: a peer that either contains an ASA supporting the discovery objective
+          indicated by the discovery initiator, or caches the locator(s) of the ASA(s) supporting
+          the objective. The locator(s) are indicated in a Discovery Response,
+          which is normally sent by the protocol kernel, as described later.</t>
           
           <t>Synchronization Initiator: an ASA that spontaneously starts synchronization
           by sending a request message referring to a specific synchronization
@@ -1798,15 +1799,22 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
       
       <section title="Implementation Status [RFC Editor: please remove]">
       <t>Two prototype implementations of GRASP have been made.</t>
-      <section title="BUPT C Implementation">
+      <section title="BUPT C++ Implementation">
       <t><list style="symbols">
-      <t>Name:</t>
-      <t>Description:</t>
-      <t>Maturity:</t>
-      <t>Coverage:</t>
-      <t>Licensing:</t>
-      <t>Experience:</t>
-      <t>Contact:</t>
+      <t>Name: BaseNegotiator.cpp, msg.cpp, Client.cpp, Server.cpp</t>
+      <t>Description: C++ implementation of GRASP kernel and API</t>
+      <t>Maturity: Prototype code, interoperable between Ubuntu.</t>
+      <t>Coverage: Corresponds to draft-carpenter-anima-gdn-protocol-03. Since it was implemented
+      based on the old version draft, the most significant limitations comparing to current protocol design 
+          include:  
+      <list style="symbols">
+          <t>Not support CBOR</t>
+          <t>Not support Flooding</t>
+          <t>Not support loop avoidance</t>
+          <t>only coded for IPv6, any IPv4 is accidental</t></list></t>
+      <t>Licensing: Huawei License.</t>
+      <t>Experience: https://github.com/liubingpang/IETF-Anima-Signaling-Protocol/blob/master/README.md</t>
+      <t>Contact: https://github.com/liubingpang/IETF-Anima-Signaling-Protocol</t>
       </list></t>
       </section>
       <section title="Python Implementation">
@@ -1815,7 +1823,8 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
       <t>Description: Python 3 implementation of GRASP kernel and API.</t>
       <t>Maturity: Prototype code, interoperable between Windows 7 and Debian.</t>
       <t>Coverage: Corresponds to draft-ietf-anima-grasp-05. Limitations include:
-        <list>
+        <list style="symbols">
+         <t>insecure: uses a dummy ACP module and does not implement TLS</t>
          <t>only coded for IPv6, any IPv4 is accidental</t>
          <t>FQDN and URI locators incompletely supported</t>
          <t>no code for rapid mode</t>
@@ -2473,7 +2482,7 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-    <t>draft-ietf-anima-grasp-05, 2016-05-05:
+    <t>draft-ietf-anima-grasp-05, 2016-05-13:
       <vspace blankLines="1"/>
       Noted in requirement T1 that it should be possible to implement ASAs independently as user space programs.
       <vspace blankLines="1"/>
