@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="7" month="June" year="2016"/>
+    <date day="20" month="June" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -258,8 +258,7 @@
         available, the new protocol needs to be able to support parameter
         exchange, including mutual synchronization, even when no negotiation
         as such is required. In general, these parameters do not apply to all
-        participating nodes, but only 
-        to a subset. </t>
+        participating nodes, but only to a subset. </t>
         
         <t>SN1. A basic requirement for the protocol is therefore the
         ability to represent, discover, synchronize and negotiate almost any
@@ -752,11 +751,12 @@
                   with.</t>
                   
                   <t>The initiator of a discovery action for a given objective need not
-                  be capable of supporting that objective for negotiation or as a source
-                  for synchronization or flooding. In other words an ASA might perform
-                  discovery because it only wishes to receive synchronization data.</t>
+                  be capable of responding to that objective as a Negotiation Counterpart, as a
+                  Synchronization Responder or as source for flooding. In other words an ASA might perform
+                  discovery even if it only wishes to act a Synchronization Initiator or Negotiation Initiator.
+                  Such an ASA does not itself need to respond to discovery messages.</t>
                   
-                  <t>It is entirely possible to use GRASP discovery without any subsequent
+                  <t>It is also entirely possible to use GRASP discovery without any subsequent
                   negotiation or synchronization action. In this case, the discovered objective
                   is simply used as a name during the discovery process and any subsequent
                   operations between the peers are outside the scope of GRASP.</t>
@@ -904,7 +904,7 @@
           simultaneous negotiations about different objectives. Thus, GRASP is
           expected to be used in a multi-threaded mode. Certain negotiation
           objectives may have restrictions on multi-threading, for example to
-          avoid over-allocating resources.</t>
+          avoid over-allocating resources. </t>
           
           <t>Some configuration actions, for example wavelength switching
           in optical networks, might take considerable time to execute. The ASA
@@ -1021,7 +1021,7 @@
       device, these three components might be fully integrated. A more common model is expected
       to be a multi-purpose device capable of containing several ASAs. In this case it is expected
       that the ACP, GRASP and the ASAs will be implemented as separate processes, which are
-      probably multi-threaded to support asynchronous operation. It is expected that GRASP
+      probably multi-threaded to support asynchronous and simultaneous operations. It is expected that GRASP
       will access the ACP by using a typical socket interface. A well defined
       Application Programming Interface (API) will be needed
       between GRASP and the ASAs. In some implementations, ASAs would run in user
@@ -1032,8 +1032,11 @@
       </t>
       <t>Because GRASP needs to work whatever happens, especially during bootstrapping
       and during fault conditions, it is essential that every implementation is as
-      robust as possible.
-      GRASP must always start up correctly after a system restart. All run time error
+      robust as possible. For example, discovery failures, or any kind of socket error
+      at any time, must not cause irrecoverable failures in GRASP itself, and must
+      return suitable error codes through the API so that ASAs can also recover.
+      </t>
+      <t>GRASP must always start up correctly after a system restart. All run time error
       conditions, and events such as address renumbering, network interface failures,
       and CPU sleep/wake cycles, must be handled in such a way that GRASP will still
       operate correctly and securely (<xref target="reqsec"/>) afterwards.</t>
@@ -2497,9 +2500,13 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-    <t>draft-ietf-anima-grasp-06, 2016-06-07:
+    <t>draft-ietf-anima-grasp-06, 2016-06-20:
       <vspace blankLines="1"/>
-      Added text on discovery cache timeouts and address changes.
+      Added text on discovery cache timeouts.
+      <vspace blankLines="1"/>
+      Noted that ASAs that are only initiators do not need to respond to discovery message.
+      <vspace blankLines="1"/>
+      Added text on unexpected address changes.
       <vspace blankLines="1"/>
       Added text on robust implementation.
       <vspace blankLines="1"/>
