@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="26" month="June" year="2016"/>
+    <date day="27" month="June" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -1201,7 +1201,8 @@
                <list style="symbols">
                <t>a discovery objective option (<xref target="ObjOption"/>).
                Its loop count MUST be set to a suitable value to prevent discovery
-               loops (default value is GRASP_DEF_LOOPCT).
+               loops (default value is GRASP_DEF_LOOPCT). If the discovery initiator
+               requires only on-link responses, the loop count MUST be set to 1.
                </t>
 
                <t>a negotiation objective option (<xref target="ObjOption"/>). This
@@ -1256,6 +1257,7 @@
           option or a combination of multiple kinds of locator
           options which indicate the locator(s) of the discovery objective.
           </t>
+          
         </section>
 
    
@@ -1456,6 +1458,8 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           counterpart (on-link or off-link) or a default gateway. The divert
           option MUST only be encapsulated in Discovery Response messages.
           If found elsewhere, it SHOULD be silently ignored.</t>
+          <t>A discovery initiator MAY ignore a Divert option if it only requires direct
+          discovery responses. </t>
 
           <t>In fragmentary CDDL, the Divert option follows the pattern:</t>
 
@@ -2248,11 +2252,8 @@ O_URI_LOCATOR = 106
         <t>48. Should the Appendix "Capability Analysis of Current Protocols" be deleted before RFC publication?</t>
         
         <t>49. <xref target="reqsec"/> should say more about signaling between two autonomic networks/domains.</t>
-        
-        <t>50. There might be objectives which are only useful on-link, so should we add feature to limit
-        discovery to on-link, and/or refuse Diverts? Should this be done by Intent? (<xref target="discmech"/>)</t>
-        
-        <t>51. Is Rapid mode limited to on-link only? What happens if first discovery responder does not support Rapid Mode?
+
+        <t>50. Is Rapid mode limited to on-link only? What happens if first discovery responder does not support Rapid Mode?
         (<xref target="negproc"/>, <xref target="synchproc"/>)</t>
       
       </list></t>
@@ -2532,7 +2533,7 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-    <t>draft-ietf-anima-grasp-06, 2016-06-26:
+    <t>draft-ietf-anima-grasp-06, 2016-06-27:
       <vspace blankLines="1"/>
       Added text on discovery cache timeouts.
       <vspace blankLines="1"/>
