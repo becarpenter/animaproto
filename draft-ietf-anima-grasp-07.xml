@@ -523,9 +523,10 @@
             protocol elements but will not necessarily be in one-to-one correspondence to
             them. This API is out of scope for the present document.<vspace blankLines="1"/></t>
             
-            <t>It is normally expected that a single instance of GRASP will exist in an autonomic
+            <t>It is normally expected that a single main instance of GRASP will exist in an autonomic
             node, and that the protocol engine and each ASA will run as independent
-            asynchronous processes.<vspace blankLines="1"/></t>
+            asynchronous processes. However, separate GRASP instances may exist for security
+            reasons (<xref target="secinst"/>).<vspace blankLines="1"/></t>
 
             <t>Security infrastructure and trust relationship<vspace blankLines="1"/>
             Because this negotiation protocol may directly
@@ -695,32 +696,51 @@
         </section>
          
         <section anchor="secinst" title="Limited Security Instances">
+        
+        <t>This section describes three cases where additional instances of GRASP are appropriate.</t>
          
-        <t>As mentioned in <xref target="highlevel"/>, some GRASP operations might be
+        <t>1) As mentioned in <xref target="highlevel"/>, some GRASP operations might be
          performed across an administrative domain boundary by mutual agreement. Such operations
          MUST be confined to a separate instance of GRASP with its own copy of all GRASP
          data structures. Messages MUST be authenticated and SHOULD be encrypted.
          TLS is RECOMMENDED for this purpose.</t>
          
-         <t>During initialisation, before a node has joined the applicable trust 
-         infrastructure, <xref target="I-D.ietf-anima-bootstrapping-keyinfra"/>, or before
-         the ACP is fully established <xref target="I-D.ietf-anima-autonomic-control-plane"/>,
+         <t>2) During initialisation, before a node has joined the applicable trust 
+         infrastructure, <xref target="I-D.ietf-anima-bootstrapping-keyinfra"/>,
          it is impossible to secure messages.
-         Thus, both the security bootstrap process and the ACP creation process might need
+         Thus, the security bootstrap process needs
          to use insecure GRASP discovery, response and flood messages.
          Such usage MUST be limited to link-local operations and MUST be confined
          to a separate insecure instance of GRASP with its own copy of all GRASP
-         data structures.</t>
+         data structures. This instance is nicknamed DULL - Discovery Unsolicited Link Local.</t>
          
-         <t>The detailed rules for this insecure instance of GRASP are as follows:
+         <t>The detailed rules for the DULL instance of GRASP are as follows:
          <list style="symbols">
-         <t>An initiator MUST only send Discover or Flood Synchronization link-local
-         multicast messages with a loop count of 1.</t>
+         <t>An initiator MUST only send Discovery or Flood Synchronization link-local
+         multicast messages with a loop count of 1. A responder MAY send a Discovery Response
+         message. Other GRASP message types MUST NOT be sent.</t>
          <t>A responder MUST silently discard any message whose loop count is not 1.</t>
          <t>A responder MUST silently discard any message referring to a GRASP Objective that is
-         not directly part of the bootstrap or ACP creation process.</t>
+         not directly part of the bootstrap creation process.</t>
          <t>A responder MUST NOT relay any multicast messages.</t>
-         <t>A responder MUST NOT send any unicast message except a Discovery Response.</t>
+         <t>A Discovery Response MUST indicate a link-local address.</t>
+         <t>A Discovery Response MUST NOT include a Divert option.</t>
+         <t>A node MUST silently discard any message whose source address is not link-local.</t>
+         </list></t>
+         
+         <t>3) During ACP formation <xref target="I-D.ietf-anima-autonomic-control-plane"/>, a separate
+         instance of GRASP is used, with unicast messages secured by TLS, and with its own copy of
+         all GRASP data structures. This instance is nicknamed SONN - Secure Only Neighbor Negotiation.</t>
+         <t>
+         The detailed rules for the SONN instance of GRASP are as follows:
+         <list style="symbols">
+         <t>Any type of GRASP message MAY be sent.</t>
+         <t>An initiator MUST send any Discovery or Flood Synchronization link-local
+         multicast messages with a loop count of 1.</t>
+         <t>A responder MUST silently discard any Discovery or Flood Synchronization message whose loop count is not 1.</t>
+         <t>A responder MUST silently discard any message referring to a GRASP Objective that is
+         not directly part of the ACP creation process.</t>
+         <t>A responder MUST NOT relay any multicast messages.</t>
          <t>A Discovery Response MUST indicate a link-local address.</t>
          <t>A Discovery Response MUST NOT include a Divert option.</t>
          <t>A node MUST silently discard any message whose source address is not link-local.</t>
@@ -2589,13 +2609,17 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-    <t>draft-ietf-anima-grasp-07, 2016-08-02:
+    <t>draft-ietf-anima-grasp-07, 2016-08-03:
       <vspace blankLines="1"/>
       Updated IANA considerations and text about well-known port usage (issue 53).
       <vspace blankLines="1"/>
       Clarified details of rapid mode (issues 43 and 50).
       <vspace blankLines="1"/>
       Description of inter-domain GRASP instance added (issue 49).
+      <vspace blankLines="1"/>
+      Description of limited security GRASP instances added (issue 52).
+      <vspace blankLines="1"/>
+      TBD
     </t>
       
     <t>draft-ietf-anima-grasp-06, 2016-06-27:
