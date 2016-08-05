@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="2" month="August" year="2016"/>
+    <date day="4" month="August" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -982,12 +982,18 @@
              could act as the corresponding negotiation
              counterpart. However, the indication is only advisory not
              prescriptive. </t>
+             
+             <t>It is possible that a Discovery Response will arrive from a responder that
+             does not support rapid mode, before such a Negotiation message arrives.
+             In this case, rapid mode will not occur.</t>
 
              <t>This rapid mode could reduce the interactions between
              nodes so that a higher efficiency could be achieved. However, a network in which some
              nodes support rapid mode and others do not will have complex timing-dependent behaviors.
              Therefore, the rapid negotiation function SHOULD be configured off by default
              and MAY be configured on or off by Intent.</t>
+             
+             
           </section>          
           
         </section>
@@ -1066,6 +1072,10 @@
              if the discovery target supports the corresponding synchronization
              objective. However, the indication is only advisory not
              prescriptive.</t>
+             
+             <t>It is possible that a Discovery Response will arrive from a responder that
+             does not support rapid mode, before such a Synchronization message arrives.
+             In this case, rapid mode will not occur.</t>
 
              <t>This rapid mode could reduce the interactions between
              nodes so that a higher efficiency could be achieved. However, a network in which some
@@ -1451,8 +1461,12 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           synchronization objective(s). The loop count(s) MUST be set to a suitable
           value to prevent flood loops (default value is GRASP_DEF_LOOPCT).</t>
           
-          <t>A node that receives a Flood Synchronization message SHOULD cache the received objectives for
-          use by local ASAs.</t>
+          <t>A node that receives a Flood Synchronization message MUST cache the received objectives for
+          use by local ASAs. Each cached objective MUST be tagged with its initiator address. If a subsequent
+          Flood Synchronization message carrying the same objective arrives from the same initiator, the previous
+          cached copy of the objective MUST be overwritten. If a subsequent Flood Synchronization message
+          carrying the same objective arrives from a different initiator, a new cached entry MUST be created.
+          </t>
         </section>
         
         <section anchor="noop" title="No Operation Message">
@@ -1863,6 +1877,13 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           multiple options, unless they have different response periods. An
           exception scenario may also be described by split objectives.</t>
           
+          <t>If the value of an objective has time-sensitive properties such as a defined
+          lifetime, a defined expiry time, or a defined refresh rate, these SHOULD be
+          expressed as part of the definition of the objective itself; they are not
+          foreseen in the GRASP protocol. For example, an objective that is flooded
+          using Flood Synchronization might include a parameter specifying its
+          expiry time as a UTC string.</t>
+          
           <t>All objectives MUST support GRASP discovery. However, as mentioned
           in <xref target="highlevel"/>, it is acceptable for an ASA to use an alternative method
           of discovery. </t>
@@ -1915,7 +1936,7 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
       <t>Name: graspy</t>
       <t>Description: Python 3 implementation of GRASP kernel and API.</t>
       <t>Maturity: Prototype code, interoperable between Windows 7 and Debian.</t>
-      <t>Coverage: Corresponds to draft-ietf-anima-grasp-05. Limitations include:
+      <t>Coverage: Corresponds to draft-ietf-anima-grasp-07. Limitations include:
         <list style="symbols">
          <t>insecure: uses a dummy ACP module and does not implement TLS</t>
          <t>only coded for IPv6, any IPv4 is accidental</t>
@@ -2302,15 +2323,7 @@ O_URI_LOCATOR = 106
       
         <t>7. Cross-check against other ANIMA WG documents for consistency and gaps.</t>
         
-  
-
-        <t>50. Is Rapid mode limited to on-link only? What happens if first discovery responder does not support Rapid Mode?
-        (<xref target="negproc"/>, <xref target="synchproc"/>)</t>
-        
-        <t>51. Should flooded objectives have a time-to-live before they are deleted from
-        the flood cache? And should they be tagged in the cache with their source locator?</t>
-        
-      
+       
       </list></t>
       
       </section>
@@ -2597,6 +2610,17 @@ O_URI_LOCATOR = 106
            <vspace blankLines="1"/>
            RESOLVED: Description of separate GRASP instance added.</t>
            
+           <t>50. Is Rapid mode limited to on-link only? What happens if first discovery responder does
+           not support Rapid Mode? <xref target="negproc"/>, <xref target="synchproc"/>)
+           <vspace blankLines="1"/>
+           RESOLVED: Not limited to on-link. First responder wins.</t>
+           
+           <t>51. Should flooded objectives have a time-to-live before they are deleted from
+           the flood cache? And should they be tagged in the cache with their source locator?
+           <vspace blankLines="1"/>
+           RESOLVED: TTL or lifetime data, if relevant, can be embedded in the objective itself. Cached flooded
+           objectives must be tagged with their source, and multiple copies must be kept if necessary.</t>
+           
            <t>52. Describe in detail what is allowed and disallowed in an insecure instance of GRASP.
            <vspace blankLines="1"/>
            RESOLVED: Done.</t>
@@ -2609,17 +2633,22 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-    <t>draft-ietf-anima-grasp-07, 2016-08-03:
-      <vspace blankLines="1"/>
-      Updated IANA considerations and text about well-known port usage (issue 53).
+    <t>draft-ietf-anima-grasp-07, 2016-08-04:
+      
       <vspace blankLines="1"/>
       Clarified details of rapid mode (issues 43 and 50).
       <vspace blankLines="1"/>
       Description of inter-domain GRASP instance added (issue 49).
+            <vspace blankLines="1"/>
+      Flood cache entries must be tagged with source locator (issue 51).
+      <vspace blankLines="1"/>
+      Noted that objectives may contain their own expiry time (issue 51).
       <vspace blankLines="1"/>
       Description of limited security GRASP instances added (issue 52).
       <vspace blankLines="1"/>
-      TBD
+      Updated IANA considerations and text about well-known port usage (issue 53).
+      <vspace blankLines="1"/>
+      Editorial fixes.
     </t>
       
     <t>draft-ietf-anima-grasp-06, 2016-06-27:
