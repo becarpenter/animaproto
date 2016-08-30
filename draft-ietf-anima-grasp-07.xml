@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="4" month="August" year="2016"/>
+    <date day="30" month="August" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -761,7 +761,7 @@
         However, GRASP itself does not provide for error detection or retransmission. Use of an
         unreliable transport protocol is therefore NOT RECOMMENDED. </t>
         
-        <t>When running within a secure ACP on reliable infrastructure,
+        <t>Nevertheless, when running within a secure ACP on reliable infrastructure,
         UDP MAY be used for unicast messages not exceeding the minimum IPv6 path MTU;
         however, TCP MUST be used for longer messages. In other words, IPv6 fragmentation
         is avoided. If a node receives a UDP message but the reply is too long, it
@@ -769,11 +769,14 @@
         the network is under heavy load or in a fault condition, UDP might become
         unreliable. Since this is when autonomic functions are most necessary,
         automatic fallback to TCP MUST be implemented. The simplest implementation
-        is therefore to use only TCP.</t>
+        is therefore to use only TCP. In particular, to guarantee interoperability
+        during bootstrap and startup, using TCP for discovery responses is strongly
+        advised.</t>
         
         <t>When running without an ACP, TLS MUST be supported and used by default, except
         for link-local multicast messages. DTLS MAY be supported as an alternative
-        but the details are out of scope for this document. </t> 
+        but the details are out of scope for this document. Transport protocols
+        other than TCP and UDP are also out of scope for this document.</t> 
         
         <t>For link-local multicast, the GRASP protocol listens to the well-known
         GRASP Listen Port (<xref target="Constants"/>). 
@@ -854,9 +857,11 @@
                   as a Divert option to another Discovery Initiator.</t>
                   
                   <t>The cache mechanism MUST include a lifetime for each entry. The
-                  lifetime is an implementation choice that MAY be modified by network Intent.
+                  lifetime is derived from a time-to-live (ttl) parameter in each
+                  Discovery Response message.
+                  Cached entries MUST be ignored or deleted after their lifetime expires.
                   In some environments, unplanned address renumbering might occur.
-                  In such cases, the cache lifetime SHOULD be short compared to
+                  In such cases, the lifetime SHOULD be short compared to
                   the typical address lifetime and a mechanism to flush the
                   discovery cache SHOULD be implemented. The discovery mechanism
                   needs to track the node's current address to ensure that Discovery
@@ -1050,9 +1055,13 @@
         which carries a given cached Session ID and initiator address more than once.
         These precautions avoid synchronization loops and mitigate potential overload.</t>
         
-        <t>Note that this mechanism is unreliable in the case of sleeping nodes. Sleeping nodes
-        that require an objective subject to flooding SHOULD periodically
-        request unicast synchronization for that objective. </t>
+        <t>Note that this mechanism is unreliable in the case of sleeping nodes,
+        or new nodes that join the network, or nodes that rejoin the network
+        after a fault. An ASA that initiates a flood SHOULD repeat the flood
+        at a suitable frequency and SHOULD also act as a synchronization responder for
+        the objective(s) concerned. Thus nodes that require an objective subject to
+        flooding can either wait for the next flood or request unicast synchronization
+        for that objective. </t>
         
         <t>The multicast messages for synchronization flooding are subject to the security
         rules in <xref target="reqsec"/>. In practice this means that they MUST NOT be transmitted
@@ -1285,18 +1294,27 @@
           
           <t><figure>
               <artwork><![CDATA[
-  response-message = [M_RESPONSE, session-id, initiator,
-                    (+locator-option // divert-option), ?objective)]
+  response-message = [M_RESPONSE, session-id, initiator, ttl,
+                     (+locator-option // divert-option), ?objective)]
+                    
+  ttl = 0..4294967295 ; in milliseconds
   ]]></artwork>
           </figure></t>
           
           <t>
           A node which receives a Discovery message SHOULD send a 
           Discovery Response message if and only if it can respond to the discovery.
-          It MUST contain the same Session ID and initiator as the Discovery message.
-          It MAY include a copy of the discovery objective from
-          the Discovery message. It is sent to the sender of the Discovery message via TCP 
-          at the port GRASP_LISTEN_PORT.
+          <list>
+          <t>It MUST contain the same Session ID and initiator as the Discovery message.
+          </t><t>It MUST contain a time-to-live (ttl) for the validity of the response, given 
+          as a positive integer value in milliseconds. Zero is treated
+          as the default value GRASP_DEF_TIMEOUT (<xref target="Constants"/>).
+          </t><t>It MAY include a copy of the discovery objective from
+          the Discovery message.</t>
+          </list>
+          It is sent to the sender of the Discovery message via TCP 
+          <!-- at the port GRASP_LISTEN_PORT. -->
+          at the port used to send the Discovery message.
           </t><t>
 
           If the responding node supports the discovery objective 
@@ -1314,6 +1332,9 @@
           option or a combination of multiple kinds of locator
           options which indicate the locator(s) of the discovery objective.
           </t>
+          
+          <t>More details on the processing of Discovery Responses are given in
+          <xref target="discmech"/>.</t>
           
         </section>
 
@@ -1342,7 +1363,7 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           Request Negotiation, the objective option MUST include the requested value. </t>
           <t>When an initiator sends a Request Negotiation message, it MUST initialize a negotiation timer
           for the new negotiation thread with the value GRASP_DEF_TIMEOUT milliseconds. Unless this 
-          timeout is modified by a Confirm Waiting     message (<xref target="ConfirmWaitingMessage"/>),
+          timeout is modified by a Confirm Waiting message (<xref target="ConfirmWaitingMessage"/>),
           the initiator will consider that the negotiation has failed when the timer expires. </t>
           <t>When an initiator sends a Request message, it MUST initialize the loop count
           of the objective option with a value defined in the specification of the option
@@ -1447,7 +1468,10 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           
           <t><figure>
               <artwork><![CDATA[
-  flood-message = [M_FLOOD, session-id, initiator, +objective]
+  flood-message = [M_FLOOD, session-id, initiator, ttl,
+                  (locator-option / []), +objective]
+                  
+  ttl = 0..4294967295 ; in milliseconds
   ]]></artwork>
           </figure></t>
           
@@ -1456,17 +1480,34 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           with synchronization data. This MAY be sent to the
           link-local ALL_GRASP_NEIGHBOR multicast address, in accordance
           with the rules in <xref target="synchproc"/>.
+          <list><t>
           The initiator address is provided as described for Discovery messages.
-          The synchronization data will be in the form of GRASP Option(s) for specific
+          </t><t>
+          The message MUST contain a time-to-live (ttl) for the validity of the response, given 
+          as a positive integer value in milliseconds. There is no default;
+          zero indicates an indefinite lifetime.
+          </t><t>
+          The message MAY contain a locator option indicating the ASA that initiated
+          the flooded data. In its absence, an empty option MUST be included.
+          </t><t>
+          The synchronization data are in the form of GRASP Option(s) for specific
           synchronization objective(s). The loop count(s) MUST be set to a suitable
           value to prevent flood loops (default value is GRASP_DEF_LOOPCT).</t>
+          </list>
+          A node that receives a Flood Synchronization message MUST cache the received objectives for
+          use by local ASAs. Each cached objective MUST be tagged with the locator option sent with it, or with a null
+          tag if an empty locator option was sent. If a subsequent Flood Synchronization message carrying the same objective
+          arrives with the same tag, the corresponding cached copy of the objective MUST be overwritten.
+          If a subsequent Flood Synchronization message carrying the same objective arrives with a different
+          tag, a new cached entry MUST be created.</t>
           
-          <t>A node that receives a Flood Synchronization message MUST cache the received objectives for
-          use by local ASAs. Each cached objective MUST be tagged with its initiator address. If a subsequent
-          Flood Synchronization message carrying the same objective arrives from the same initiator, the previous
-          cached copy of the objective MUST be overwritten. If a subsequent Flood Synchronization message
-          carrying the same objective arrives from a different initiator, a new cached entry MUST be created.
-          </t>
+          <t>Note: the purpose of this mechanism is to allow the recipient of flooded values to distinguish between
+          different senders of the same objective, and if necessary communicate with them using the locator, protocol
+          and port included in the locator option. Many objectives will not need this mechanism, so they will be flooded
+          with a null locator.</t>
+          
+          <t>Cached entries MUST be ignored or deleted after their lifetime expires.</t>
+          
         </section>
         
         <section anchor="noop" title="No Operation Message">
@@ -1877,12 +1918,12 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           multiple options, unless they have different response periods. An
           exception scenario may also be described by split objectives.</t>
           
-          <t>If the value of an objective has time-sensitive properties such as a defined
+          <!-- <t>If the value of an objective has time-sensitive properties such as a defined
           lifetime, a defined expiry time, or a defined refresh rate, these SHOULD be
           expressed as part of the definition of the objective itself; they are not
           foreseen in the GRASP protocol. For example, an objective that is flooded
           using Flood Synchronization might include a parameter specifying its
-          expiry time as a UTC string.</t>
+          expiry time as a UTC string.</t> -->
           
           <t>All objectives MUST support GRASP discovery. However, as mentioned
           in <xref target="highlevel"/>, it is acceptable for an ASA to use an alternative method
@@ -1943,7 +1984,7 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
          <t>FQDN and URI locators incompletely supported</t>
          <t>no code for rapid mode</t>
          <t>relay code is lazy (no rate control)</t>
-         <t>all unicast transactions use TCP (no unicast UDP)</t>
+         <t>all unicast transactions use TCP (no unicast UDP). Experimental code for unicast UDP proved to be complex and brittle.</t>
          <t>optional Objective option in Response messages not implemented</t>
          <t>workarounds for defects in Python socket module and Windows socket peculiarities</t>
         </list></t>
@@ -1985,9 +2026,12 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
         
       <t>- Authorization and Roles<list style="hanging">
          <t>The GRASP protocol is agnostic about the role of individual ASAs and about
-         which objectives a particular ASA is authorized to support. It SHOULD apply
-         obvious precautions such as allowing only one ASA in a given node to modify
-         a given objective, but otherwise authorization is out of scope. </t>
+         which objectives a particular ASA is authorized to support. An implementation
+         might support precautions such as allowing only one ASA in a given node to modify
+         a given objective, but this may not be appropriate in all cases. For example,
+         it might be operationally useful to allow an old and a new version of the same
+         ASA to run simultaneously during an overlap period. These questions are out
+         of scope for the present specification.</t>
          </list></t>
          
       <t>- Privacy and confidentiality<list style="hanging">
@@ -2060,14 +2104,15 @@ message /= discovery-message
 discovery-message = [M_DISCOVERY, session-id, initiator, objective]
 
 message /= response-message ;response to Discovery
-response-message = [M_RESPONSE, session-id, initiator, 
+response-message = [M_RESPONSE, session-id, initiator, ttl,
                    (+locator-option // divert-option), ?objective]
 
 message /= synch-message ;response to Synchronization request
 synch-message = [M_SYNCH, session-id, objective] 
 
 message /= flood-message
-flood-message = [M_FLOOD, session-id, initiator, +objective]
+flood-message = [M_FLOOD, session-id, initiator, ttl,
+                (locator-option / []), +objective]
 
 message /= request-negotiation-message
 request-negotiation-message = [M_REQ_NEG, session-id, objective]
@@ -2094,6 +2139,7 @@ decline-option = [O_DECLINE, ?reason]
 reason = text  ;optional error message
 
 waiting-time = 0..4294967295 ; in milliseconds
+ttl = 0..4294967295 ; in milliseconds
 
 locator-option /= [O_IPv4_LOCATOR, ipv4-address,
                    transport-proto, port-number]
@@ -2618,8 +2664,8 @@ O_URI_LOCATOR = 106
            <t>51. Should flooded objectives have a time-to-live before they are deleted from
            the flood cache? And should they be tagged in the cache with their source locator?
            <vspace blankLines="1"/>
-           RESOLVED: TTL or lifetime data, if relevant, can be embedded in the objective itself. Cached flooded
-           objectives must be tagged with their source, and multiple copies must be kept if necessary.</t>
+           RESOLVED: TTL added to Flood (and Discovery Response) messages. Cached flooded
+           objectives must be tagged with their originating ASA locator, and multiple copies must be kept if necessary.</t>
            
            <t>52. Describe in detail what is allowed and disallowed in an insecure instance of GRASP.
            <vspace blankLines="1"/>
@@ -2633,20 +2679,28 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-    <t>draft-ietf-anima-grasp-07, 2016-08-04:
+    <t>draft-ietf-anima-grasp-07, 2016-08-27:
       
+      <vspace blankLines="1"/>
+      Protocol change: Added TTL field to Flood message (issue 51).
+      <vspace blankLines="1"/>
+      Protocol change: Added Locator option to Flood message (issue 51).
+      <vspace blankLines="1"/>
+      Protocol change: Added TTL field to Discovery Response message (corrollary to issue 51).
       <vspace blankLines="1"/>
       Clarified details of rapid mode (issues 43 and 50).
       <vspace blankLines="1"/>
       Description of inter-domain GRASP instance added (issue 49).
-            <vspace blankLines="1"/>
-      Flood cache entries must be tagged with source locator (issue 51).
-      <vspace blankLines="1"/>
-      Noted that objectives may contain their own expiry time (issue 51).
       <vspace blankLines="1"/>
       Description of limited security GRASP instances added (issue 52).
       <vspace blankLines="1"/>
+      Strengthened advice to use TCP rather than UDP.
+      <vspace blankLines="1"/>
       Updated IANA considerations and text about well-known port usage (issue 53).
+      <vspace blankLines="1"/>
+      Amended text about ASA authorization and roles to allow for overlapping ASAs.
+      <vspace blankLines="1"/>
+      Added text recommending that Flood should be repeated periodically.
       <vspace blankLines="1"/>
       Editorial fixes.
     </t>
