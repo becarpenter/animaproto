@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="30" month="August" year="2016"/>
+    <date day="13" month="September" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -2679,7 +2679,7 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-    <t>draft-ietf-anima-grasp-07, 2016-08-27:
+    <t>draft-ietf-anima-grasp-07, 2016-09-13:
       
       <vspace blankLines="1"/>
       Protocol change: Added TTL field to Flood message (issue 51).
