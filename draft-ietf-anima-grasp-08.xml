@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="25" month="October" year="2016"/>
+    <date day="30" month="October" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -2835,7 +2835,7 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-    <t>draft-ietf-anima-grasp-08, 2016-10-25:
+    <t>draft-ietf-anima-grasp-08, 2016-10-30:
     
       <vspace blankLines="1"/>
       Protocol change: Added M_INVALID message.
@@ -2852,9 +2852,11 @@ O_URI_LOCATOR = 106
       <vspace blankLines="1"/>
       Corrected and expanded explanation of port used for Discovery Response.
       <vspace blankLines="1"/>
+      Noted that Discovery message could be sent unicast in special cases.
+      <vspace blankLines="1"/>
       Added paragraph on extensibility.
       <vspace blankLines="1"/>
-      Specified default maxium message size.
+      Specified default maximum message size.
       <vspace blankLines="1"/>
       Added Appendix for sample messages.
       <vspace blankLines="1"/>
