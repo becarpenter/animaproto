@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="1" month="December" year="2016"/>
+    <date day="7" month="December" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -741,8 +741,10 @@
          <section anchor="secinst-dull" title="Discovery Unsolicited Link-Local">
          <t>Some services may need to use insecure GRASP discovery, response
          and flood messages without being able to use pre-existing security associations.
-         This includes discovery of candidate ACP neighbors 
-         <xref target="I-D.ietf-anima-autonomic-control-plane"/>], discovery of bootstrap
+         Such operations being intrinsically insecure, they need to be confined to link-local
+         use to minimise the risk of malicious actions. Possible examples
+         include discovery of candidate ACP neighbors 
+         <xref target="I-D.ietf-anima-autonomic-control-plane"/>, discovery of bootstrap
          proxies <xref target="I-D.ietf-anima-bootstrapping-keyinfra"/> or perhaps
          initialisation services in networks using GRASP without being fully autonomic
          (e.g., no ACP).
@@ -763,9 +765,13 @@
          <t>A Discovery Response MUST NOT include a Divert option.</t>
          <t>A node MUST silently discard any message whose source address is not link-local.</t>
          </list></t>
+         <t>GRASP traffic SHOULD be minimized by using only Flood Synchronization
+         to announce objectives and their associated locators, rather than by using Discovery
+         and Response. Further details are out of scope for this document</t>
          </section>
          
          <section anchor="secinst-sonn" title="Secure Only Neighbor Negotiation">
+         
          <t>During ACP formation <xref target="I-D.ietf-anima-autonomic-control-plane"/>, a separate
          instance of GRASP is used, with unicast messages secured by TLS, and with its own copy of
          all GRASP data structures. This instance is nicknamed SONN - Secure Only Neighbor Negotiation.</t>
@@ -777,7 +783,7 @@
          multicast messages with a loop count of 1.</t>
          <t>A responder MUST silently discard any Discovery or Flood Synchronization message whose loop count is not 1.</t>
          <t>A responder MUST silently discard any message referring to a GRASP Objective that is
-         not directly part of the ACP creation process.</t>
+         not directly part of the service concerned.</t>
          <t>A responder MUST NOT relay any multicast messages.</t>
          <t>A Discovery Response MUST indicate a link-local address.</t>
          <t>A Discovery Response MUST NOT include a Divert option.</t>
@@ -837,8 +843,8 @@
                   indicates itself as a discovery responder or diverts the
                   initiator towards another more suitable ASA.</t>
 
-                  <t>The discovery action will normally be followed by
-                  a negotiation or synchronization action. The
+                  <t>The discovery action (M_DISCOVERY) will normally be followed by
+                  a negotiation (M_REQ_NEG) or synchronization (M_REQ_SYN) action. The
                   discovery results could be utilized by the negotiation
                   protocol to decide which ASA the initiator will negotiate
                   with.</t>
@@ -856,9 +862,9 @@
                 </section>
                 
                 <section title="Discovery Overview">
-                <t>A complete discovery process will start with a multicast on the 
+                <t>A complete discovery process will start with a multicast (of M_DISCOVERY) on the 
                 local link. On-link neighbors supporting the discovery objective will
-                respond directly. A neighbor with multiple interfaces will respond
+                respond directly (with M_RESPONSE). A neighbor with multiple interfaces will respond
                 with a cached discovery response if any. However, it SHOULD NOT respond
                 with a cached response on an interface if it learnt that information from
                 the same interface. If it has no cached response, it will relay the 
@@ -1014,16 +1020,16 @@
           for subsequent repetitions.</t>
 
           <t>If the counterpart can immediately apply the requested
-          configuration, it will give an immediate positive (accept) answer.
+          configuration, it will give an immediate positive (O_ACCEPT) answer (using M_END).
           This will end the negotiation phase immediately. Otherwise, it will
-          negotiate. It will reply with a proposed alternative configuration
+          negotiate (using M_NEGOTIATE). It will reply with a proposed alternative configuration
           that it can apply (typically, a configuration that uses fewer resources
           than requested by the negotiation initiator). This will start a
-          bi-directional negotiation to reach a compromise between the two ASAs.</t>
+          bi-directional negotiation (using M_NEGOTIATE) to reach a compromise between the two ASAs.</t>
 
           <t>The negotiation procedure is ended when one of the negotiation
-          peers sends a Negotiation Ending message, which contains an accept
-          or decline option and does not need a response from the negotiation
+          peers sends a Negotiation Ending (M_END) message, which contains an accept (O_ACCEPT)
+          or decline (O_DECLINE) option and does not need a response from the negotiation
           peer. Negotiation may also end in failure (equivalent to a decline)
           if a timeout is exceeded or a loop count is exceeded. </t>
 
@@ -1039,7 +1045,7 @@
           in optical networks, might take considerable time to execute. The ASA
           concerned needs to allow for this by design, but GRASP does allow for
           a peer to insert latency in a negotiation process if necessary
-          (<xref target="ConfirmWaitingMessage"/>).</t>
+          (<xref target="ConfirmWaitingMessage"/>, M_WAIT).</t>
           
           <section anchor="rapidneg" title="Rapid Mode (Discovery/Negotiation Linkage)">
              <t>A Discovery message MAY include a Negotiation
@@ -1048,7 +1054,7 @@
              This has implications for the construction of the GRASP core, as it must carefully
              pass the contents of the Negotiation Objective option to the ASA so that it
              may evaluate the objective directly. When a Negotiation Objective option is
-             present the ASA replies with an M_NEGOTIATE message (or M_END if it is
+             present the ASA replies with an M_NEGOTIATE message (or M_END with O_ACCEPT if it is
              immediately satisfied with the proposal), rather than with an M_RESPONSE.
              However, if the recipient node does not support rapid mode, discovery will
              continue normally.</t>
@@ -1545,7 +1551,7 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           <t><figure>
               <artwork><![CDATA[
   flood-message = [M_FLOOD, session-id, initiator, ttl,
-                  (locator-option / []), +objective]
+                  +[objective, (locator-option / [])]]
                   
   ttl = 0..4294967295 ; in milliseconds
   ]]></artwork>
@@ -1560,16 +1566,17 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           The initiator address is provided, as described for Discovery messages (<xref target="DiscoveryMessage"/>),
           only to disambiguate the Session ID.
           </t><t>
-          The message MUST contain a time-to-live (ttl) for the validity of the response, given 
+          The message MUST contain a time-to-live (ttl) for the validity of the contents, given 
           as a positive integer value in milliseconds. There is no default;
           zero indicates an indefinite lifetime.
           </t><t>
-          The message MAY contain a locator option indicating the ASA that initiated
-          the flooded data. In its absence, an empty option MUST be included.
-          </t><t>
           The synchronization data are in the form of GRASP Option(s) for specific
           synchronization objective(s). The loop count(s) MUST be set to a suitable
-          value to prevent flood loops (default value is GRASP_DEF_LOOPCT).</t>
+          value to prevent flood loops (default value is GRASP_DEF_LOOPCT).</t><t>
+          Each objective option MAY be followed by a locator option associated with
+          the flooded objective. In its absence, an empty option MUST be included
+          to indicate a null locator.
+          </t>
           </list>
           A node that receives a Flood Synchronization message MUST cache the received objectives for
           use by local ASAs. Each cached objective MUST be tagged with the locator option sent with it, or with a null
@@ -1925,12 +1932,15 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
         <artwork><![CDATA[
   objective-flags = uint .bits objective-flag
   objective-flag = &(
-  F_DISC: 0   ; valid for discovery only
-  F_NEG: 1    ; valid for discovery and negotiation
-  F_SYNCH: 2  ; valid for discovery and synchronization
+  F_DISC: 0    ; valid for discovery only
+  F_NEG: 1     ; valid for discovery and negotiation
+  F_SYNCH: 2   ; valid for discovery and synchronization
+  F_NEG_DRY: 3 ; valid for discovery and dry-run negotiation
   )
   ]]></artwork>
           </figure></t>
+         <t>Note that for a given negotiation, an objective must be either valid for negotiation, or for
+         dry-run negotiation. Mixing the two modes in a single negotiation is not possible.</t> 
          </section>
 
       <section anchor="ConsOption" title="General Considerations for Objective Options">
@@ -2036,7 +2046,7 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
             To guarantee convergence, a limited number of rounds or a timeout is needed
             for each negotiation objective. 
             Therefore, the definition of each negotiation objective SHOULD clearly specify
-            this, for example a default loop count and timeout.
+            this, for example a default loop count and timeout,
             so that the negotiation can always be terminated properly. If not,
             the GRASP defaults will apply.
          </t>
@@ -2229,7 +2239,7 @@ synch-message = [M_SYNCH, session-id, objective]
 
 message /= flood-message
 flood-message = [M_FLOOD, session-id, initiator, ttl,
-                (locator-option / []), +objective]
+                +[objective, (locator-option / [])]]
 
 message /= request-negotiation-message
 request-negotiation-message = [M_REQ_NEG, session-id, objective]
@@ -2284,8 +2294,10 @@ objective-flags = uint .bits objective-flag
 
 objective-flag = &(
  F_DISC: 0 ; valid for discovery only
- F_NEG: 1 ; valid for discovery and negotiation
- F_SYNCH: 2) ; valid for discovery and synchronization
+ F_NEG: 1     ; valid for discovery and negotiation
+ F_SYNCH: 2   ; valid for discovery and synchronization
+ F_NEG_DRY: 3 ; valid for discovery and dry-run negotiation
+)
 
 objective = [objective-name, objective-flags, loop-count, ?any]
 
@@ -2409,7 +2421,7 @@ O_URI_LOCATOR = 106
     <section anchor="ack" title="Acknowledgements">
     
       <t>A major contribution to the original version of this document was made by Sheng Jiang.
-      Significant review inputs were received from Joel Halpern and Michael Richardson.</t>
+      Significant review inputs were received from Joel Halpern, Toerless Eckert and Michael Richardson.</t>
       
       <t>Valuable comments were received from
       Michael Behringer,
@@ -2488,10 +2500,9 @@ O_URI_LOCATOR = 106
     <section title="Open Issues [RFC Editor: Please remove if empty]">
       <t><list style="symbols">
       
-        <t>59. Add F_NEG_DRY flag to specify a "dry run" objective?.</t>
-        <t>60. Change M_FLOOD syntax to associate a locator with each objective?</t>
+ 
         <t>61. Is the SONN constrained instance really needed?</t>
-        <t>62. Is it helpful to tag descriptive text with message names (M_DISCOVER etc.)?</t>
+
   
        
       </list></t>
@@ -2819,6 +2830,15 @@ O_URI_LOCATOR = 106
            <t>58. Maximum message size?
            <vspace blankLines="1"/>
            RESOLVED by specifying default maximum message size (2048 bytes).</t>
+           
+          <t>59. Add F_NEG_DRY flag to specify a "dry run" objective?.<vspace blankLines="1"/>
+           RESOLVED: Done.</t>
+           
+          <t>60. Change M_FLOOD syntax to associate a locator with each objective?<vspace blankLines="1"/>
+           RESOLVED: Done.</t>
+           
+          <t>62. Is it helpful to tag descriptive text with message names (M_DISCOVER etc.)?<vspace blankLines="1"/>
+           RESOLVED: Yes, done in various parts of the text.</t> 
             
             </list></t>
       </section>
@@ -2826,7 +2846,10 @@ O_URI_LOCATOR = 106
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
       <t>draft-ietf-anima-grasp-09, 2016-12-xx:
-    
+      <vspace blankLines="1"/>
+      Protocol change: Add F_NEG_DRY flag to specify a "dry run" objective.
+      <vspace blankLines="1"/>     
+      Protocol change: Change M_FLOOD syntax to associate a locator with each objective.
       <vspace blankLines="1"/>
       Concentrated mentions of TLS in one sub-section, with all details out of scope.
       <vspace blankLines="1"/>
