@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="7" month="December" year="2016"/>
+    <date day="9" month="December" year="2016"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -1927,19 +1927,19 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
          <section title="Objective flags">
 
          <t>An objective may be relevant for discovery only, for discovery and negotiation, or
-         for discovery and synchronization. This is expressed in the objective by logical flags:</t>
+         for discovery and synchronization. This is expressed in the objective by logical flag bits:</t>
          <t><figure>
         <artwork><![CDATA[
   objective-flags = uint .bits objective-flag
   objective-flag = &(
-  F_DISC: 0    ; valid for discovery only
-  F_NEG: 1     ; valid for discovery and negotiation
-  F_SYNCH: 2   ; valid for discovery and synchronization
-  F_NEG_DRY: 3 ; valid for discovery and dry-run negotiation
+  F_DISC: 0    ; valid for discovery
+  F_NEG: 1     ; valid for negotiation
+  F_SYNCH: 2   ; valid for synchronization
+  F_NEG_DRY: 3 ; negotiation is dry-run
   )
   ]]></artwork>
           </figure></t>
-         <t>Note that for a given negotiation, an objective must be either valid for negotiation, or for
+         <t>Note that for a given negotiation session, an objective must be either used for negotiation, or for
          dry-run negotiation. Mixing the two modes in a single negotiation is not possible.</t> 
          </section>
 
@@ -2293,10 +2293,10 @@ initiator = ipv4-address / ipv6-address
 objective-flags = uint .bits objective-flag
 
 objective-flag = &(
- F_DISC: 0 ; valid for discovery only
- F_NEG: 1     ; valid for discovery and negotiation
- F_SYNCH: 2   ; valid for discovery and synchronization
- F_NEG_DRY: 3 ; valid for discovery and dry-run negotiation
+  F_DISC: 0    ; valid for discovery
+  F_NEG: 1     ; valid for negotiation
+  F_SYNCH: 2   ; valid for synchronization
+  F_NEG_DRY: 3 ; negotiation is dry-run
 )
 
 objective = [objective-name, objective-flags, loop-count, ?any]
@@ -2863,7 +2863,7 @@ O_URI_LOCATOR = 106
       <vspace blankLines="1"/>
       Dropped the word 'kernel' to avoid confusion with o/s kernel mode.
       <vspace blankLines="1"/>
-      Editorial improvements.
+      Editorial improvements and clarifications.
       </t>
       
       <t>draft-ietf-anima-grasp-08, 2016-10-30:
@@ -3108,7 +3108,7 @@ O_URI_LOCATOR = 106
       in  <xref target="cddl"/>. Each message is shown three times in the following formats:
       <list style="numbers">
         <t>CBOR diagnostic notation.</t>
-        <t>Similar, but showing the names of the constants.</t>
+        <t>Similar, but showing the names of the constants. (Details of the flag bit encoding are omitted.) </t>
         <t>Hexadecimal version of the CBOR wire format.</t>
       </list>
       Long lines are split for display purposes only.</t>
@@ -3119,10 +3119,10 @@ looking for objective EX1:</t>
 
 <t><figure>
 <artwork><![CDATA[
-[1, 13948744, h'20010db8f000baaa28ccdc4c97036781', ["EX1", 2, 2, 0]]
+[1, 13948744, h'20010db8f000baaa28ccdc4c97036781', ["EX1", 5, 2, 0]]
 [M_DISCOVERY, 13948744, h'20010db8f000baaa28ccdc4c97036781',
-              ["EX1", F_SYNCH, 2, 0]]
-h'84011a00d4d7485020010db8f000baaa28ccdc4c970367818463455831020200' 
+              ["EX1", F_SYNCH_bits, 2, 0]]
+h'84011a00d4d7485020010db8f000baaa28ccdc4c970367818463455831050200' 
 ]]></artwork>
 </figure></t>
 
@@ -3141,15 +3141,15 @@ h'85021a00d4d7485020010db8f000baaa28ccdc4c9703678119ea6084186750
 </section>
 <section title="Flood Example">
 
-<t>The initiator multicasts a flood message. There is no response:</t>
+<t>The initiator multicasts a flood message. The single objective has a null locator. There is no response:</t>
 <t><figure>
 <artwork><![CDATA[
-[9, 3504974, h'20010db8f000baaa28ccdc4c97036781', 10000, [], 
-             ["EX1", 2, 2, ["Example 1 value=", 100]]] 
-[M_FLOOD, 3504974, h'20010db8f000baaa28ccdc4c97036781', 10000, [], 
-             ["EX1", F_SYNCH, 2, ["Example 1 value=", 100]]]
-h'86091a00357b4e5020010db8f000baaa28ccdc4c9703678119271080846345
-  5831020282704578616d706c6520312076616c75653d1864' 
+[9, 3504974, h'20010db8f000baaa28ccdc4c97036781', 10000,  
+             [["EX1", 5, 2, ["Example 1 value=", 100]],[] ] ] 
+[M_FLOOD, 3504974, h'20010db8f000baaa28ccdc4c97036781', 10000,
+             [["EX1", F_SYNCH_bits, 2, ["Example 1 value=", 100]],[] ] ]
+h'86091a00357b4e5020010db8f000baaa28ccdc4c97036781192710
+  828463455831050282704578616d706c6520312076616c75653d186480'  
 ]]></artwork>
 </figure></t>
 </section>
@@ -3158,17 +3158,17 @@ h'86091a00357b4e5020010db8f000baaa28ccdc4c9703678119271080846345
 <t>Following successful discovery of objective EX2, the initiator unicasts a request:</t>
 <t><figure>
 <artwork><![CDATA[
-[4, 4038926, ["EX2", 2, 5, 0]] 
-[M_REQ_SYN, 4038926, ["EX2", F_SYNCH, 5, 0]] 
-h'83041a003da10e8463455832020500'
+[4, 4038926, ["EX2", 5, 5, 0]] 
+[M_REQ_SYN, 4038926, ["EX2", F_SYNCH_bits, 5, 0]] 
+h'83041a003da10e8463455832050500'
 ]]></artwork>
 </figure></t>
 <t>The peer responds with a value:</t>
 <t><figure>
 <artwork><![CDATA[
-[8, 4038926, ["EX2", 2, 5, ["Example 2 value=", 200]]] 
-[M_SYNCH, 4038926, ["EX2", F_SYNCH, 5, ["Example 2 value=", 200]]] 
-h'83081a003da10e8463455832020582704578616d706c6520322076616c75653d18c8' 
+[8, 4038926, ["EX2", 5, 5, ["Example 2 value=", 200]]] 
+[M_SYNCH, 4038926, ["EX2", F_SYNCH_bits, 5, ["Example 2 value=", 200]]] 
+h'83081a003da10e8463455832050582704578616d706c6520322076616c75653d18c8' 
 ]]></artwork>
 </figure></t>
 </section>
@@ -3177,9 +3177,9 @@ h'83081a003da10e8463455832020582704578616d706c6520322076616c75653d18c8'
 <t>Following successful discovery of objective EX3, the initiator unicasts a request:</t>
 <t><figure>
 <artwork><![CDATA[
-[3, 802813, ["EX3", 1, 6, ["NZD", 47]]] 
-[M_REQ_NEG, 802813, ["EX3", 1, 6, ["NZD", 47]]] 
-h'83031a000c3ffd8463455833010682634e5a44182f' 
+[3, 802813, ["EX3", 3, 6, ["NZD", 47]]] 
+[M_REQ_NEG, 802813, ["EX3", F_NEG_bits, 6, ["NZD", 47]]] 
+h'83031a000c3ffd8463455833030682634e5a44182f' 
 ]]></artwork>
 </figure></t>
 <t>The peer responds with immediate acceptance. Note that no objective is needed,
@@ -3197,25 +3197,25 @@ h'83061a000c3ffd811865'
 <t>Again the initiator unicasts a request:</t>
 <t><figure>
 <artwork><![CDATA[
-[3, 13767778, ["EX3", 1, 6, ["NZD", 410]]] 
-[M_REQ_NEG, 13767778, ["EX3", F_NEG, 6, ["NZD", 410]]]
-h'83031a00d214628463455833010682634e5a4419019a' 
+[3, 13767778, ["EX3", 3, 6, ["NZD", 410]]] 
+[M_REQ_NEG, 13767778, ["EX3", F_NEG_bits, 6, ["NZD", 410]]]
+h'83031a00d214628463455833030682634e5a4419019a' 
 ]]></artwork>
 </figure></t>
 <t>The responder starts to negotiate (making an offer):</t>
 <t><figure>
 <artwork><![CDATA[
-[5, 13767778, ["EX3", 1, 6, ["NZD", 80]]] 
-[M_NEGOTIATE, 13767778, ["EX3", F_NEG, 6, ["NZD", 80]]] 
-h'83051a00d214628463455833010682634e5a441850' 
+[5, 13767778, ["EX3", 3, 6, ["NZD", 80]]] 
+[M_NEGOTIATE, 13767778, ["EX3", F_NEG_bits, 6, ["NZD", 80]]] 
+h'83051a00d214628463455833030682634e5a441850' 
 ]]></artwork>
 </figure></t>
-<t>The initiator continues to negotiate (reducing its request):</t>
+<t>The initiator continues to negotiate (reducing its request, and note that the loop count is decremented):</t>
 <t><figure>
 <artwork><![CDATA[
-[5, 13767778, ["EX3", 1, 5, ["NZD", 307]]] 
-[M_NEGOTIATE, 13767778, ["EX3", F_NEG, 5, ["NZD", 307]]] 
-h'83051a00d214628463455833010582634e5a44190133' 
+[5, 13767778, ["EX3", 3, 5, ["NZD", 307]]] 
+[M_NEGOTIATE, 13767778, ["EX3", F_NEG_bits, 5, ["NZD", 307]]] 
+h'83051a00d214628463455833030582634e5a44190133' 
 ]]></artwork>
 </figure></t>
 <t>The responder asks for more time:</t>
@@ -3229,17 +3229,17 @@ h'83071a00d21462198895'
 <t>The responder continues to negotiate (increasing its offer):</t>
 <t><figure>
 <artwork><![CDATA[
-[5, 13767778, ["EX3", 1, 4, ["NZD", 120]]] 
-[M_NEGOTIATE, 13767778, ["EX3", F_NEG, 4, ["NZD", 120]]]
-h'83051a00d214628463455833010482634e5a441878' 
+[5, 13767778, ["EX3", 3, 4, ["NZD", 120]]] 
+[M_NEGOTIATE, 13767778, ["EX3", F_NEG_bits, 4, ["NZD", 120]]]
+h'83051a00d214628463455833030482634e5a441878' 
 ]]></artwork>
 </figure></t>
 <t>The initiator continues to negotiate (reducing its request):</t>
 <t><figure>
 <artwork><![CDATA[
-[5, 13767778, ["EX3", 1, 3, ["NZD", 246]]] 
-[M_NEGOTIATE, 13767778, ["EX3", F_NEG, 3, ["NZD", 246]]]
-h'83051a00d214628463455833010382634e5a4418f6' 
+[5, 13767778, ["EX3", 3, 3, ["NZD", 246]]] 
+[M_NEGOTIATE, 13767778, ["EX3", F_NEG_bits, 3, ["NZD", 246]]]
+h'83051a00d214628463455833030382634e5a4418f6' 
 ]]></artwork>
 </figure></t>
 <t>The responder refuses to negotiate further:</t>
