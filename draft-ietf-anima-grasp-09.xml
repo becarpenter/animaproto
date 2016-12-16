@@ -1944,6 +1944,8 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
   )
   ]]></artwork>
           </figure></t>
+         <t>These bits are independent and may be combined appropriately, e.g. (F_DISC and F_SYNCH) or 
+         (F_DISC and F_NEG) or (F_DISC and F_NEG and F_NEG_DRY).</t> 
          <t>Note that for a given negotiation session, an objective must be either used for negotiation, or for
          dry-run negotiation. Mixing the two modes in a single negotiation is not possible.</t> 
          </section>

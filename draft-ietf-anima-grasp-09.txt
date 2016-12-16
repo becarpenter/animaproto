@@ -5,10 +5,10 @@
 Network Working Group                                         C. Bormann
 Internet-Draft                                   Universitaet Bremen TZI
 Intended status: Standards Track                       B. Carpenter, Ed.
-Expires: June 10, 2017                                 Univ. of Auckland
+Expires: June 18, 2017                                 Univ. of Auckland
                                                              B. Liu, Ed.
                                             Huawei Technologies Co., Ltd
-                                                        December 7, 2016
+                                                       December 15, 2016
 
 
              A Generic Autonomic Signaling Protocol (GRASP)
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 10, 2017.
+   This Internet-Draft will expire on June 18, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Bormann, et al.           Expires June 10, 2017                 [Page 1]
+Bormann, et al.           Expires June 18, 2017                 [Page 1]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Bormann, et al.           Expires June 10, 2017                 [Page 2]
+Bormann, et al.           Expires June 18, 2017                 [Page 2]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -125,10 +125,10 @@ Internet-Draft                    GRASP                    December 2016
    4.  Implementation Status [RFC Editor: please remove] . . . . . .  43
      4.1.  BUPT C++ Implementation . . . . . . . . . . . . . . . . .  43
      4.2.  Python Implementation . . . . . . . . . . . . . . . . . .  44
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  44
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  45
    6.  CDDL Specification of GRASP . . . . . . . . . . . . . . . . .  47
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  49
-   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  50
+   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  51
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  51
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .  51
      9.2.  Informative References  . . . . . . . . . . . . . . . . .  52
@@ -137,12 +137,12 @@ Internet-Draft                    GRASP                    December 2016
    Appendix C.  Change log [RFC Editor: Please remove] . . . . . . .  63
    Appendix D.  Example Message Formats  . . . . . . . . . . . . . .  69
      D.1.  Discovery Example . . . . . . . . . . . . . . . . . . . .  69
-     D.2.  Flood Example . . . . . . . . . . . . . . . . . . . . . .  69
+     D.2.  Flood Example . . . . . . . . . . . . . . . . . . . . . .  70
      D.3.  Synchronization Example . . . . . . . . . . . . . . . . .  70
      D.4.  Simple Negotiation Example  . . . . . . . . . . . . . . .  70
-     D.5.  Complete Negotiation Example  . . . . . . . . . . . . . .  70
-   Appendix E.  Capability Analysis of Current Protocols . . . . . .  71
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  74
+     D.5.  Complete Negotiation Example  . . . . . . . . . . . . . .  71
+   Appendix E.  Capability Analysis of Current Protocols . . . . . .  72
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  75
 
 1.  Introduction
 
@@ -165,7 +165,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                 [Page 3]
+Bormann, et al.           Expires June 18, 2017                 [Page 3]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -221,7 +221,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                 [Page 4]
+Bormann, et al.           Expires June 18, 2017                 [Page 4]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -277,7 +277,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                 [Page 5]
+Bormann, et al.           Expires June 18, 2017                 [Page 5]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -333,7 +333,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                 [Page 6]
+Bormann, et al.           Expires June 18, 2017                 [Page 6]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -389,7 +389,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                 [Page 7]
+Bormann, et al.           Expires June 18, 2017                 [Page 7]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -445,7 +445,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                 [Page 8]
+Bormann, et al.           Expires June 18, 2017                 [Page 8]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -501,7 +501,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                 [Page 9]
+Bormann, et al.           Expires June 18, 2017                 [Page 9]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -557,7 +557,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 10]
+Bormann, et al.           Expires June 18, 2017                [Page 10]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -613,7 +613,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 11]
+Bormann, et al.           Expires June 18, 2017                [Page 11]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -669,7 +669,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 12]
+Bormann, et al.           Expires June 18, 2017                [Page 12]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -725,7 +725,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 13]
+Bormann, et al.           Expires June 18, 2017                [Page 13]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -781,7 +781,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 14]
+Bormann, et al.           Expires June 18, 2017                [Page 14]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -837,7 +837,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 15]
+Bormann, et al.           Expires June 18, 2017                [Page 15]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -893,7 +893,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 16]
+Bormann, et al.           Expires June 18, 2017                [Page 16]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -917,8 +917,8 @@ Internet-Draft                    GRASP                    December 2016
 
 3.5.2.  Constrained Instances
 
-   This section describes three cases where additional instances of
-   GRASP subject to certain constraints are appropriate.
+   This section describes some examples of cases where additional
+   instances of GRASP subject to certain constraints are appropriate.
 
 3.5.2.1.  No ACP
 
@@ -949,7 +949,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 17]
+Bormann, et al.           Expires June 18, 2017                [Page 17]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -984,10 +984,11 @@ Internet-Draft                    GRASP                    December 2016
 
 3.5.2.3.  Secure Only Neighbor Negotiation
 
-   During ACP formation [I-D.ietf-anima-autonomic-control-plane], a
-   separate instance of GRASP is used, with unicast messages secured by
-   TLS, and with its own copy of all GRASP data structures.  This
-   instance is nicknamed SONN - Secure Only Neighbor Negotiation.
+   Some services might use insecure on-link operations as in DULL, but
+   also use unicast synchronization or negotiation operations protected
+   by TLS.  A separate instance of GRASP is used, with its own copy of
+   all GRASP data structures.  This instance is nicknamed SONN - Secure
+   Only Neighbor Negotiation.
 
    The detailed rules for the SONN instance of GRASP are as follows:
 
@@ -1004,8 +1005,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-
-Bormann, et al.           Expires June 10, 2017                [Page 18]
+Bormann, et al.           Expires June 18, 2017                [Page 18]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1018,6 +1018,9 @@ Internet-Draft                    GRASP                    December 2016
 
    o  A node MUST silently discard any message whose source address is
       not link-local.
+
+   Further details, including TLS and PKI usage, are out of scope for
+   this document.
 
 3.5.3.  Transport Layer Usage
 
@@ -1058,10 +1061,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 19]
+Bormann, et al.           Expires June 18, 2017                [Page 19]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1117,7 +1117,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 20]
+Bormann, et al.           Expires June 18, 2017                [Page 20]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1173,7 +1173,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 21]
+Bormann, et al.           Expires June 18, 2017                [Page 21]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1229,7 +1229,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 22]
+Bormann, et al.           Expires June 18, 2017                [Page 22]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1285,7 +1285,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 23]
+Bormann, et al.           Expires June 18, 2017                [Page 23]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1341,7 +1341,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 24]
+Bormann, et al.           Expires June 18, 2017                [Page 24]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1397,7 +1397,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 25]
+Bormann, et al.           Expires June 18, 2017                [Page 25]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1453,7 +1453,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 26]
+Bormann, et al.           Expires June 18, 2017                [Page 26]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1509,7 +1509,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 27]
+Bormann, et al.           Expires June 18, 2017                [Page 27]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1565,7 +1565,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 28]
+Bormann, et al.           Expires June 18, 2017                [Page 28]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1621,7 +1621,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 29]
+Bormann, et al.           Expires June 18, 2017                [Page 29]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1677,7 +1677,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 30]
+Bormann, et al.           Expires June 18, 2017                [Page 30]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1733,7 +1733,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 31]
+Bormann, et al.           Expires June 18, 2017                [Page 31]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1789,7 +1789,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 32]
+Bormann, et al.           Expires June 18, 2017                [Page 32]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1845,7 +1845,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 33]
+Bormann, et al.           Expires June 18, 2017                [Page 33]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1901,7 +1901,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 34]
+Bormann, et al.           Expires June 18, 2017                [Page 34]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -1957,7 +1957,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 35]
+Bormann, et al.           Expires June 18, 2017                [Page 35]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -2013,7 +2013,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 36]
+Bormann, et al.           Expires June 18, 2017                [Page 36]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -2069,7 +2069,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 37]
+Bormann, et al.           Expires June 18, 2017                [Page 37]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -2125,7 +2125,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 38]
+Bormann, et al.           Expires June 18, 2017                [Page 38]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -2181,7 +2181,7 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 39]
+Bormann, et al.           Expires June 18, 2017                [Page 39]
 
 Internet-Draft                    GRASP                    December 2016
 
@@ -2220,27 +2220,31 @@ Internet-Draft                    GRASP                    December 2016
 
    An objective may be relevant for discovery only, for discovery and
    negotiation, or for discovery and synchronization.  This is expressed
-   in the objective by logical flags:
+   in the objective by logical flag bits:
 
      objective-flags = uint .bits objective-flag
      objective-flag = &(
-     F_DISC: 0    ; valid for discovery only
-     F_NEG: 1     ; valid for discovery and negotiation
-     F_SYNCH: 2   ; valid for discovery and synchronization
-     F_NEG_DRY: 3 ; valid for discovery and dry-run negotiation
+     F_DISC: 0    ; valid for discovery
+     F_NEG: 1     ; valid for negotiation
+     F_SYNCH: 2   ; valid for synchronization
+     F_NEG_DRY: 3 ; negotiation is dry-run
      )
 
-   Note that for a given negotiation, an objective must be either valid
-   for negotiation, or for dry-run negotiation.  Mixing the two modes in
-   a single negotiation is not possible.
+   These bits are independent and may be combined appropriately, e.g.
+   (F_DISC and F_SYNCH) or (F_DISC and F_NEG) or (F_DISC and F_NEG and
+   F_NEG_DRY).
 
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 40]
+Bormann, et al.           Expires June 18, 2017                [Page 40]
 
 Internet-Draft                    GRASP                    December 2016
 
+
+   Note that for a given negotiation session, an objective must be
+   either used for negotiation, or for dry-run negotiation.  Mixing the
+   two modes in a single negotiation is not possible.
 
 3.10.3.  General Considerations for Objective Options
 
@@ -2286,17 +2290,17 @@ Internet-Draft                    GRASP                    December 2016
    As noted earlier, one negotiation objective is handled by each GRASP
    negotiation thread.  Therefore, a negotiation objective, which is
    based on a specific function or action, SHOULD be organized as a
-   single GRASP option.  It is NOT RECOMMENDED to organize multiple
-   negotiation objectives into a single option, nor to split a single
-   function or action into multiple negotiation objectives.
 
 
 
-
-Bormann, et al.           Expires June 10, 2017                [Page 41]
+Bormann, et al.           Expires June 18, 2017                [Page 41]
 
 Internet-Draft                    GRASP                    December 2016
 
+
+   single GRASP option.  It is NOT RECOMMENDED to organize multiple
+   negotiation objectives into a single option, nor to split a single
+   function or action into multiple negotiation objectives.
 
    It is important to understand that GRASP negotiation does not support
    transactional integrity.  If transactional integrity is needed for a
@@ -2343,19 +2347,18 @@ Internet-Draft                    GRASP                    December 2016
    objective for purposes such as trust bootstrapping or formation of
    the ACP.
 
-   To guarantee convergence, a limited number of rounds or a timeout is
-   needed for each negotiation objective.  Therefore, the definition of
-   each negotiation objective SHOULD clearly specify this, for example a
 
 
-
-Bormann, et al.           Expires June 10, 2017                [Page 42]
+Bormann, et al.           Expires June 18, 2017                [Page 42]
 
 Internet-Draft                    GRASP                    December 2016
 
 
-   default loop count and timeout.  so that the negotiation can always
-   be terminated properly.  If not, the GRASP defaults will apply.
+   To guarantee convergence, a limited number of rounds or a timeout is
+   needed for each negotiation objective.  Therefore, the definition of
+   each negotiation objective SHOULD clearly specify this, for example a
+   default loop count and timeout, so that the negotiation can always be
+   terminated properly.  If not, the GRASP defaults will apply.
 
    There must be a well-defined procedure for concluding that a
    negotiation cannot succeed, and if so deciding what happens next
@@ -2400,15 +2403,14 @@ Internet-Draft                    GRASP                    December 2016
 
       *  only coded for IPv6, any IPv4 is accidental
 
-   o  Licensing: Huawei License.
 
 
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 43]
+Bormann, et al.           Expires June 18, 2017                [Page 43]
 
 Internet-Draft                    GRASP                    December 2016
 
+
+   o  Licensing: Huawei License.
 
    o  Experience: https://github.com/liubingpang/IETF-Anima-Signaling-
       Protocol/blob/master/README.md
@@ -2453,19 +2455,22 @@ Internet-Draft                    GRASP                    December 2016
 
    o  Contact: https://www.cs.auckland.ac.nz/~brian/graspy/
 
+
+
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 44]
+
+Internet-Draft                    GRASP                    December 2016
+
+
 5.  Security Considerations
 
    It is obvious that a successful attack on negotiation-enabled nodes
    would be extremely harmful, as such nodes might end up with a
    completely undesirable configuration that would also adversely affect
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 44]
-
-Internet-Draft                    GRASP                    December 2016
-
-
    their peers.  GRASP nodes and messages therefore require full
    protection.
 
@@ -2509,19 +2514,18 @@ Internet-Draft                    GRASP                    December 2016
       involved in the signaling protocol, so there should be no direct
       impact on personal privacy.  Nevertheless, traffic flow paths,
       VPNs, etc. could be negotiated, which could be of interest for
-      traffic analysis.  Also, operators generally want to conceal
-      details of their network topology and traffic density from
-      outsiders.  Therefore, since insider attacks cannot be excluded in
-      a large network, the security mechanism for the protocol MUST
 
 
 
-
-Bormann, et al.           Expires June 10, 2017                [Page 45]
+Bormann, et al.           Expires June 18, 2017                [Page 45]
 
 Internet-Draft                    GRASP                    December 2016
 
 
+      traffic analysis.  Also, operators generally want to conceal
+      details of their network topology and traffic density from
+      outsiders.  Therefore, since insider attacks cannot be excluded in
+      a large network, the security mechanism for the protocol MUST
       provide message confidentiality.  This is why Section 3.5.1
       requires either an ACP or an alternative security mechanism.
 
@@ -2566,17 +2570,18 @@ Internet-Draft                    GRASP                    December 2016
 
    - Security of discovered locators
 
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 46]
+
+Internet-Draft                    GRASP                    December 2016
+
+
       When GRASP discovery returns an IP address, it MUST be that of a
       node within the secure environment (Section 3.5.1).  If it returns
       an FQDN or a URI, the ASA that receives it MUST NOT assume that
       the target of the locator is within the secure environment.
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 46]
-
-Internet-Draft                    GRASP                    December 2016
-
 
 6.  CDDL Specification of GRASP
 
@@ -2622,17 +2627,16 @@ Internet-Draft                    GRASP                    December 2016
   message /= invalid-message
   invalid-message = [M_INVALID, session-id, ?any]
 
-  noop-message = [M_NOOP]
-
-  divert-option = [O_DIVERT, +locator-option]
 
 
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 47]
+Bormann, et al.           Expires June 18, 2017                [Page 47]
 
 Internet-Draft                    GRASP                    December 2016
 
+
+  noop-message = [M_NOOP]
+
+  divert-option = [O_DIVERT, +locator-option]
 
   accept-option = [O_ACCEPT]
 
@@ -2664,10 +2668,10 @@ Internet-Draft                    GRASP                    December 2016
   objective-flags = uint .bits objective-flag
 
   objective-flag = &(
-   F_DISC: 0 ; valid for discovery only
-   F_NEG: 1     ; valid for discovery and negotiation
-   F_SYNCH: 2   ; valid for discovery and synchronization
-   F_NEG_DRY: 3 ; valid for discovery and dry-run negotiation
+    F_DISC: 0    ; valid for discovery
+    F_NEG: 1     ; valid for negotiation
+    F_SYNCH: 2   ; valid for synchronization
+    F_NEG_DRY: 3 ; negotiation is dry-run
   )
 
   objective = [objective-name, objective-flags, loop-count, ?any]
@@ -2678,18 +2682,18 @@ Internet-Draft                    GRASP                    December 2016
 
   ; Constants for message types and option types
 
-  M_NOOP = 0
-  M_DISCOVERY = 1
-  M_RESPONSE = 2
-  M_REQ_NEG = 3
 
 
 
-Bormann, et al.           Expires June 10, 2017                [Page 48]
+Bormann, et al.           Expires June 18, 2017                [Page 48]
 
 Internet-Draft                    GRASP                    December 2016
 
 
+  M_NOOP = 0
+  M_DISCOVERY = 1
+  M_RESPONSE = 2
+  M_REQ_NEG = 3
   M_REQ_SYN = 4
   M_NEGOTIATE = 5
   M_END = 6
@@ -2732,20 +2736,22 @@ Internet-Draft                    GRASP                    December 2016
    Description: See Section 3.6
    Reference: RFC XXXX (this document)
 
+
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 49]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    The IANA is requested to create a GRASP Parameter Registry including
    two registry tables.  These are the GRASP Messages and Options
    Table and the GRASP Objective Names Table.
 
    GRASP Messages and Options Table.  The values in this table are names
    paired with decimal integers.  Future values MUST be assigned using
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 49]
-
-Internet-Draft                    GRASP                    December 2016
-
-
    the Standards Action policy defined by [RFC5226].  The following
    initial values are assigned by this document:
 
@@ -2785,6 +2791,17 @@ Internet-Draft                    GRASP                    December 2016
     EX8
     EX9
 
+
+
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 50]
+
+Internet-Draft                    GRASP                    December 2016
+
+
 8.  Acknowledgements
 
    A major contribution to the original version of this document was
@@ -2792,18 +2809,10 @@ Internet-Draft                    GRASP                    December 2016
    Joel Halpern, Toerless Eckert and Michael Richardson.
 
    Valuable comments were received from Michael Behringer, Jeferson
-   Campos Nobre, Laurent Ciavaglia, Zongpeng Du, Toerless Eckert, Yu Fu,
-   Zhenbin Li, Dimitri Papadimitriou, Pierre Peloso, Reshad Rahman,
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 50]
-
-Internet-Draft                    GRASP                    December 2016
-
-
-   Markus Stenberg, Rene Struik, Dacheng Zhang, and other participants
-   in the NMRG research group and the ANIMA working group.
+   Campos Nobre, Laurent Ciavaglia, Zongpeng Du, Yu Fu, Zhenbin Li,
+   Dimitri Papadimitriou, Pierre Peloso, Reshad Rahman, Markus Stenberg,
+   Rene Struik, Dacheng Zhang, and other participants in the NMRG
+   research group and the ANIMA working group.
 
 9.  References
 
@@ -2841,6 +2850,14 @@ Internet-Draft                    GRASP                    December 2016
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <http://www.rfc-editor.org/info/rfc5280>.
 
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 51]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
               Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
               January 2012, <http://www.rfc-editor.org/info/rfc6347>.
@@ -2848,15 +2865,6 @@ Internet-Draft                    GRASP                    December 2016
    [RFC7049]  Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", RFC 7049, DOI 10.17487/RFC7049,
               October 2013, <http://www.rfc-editor.org/info/rfc7049>.
-
-
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 51]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    [RFC7217]  Gont, F., "A Method for Generating Semantically Opaque
               Interface Identifiers with IPv6 Stateless Address
@@ -2895,6 +2903,17 @@ Internet-Draft                    GRASP                    December 2016
               anima-stable-connectivity-01 (work in progress), July
               2016.
 
+
+
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 52]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    [I-D.ietf-netconf-restconf]
               Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
               Protocol", draft-ietf-netconf-restconf-18 (work in
@@ -2905,14 +2924,6 @@ Internet-Draft                    GRASP                    December 2016
               Enterprise Number (PEN) practices and Internet Assigned
               Numbers Authority (IANA) registration considerations",
               draft-liang-iana-pen-06 (work in progress), July 2015.
-
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 52]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    [I-D.liu-anima-grasp-api]
               Carpenter, B., Liu, B., Wang, W., and X. Gong, "Generic
@@ -2950,6 +2961,15 @@ Internet-Draft                    GRASP                    December 2016
               Tunnels", RFC 3209, DOI 10.17487/RFC3209, December 2001,
               <http://www.rfc-editor.org/info/rfc3209>.
 
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 53]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    [RFC3315]  Droms, R., Ed., Bound, J., Volz, B., Lemon, T., Perkins,
               C., and M. Carney, "Dynamic Host Configuration Protocol
               for IPv6 (DHCPv6)", RFC 3315, DOI 10.17487/RFC3315, July
@@ -2959,16 +2979,6 @@ Internet-Draft                    GRASP                    December 2016
               for the Simple Network Management Protocol (SNMP)",
               STD 62, RFC 3416, DOI 10.17487/RFC3416, December 2002,
               <http://www.rfc-editor.org/info/rfc3416>.
-
-
-
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 53]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    [RFC4861]  Narten, T., Nordmark, E., Simpson, W., and H. Soliman,
               "Neighbor Discovery for IP version 6 (IPv6)", RFC 4861,
@@ -3006,6 +3016,16 @@ Internet-Draft                    GRASP                    December 2016
               Discovery", RFC 6763, DOI 10.17487/RFC6763, February 2013,
               <http://www.rfc-editor.org/info/rfc6763>.
 
+
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 54]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    [RFC6887]  Wing, D., Ed., Cheshire, S., Boucadair, M., Penno, R., and
               P. Selkirk, "Port Control Protocol (PCP)", RFC 6887,
               DOI 10.17487/RFC6887, April 2013,
@@ -3016,15 +3036,6 @@ Internet-Draft                    GRASP                    December 2016
               (DNS-SD) / Multicast DNS (mDNS) Extensions", RFC 7558,
               DOI 10.17487/RFC7558, July 2015,
               <http://www.rfc-editor.org/info/rfc7558>.
-
-
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 54]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    [RFC7575]  Behringer, M., Pritikin, M., Bjarnason, S., Clemm, A.,
               Carpenter, B., Jiang, S., and L. Ciavaglia, "Autonomic
@@ -3047,7 +3058,7 @@ Internet-Draft                    GRASP                    December 2016
 
 Appendix A.  Open Issues [RFC Editor: Please remove if empty]
 
-   o  61.  Is the SONN constrained instance really needed?
+   o  63.  Placeholder
 
 Appendix B.  Closed Issues [RFC Editor: Please remove]
 
@@ -3064,6 +3075,13 @@ Appendix B.  Closed Issues [RFC Editor: Please remove]
       RESOLVED by specifying UDP for short message and TCP for longer
       one.
 
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 55]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    o  2.  DTLS or TLS vs built-in security mechanism.  For now, this
       specification has chosen a PKI based built-in security mechanism
       based on asymmetric cryptography.  However, (D)TLS might be chosen
@@ -3074,13 +3092,6 @@ Appendix B.  Closed Issues [RFC Editor: Please remove]
       cryptographic calculations for every message.  (D)TLS has startup
       overheads but cheaper crypto per message.  DTLS is less mature
       than TLS.
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 55]
-
-Internet-Draft                    GRASP                    December 2016
-
 
       RESOLVED by specifying external security (ACP or (D)TLS).
 
@@ -3120,6 +3131,13 @@ Internet-Draft                    GRASP                    December 2016
       RESOLVED for now by adding optional use of DNS-SD by ASAs.
       Subsequently removed by editors as irrelevant to GRASP istelf.
 
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 56]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    o  5.  Need to expand description of the minimum requirements for the
       specification of an individual discovery, synchronization or
       negotiation objective.
@@ -3130,14 +3148,6 @@ Internet-Draft                    GRASP                    December 2016
       node starts up, performs discovery, and conducts negotiation and
       synchronisation for a sample use case would help readers to
       understand the applicability of this specification.  Maybe it
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 56]
-
-Internet-Draft                    GRASP                    December 2016
-
-
       should be an artificial use case or maybe a simple real one, based
       on a conceptual API.  However, the authors have not yet decided
       whether to have a separate document or have it in the protocol
@@ -3175,6 +3185,15 @@ Internet-Draft                    GRASP                    December 2016
       sufficient to prove AN identity; or explain how Device Identity
       Option is used.  (Sheng)
 
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 57]
+
+Internet-Draft                    GRASP                    December 2016
+
+
       RESOLVED for now: we assume that all ASAs in a device are trusted
       as soon as the device is trusted, so they share credentials.  In
       that case the Device Identity Option is useless.  This needs to be
@@ -3185,14 +3204,6 @@ Internet-Draft                    GRASP                    December 2016
       first step of a negotiation/synchronization.  (Sheng)
 
       RESOLVED by improved text.
-
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 57]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    o  14.  Do we need an unsolicited flooding mechanism for discovery
       (for discovery results that everyone needs), to reduce scaling
@@ -3230,6 +3241,15 @@ Internet-Draft                    GRASP                    December 2016
 
       RESOLVED: Yes, changed to CBOR.
 
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 58]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    o  20.  Is the Divert option needed?  If a discovery response
       provides a valid IP address or FQDN, the recipient doesn't gain
       any extra knowledge from the Divert.  On the other hand, the
@@ -3242,13 +3262,6 @@ Internet-Draft                    GRASP                    December 2016
       Protocol)?
 
       RESOLVED: Yes, name changed.
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 58]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    o  22.  Does discovery mechanism scale robustly as needed?  Need hop
       limit on relaying?
@@ -3286,6 +3299,13 @@ Internet-Draft                    GRASP                    December 2016
    o  29.  PEN is used to distinguish vendor options.  Would it be
       better to use a domain name?  Anything unique will do.
 
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 59]
+
+Internet-Draft                    GRASP                    December 2016
+
+
       RESOLVED: Simplified this by removing PEN field and changing
       naming rules for objectives.
 
@@ -3298,13 +3318,6 @@ Internet-Draft                    GRASP                    December 2016
       sufficient to deal with sleeping nodes?
 
       RESOLVED: WG feedback is that it's unnecessary to say more.
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 59]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    o  32.  We have one-to-one synchronization and flooding
       synchronization.  Do we also need selective flooding to a subset
@@ -3341,6 +3354,14 @@ Internet-Draft                    GRASP                    December 2016
    o  38.  Is Session ID sufficient to identify relayed responses?
       Isn't the originator's address needed too?
 
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 60]
+
+Internet-Draft                    GRASP                    December 2016
+
+
       RESOLVED: Yes, this is needed for multicast messages and their
       responses.
 
@@ -3352,15 +3373,6 @@ Internet-Draft                    GRASP                    December 2016
    o  40.  Add a "reason" code to the DECLINE option?
 
       RESOLVED: Done.
-
-
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 60]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    o  41.  What happens if an ASA cannot conveniently use one of the
       GRASP mechanisms?  Do we (a) add a message type to GRASP, or (b)
@@ -3398,6 +3410,14 @@ Internet-Draft                    GRASP                    December 2016
       messages is intended to assist in loop prevention.  However, we
       also have the loop count for that.  Also, if we create a new
       Session ID each time a DISCOVER or FLOOD is relayed, that ID can
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 61]
+
+Internet-Draft                    GRASP                    December 2016
+
+
       be disambiguated by recipients.  It would be simpler to remove the
       initiator from the messages, making parsing more uniform.  Is that
       OK?
@@ -3410,13 +3430,6 @@ Internet-Draft                    GRASP                    December 2016
       accordingly)?
 
       RESOLVED: Yes. Done.
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 61]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    o  48.  Should the Appendix "Capability Analysis of Current
       Protocols" be deleted before RFC publication?
@@ -3454,6 +3467,13 @@ Internet-Draft                    GRASP                    December 2016
       simultaneously choose the same Session ID and send each other
       simultaneous M_REQ_NEG messages?
 
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 62]
+
+Internet-Draft                    GRASP                    December 2016
+
+
       RESOLVED: Yes. Enhanced text on Session ID generation, and added
       precaution when receiving a Request message.
 
@@ -3466,13 +3486,6 @@ Internet-Draft                    GRASP                    December 2016
       RESOLVED: Done.
 
    o  57.  Add M_INVALID message?
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 62]
-
-Internet-Draft                    GRASP                    December 2016
-
 
       RESOLVED: Done.
 
@@ -3489,6 +3502,10 @@ Internet-Draft                    GRASP                    December 2016
 
       RESOLVED: Done.
 
+   o  61.  Is the SONN constrained instance really needed?
+
+      RESOLVED: Retained but only as an option.
+
    o  62.  Is it helpful to tag descriptive text with message names
       (M_DISCOVER etc.)?
 
@@ -3496,15 +3513,24 @@ Internet-Draft                    GRASP                    December 2016
 
 Appendix C.  Change log [RFC Editor: Please remove]
 
-   draft-ietf-anima-grasp-09, 2016-12-xx:
+   draft-ietf-anima-grasp-09, 2016-12-15:
 
    Protocol change: Add F_NEG_DRY flag to specify a "dry run" objective.
 
    Protocol change: Change M_FLOOD syntax to associate a locator with
    each objective.
 
-   Concentrated mentions of TLS in one sub-section, with all details out
-   of scope.
+   Concentrated mentions of TLS in one section, with all details out of
+   scope.
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 63]
+
+Internet-Draft                    GRASP                    December 2016
+
+
+   Clarified text around constrained instances of GRASP.
 
    Strengthened text restricting LL addresses in locator options.
 
@@ -3517,18 +3543,11 @@ Appendix C.  Change log [RFC Editor: Please remove]
 
    Dropped the word 'kernel' to avoid confusion with o/s kernel mode.
 
-   Editorial improvements.
+   Editorial improvements and clarifications.
 
    draft-ietf-anima-grasp-08, 2016-10-30:
 
    Protocol change: Added M_INVALID message.
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 63]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    Protocol change: Increased Session ID space to 32 bits.
 
@@ -3560,6 +3579,13 @@ Internet-Draft                    GRASP                    December 2016
 
    Protocol change: Added TTL field to Flood message (issue 51).
 
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 64]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    Protocol change: Added Locator option to Flood message (issue 51).
 
    Protocol change: Added TTL field to Discovery Response message
@@ -3578,13 +3604,6 @@ Internet-Draft                    GRASP                    December 2016
 
    Amended text about ASA authorization and roles to allow for
    overlapping ASAs.
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 64]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    Added text recommending that Flood should be repeated periodically.
 
@@ -3614,6 +3633,15 @@ Internet-Draft                    GRASP                    December 2016
    response.  Updated protocol description, CDDL and IANA considerations
    accordingly.
 
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 65]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    Clarified that discovery and flood multicasts are handled by the
    GRASP core, not directly by ASAs.
 
@@ -3634,13 +3662,6 @@ Internet-Draft                    GRASP                    December 2016
    Updated IANA Considerations.
 
    draft-ietf-anima-grasp-03, 2016-02-24:
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 65]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    Protocol change: Removed initiator field from certain messages and
    adjusted relaying requirement to simplify loop detection.  Also
@@ -3669,6 +3690,14 @@ Internet-Draft                    GRASP                    December 2016
 
    Protocol change: added optional error string to DECLINE option.
 
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 66]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    Protocol change: removed statement that seemed to say that a Request
    not preceded by a Discovery should cause a Discovery response.  That
    made no sense, because there is no way the initiator would know where
@@ -3690,13 +3719,6 @@ Internet-Draft                    GRASP                    December 2016
 
    Protocol change: Receiver of REQUEST message must close socket if no
    ASA is listening for the objective.
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 66]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    Protocol change: Simplified Waiting message.
 
@@ -3725,6 +3747,13 @@ Internet-Draft                    GRASP                    December 2016
 
    File name and protocol name changed following WG adoption.
 
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 67]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    Added URL locator type.
 
    draft-carpenter-anima-gdn-protocol-04, 2015-06-21:
@@ -3745,14 +3774,6 @@ Internet-Draft                    GRASP                    December 2016
 
    Clarified that GDNP discovery must not be a prerequisite for GDNP
    negotiation or synchronization (resolved issue 13).
-
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 67]
-
-Internet-Draft                    GRASP                    December 2016
-
 
    Specified flag bits for objective options (resolved issue 15).
 
@@ -3782,6 +3803,13 @@ Internet-Draft                    GRASP                    December 2016
    Clarified that objectives may be simple values or complex data
    structures,
 
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 68]
+
+Internet-Draft                    GRASP                    December 2016
+
+
    Improved description of objective options,
 
    Added loop-avoidance mechanisms (loop count and default timeout,
@@ -3802,14 +3830,6 @@ Internet-Draft                    GRASP                    December 2016
    unsolicited responses, numerous corrections and clarifications,
    expanded future work list, 2015-01-06.
 
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 68]
-
-Internet-Draft                    GRASP                    December 2016
-
-
    draft-carpenter-anima-gdn-protocol-00, combination of draft-jiang-
    config-negotiation-ps-03 and draft-jiang-config-negotiation-protocol-
    02, 2014-10-08.
@@ -3823,7 +3843,8 @@ Appendix D.  Example Message Formats
 
    1.  CBOR diagnostic notation.
 
-   2.  Similar, but showing the names of the constants.
+   2.  Similar, but showing the names of the constants.  (Details of the
+       flag bit encoding are omitted.)
 
    3.  Hexadecimal version of the CBOR wire format.
 
@@ -3834,10 +3855,21 @@ D.1.  Discovery Example
    The initiator (2001:db8:f000:baaa:28cc:dc4c:9703:6781) multicasts a
    discovery message looking for objective EX1:
 
-   [1, 13948744, h'20010db8f000baaa28ccdc4c97036781', ["EX1", 2, 2, 0]]
+
+
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 69]
+
+Internet-Draft                    GRASP                    December 2016
+
+
+   [1, 13948744, h'20010db8f000baaa28ccdc4c97036781', ["EX1", 5, 2, 0]]
    [M_DISCOVERY, 13948744, h'20010db8f000baaa28ccdc4c97036781',
-                 ["EX1", F_SYNCH, 2, 0]]
-   h'84011a00d4d7485020010db8f000baaa28ccdc4c970367818463455831020200'
+                 ["EX1", F_SYNCH_bits, 2, 0]]
+   h'84011a00d4d7485020010db8f000baaa28ccdc4c970367818463455831050200'
 
    A peer (2001:0db8:f000:baaa:f000:baaa:f000:baaa) responds with a
    locator:
@@ -3852,50 +3884,47 @@ D.1.  Discovery Example
 
 D.2.  Flood Example
 
-   The initiator multicasts a flood message.  There is no response:
+   The initiator multicasts a flood message.  The single objective has a
+   null locator.  There is no response:
 
-
-
-
-
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 69]
-
-Internet-Draft                    GRASP                    December 2016
-
-
-   [9, 3504974, h'20010db8f000baaa28ccdc4c97036781', 10000, [],
-                ["EX1", 2, 2, ["Example 1 value=", 100]]]
-   [M_FLOOD, 3504974, h'20010db8f000baaa28ccdc4c97036781', 10000, [],
-                ["EX1", F_SYNCH, 2, ["Example 1 value=", 100]]]
-   h'86091a00357b4e5020010db8f000baaa28ccdc4c9703678119271080846345
-     5831020282704578616d706c6520312076616c75653d1864'
+[9, 3504974, h'20010db8f000baaa28ccdc4c97036781', 10000,
+             [["EX1", 5, 2, ["Example 1 value=", 100]],[] ] ]
+[M_FLOOD, 3504974, h'20010db8f000baaa28ccdc4c97036781', 10000,
+             [["EX1", F_SYNCH_bits, 2, ["Example 1 value=", 100]],[] ] ]
+h'86091a00357b4e5020010db8f000baaa28ccdc4c97036781192710
+  828463455831050282704578616d706c6520312076616c75653d186480'
 
 D.3.  Synchronization Example
 
    Following successful discovery of objective EX2, the initiator
    unicasts a request:
 
-   [4, 4038926, ["EX2", 2, 5, 0]]
-   [M_REQ_SYN, 4038926, ["EX2", F_SYNCH, 5, 0]]
-   h'83041a003da10e8463455832020500'
+   [4, 4038926, ["EX2", 5, 5, 0]]
+   [M_REQ_SYN, 4038926, ["EX2", F_SYNCH_bits, 5, 0]]
+   h'83041a003da10e8463455832050500'
 
    The peer responds with a value:
 
- [8, 4038926, ["EX2", 2, 5, ["Example 2 value=", 200]]]
- [M_SYNCH, 4038926, ["EX2", F_SYNCH, 5, ["Example 2 value=", 200]]]
- h'83081a003da10e8463455832020582704578616d706c6520322076616c75653d18c8'
+ [8, 4038926, ["EX2", 5, 5, ["Example 2 value=", 200]]]
+ [M_SYNCH, 4038926, ["EX2", F_SYNCH_bits, 5, ["Example 2 value=", 200]]]
+ h'83081a003da10e8463455832050582704578616d706c6520322076616c75653d18c8'
 
 D.4.  Simple Negotiation Example
 
    Following successful discovery of objective EX3, the initiator
    unicasts a request:
 
-   [3, 802813, ["EX3", 1, 6, ["NZD", 47]]]
-   [M_REQ_NEG, 802813, ["EX3", 1, 6, ["NZD", 47]]]
-   h'83031a000c3ffd8463455833010682634e5a44182f'
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 70]
+
+Internet-Draft                    GRASP                    December 2016
+
+
+   [3, 802813, ["EX3", 3, 6, ["NZD", 47]]]
+   [M_REQ_NEG, 802813, ["EX3", F_NEG_bits, 6, ["NZD", 47]]]
+   h'83031a000c3ffd8463455833030682634e5a44182f'
 
    The peer responds with immediate acceptance.  Note that no objective
    is needed, because the initiator's request was accepted without
@@ -3909,28 +3938,22 @@ D.5.  Complete Negotiation Example
 
    Again the initiator unicasts a request:
 
-   [3, 13767778, ["EX3", 1, 6, ["NZD", 410]]]
-   [M_REQ_NEG, 13767778, ["EX3", F_NEG, 6, ["NZD", 410]]]
-   h'83031a00d214628463455833010682634e5a4419019a'
+   [3, 13767778, ["EX3", 3, 6, ["NZD", 410]]]
+   [M_REQ_NEG, 13767778, ["EX3", F_NEG_bits, 6, ["NZD", 410]]]
+   h'83031a00d214628463455833030682634e5a4419019a'
 
    The responder starts to negotiate (making an offer):
 
+   [5, 13767778, ["EX3", 3, 6, ["NZD", 80]]]
+   [M_NEGOTIATE, 13767778, ["EX3", F_NEG_bits, 6, ["NZD", 80]]]
+   h'83051a00d214628463455833030682634e5a441850'
 
+   The initiator continues to negotiate (reducing its request, and note
+   that the loop count is decremented):
 
-Bormann, et al.           Expires June 10, 2017                [Page 70]
-
-Internet-Draft                    GRASP                    December 2016
-
-
-   [5, 13767778, ["EX3", 1, 6, ["NZD", 80]]]
-   [M_NEGOTIATE, 13767778, ["EX3", F_NEG, 6, ["NZD", 80]]]
-   h'83051a00d214628463455833010682634e5a441850'
-
-   The initiator continues to negotiate (reducing its request):
-
-   [5, 13767778, ["EX3", 1, 5, ["NZD", 307]]]
-   [M_NEGOTIATE, 13767778, ["EX3", F_NEG, 5, ["NZD", 307]]]
-   h'83051a00d214628463455833010582634e5a44190133'
+   [5, 13767778, ["EX3", 3, 5, ["NZD", 307]]]
+   [M_NEGOTIATE, 13767778, ["EX3", F_NEG_bits, 5, ["NZD", 307]]]
+   h'83051a00d214628463455833030582634e5a44190133'
 
    The responder asks for more time:
 
@@ -3940,15 +3963,24 @@ Internet-Draft                    GRASP                    December 2016
 
    The responder continues to negotiate (increasing its offer):
 
-   [5, 13767778, ["EX3", 1, 4, ["NZD", 120]]]
-   [M_NEGOTIATE, 13767778, ["EX3", F_NEG, 4, ["NZD", 120]]]
-   h'83051a00d214628463455833010482634e5a441878'
+   [5, 13767778, ["EX3", 3, 4, ["NZD", 120]]]
+   [M_NEGOTIATE, 13767778, ["EX3", F_NEG_bits, 4, ["NZD", 120]]]
+   h'83051a00d214628463455833030482634e5a441878'
 
    The initiator continues to negotiate (reducing its request):
 
-   [5, 13767778, ["EX3", 1, 3, ["NZD", 246]]]
-   [M_NEGOTIATE, 13767778, ["EX3", F_NEG, 3, ["NZD", 246]]]
-   h'83051a00d214628463455833010382634e5a4418f6'
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 71]
+
+Internet-Draft                    GRASP                    December 2016
+
+
+   [5, 13767778, ["EX3", 3, 3, ["NZD", 246]]]
+   [M_NEGOTIATE, 13767778, ["EX3", F_NEG_bits, 3, ["NZD", 246]]]
+   h'83051a00d214628463455833030382634e5a4418f6'
 
    The responder refuses to negotiate further:
 
@@ -3970,14 +4002,6 @@ Appendix E.  Capability Analysis of Current Protocols
 
    Numerous protocols include some form of discovery, but these all
    appear to be very specific in their applicability.  Service Location
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 71]
-
-Internet-Draft                    GRASP                    December 2016
-
-
    Protocol (SLP) [RFC2608] provides service discovery for managed
    networks, but requires configuration of its own servers.  DNS-SD
    [RFC6763] combined with mDNS [RFC6762] provides service discovery for
@@ -4000,6 +4024,15 @@ Internet-Draft                    GRASP                    December 2016
    Configuration Protocol (NETCONF) [RFC6241] uses an RPC model that
    does allow positive or negative responses from the target system, but
    this is still not adequate for negotiation.
+
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 72]
+
+Internet-Draft                    GRASP                    December 2016
+
 
    There are various existing protocols that have elementary negotiation
    abilities, such as Dynamic Host Configuration Protocol for IPv6
@@ -4026,14 +4059,6 @@ Internet-Draft                    GRASP                    December 2016
    We now consider two protocols that are works in progress at the time
    of this writing.  Firstly, RESTCONF [I-D.ietf-netconf-restconf] is a
    protocol intended to convey NETCONF information expressed in the YANG
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 72]
-
-Internet-Draft                    GRASP                    December 2016
-
-
    language via HTTP, including the ability to transit HTML
    intermediaries.  While this is a powerful approach in the context of
    centralised configuration of a complex network, it is not well
@@ -4056,6 +4081,14 @@ Internet-Draft                    GRASP                    December 2016
    additional point-to-point channel..."
 
    Specific features of DNCP include:
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 73]
+
+Internet-Draft                    GRASP                    December 2016
+
 
    o  Every participating node has a unique node identifier.
 
@@ -4081,15 +4114,6 @@ Internet-Draft                    GRASP                    December 2016
    authority, and it is a proven method of network-wide state
    synchronization by flooding.
 
-
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 73]
-
-Internet-Draft                    GRASP                    December 2016
-
-
    The Server Cache Synchronization Protocol (SCSP) [RFC2334] also
    describes a method for cache synchronization and cache replication
    among a group of nodes.
@@ -4110,6 +4134,18 @@ Internet-Draft                    GRASP                    December 2016
    we have not identified a path by which one of the existing protocols
    could be extended to meet the requirements.
 
+
+
+
+
+
+
+
+Bormann, et al.           Expires June 18, 2017                [Page 74]
+
+Internet-Draft                    GRASP                    December 2016
+
+
 Authors' Addresses
 
    Carsten Bormann
@@ -4129,21 +4165,6 @@ Authors' Addresses
    New Zealand
 
    Email: brian.e.carpenter@gmail.com
-
-
-
-
-
-
-
-
-
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 74]
-
-Internet-Draft                    GRASP                    December 2016
 
 
    Bing Liu (editor)
@@ -4176,25 +4197,4 @@ Internet-Draft                    GRASP                    December 2016
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Bormann, et al.           Expires June 10, 2017                [Page 75]
+Bormann, et al.           Expires June 18, 2017                [Page 75]
