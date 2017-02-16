@@ -1,7 +1,7 @@
 # animaproto
 Anima signaling protocol
 
-This repository is for an IETF effort and falls under IETF rules: see http://www.ietf.org/about/note-well.html
+This repository is for an IETF effort and falls under IETF rules: see CONTRIBUTING.md
 
 For general background see http://datatracker.ietf.org/wg/anima/charter/
 
