@@ -62,11 +62,11 @@
 
     <!---->
 
-    <date day="2" month="March" year="2017"/>
+    <date day="10" month="March" year="2017"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
-      devices and autonomic service agents to dynamically discover peers, to synchronize
+      nodes and autonomic service agents to dynamically discover peers, to synchronize
       state with them, and to negotiate parameter settings with them. The document
       then defines a general protocol for discovery, synchronization and negotiation,
       while the technical objectives for specific scenarios are to be described in
@@ -231,17 +231,18 @@
         approximation to autonomic networking already in widespread use. Routing
         protocols use a largely autonomic model based on distributed devices
         that communicate repeatedly with each other. The focus
-        is reachability, so current routing protocols mainly consider simple
+        is reachability, so routing protocols primarily consider simple
         link status and metrics, and an underlying assumption is that
         nodes need a consistent, although partial, view of the network topology
-        in order for the routing algorithm to converge. Thus, routing is
+        in order for the routing algorithm to converge. Also, routing is
         mainly based on simple information synchronization between peers,
         rather than on bi-directional negotiation.</t>
-        <t>By contrast,
-        autonomic networks need to be able to manage many more dimensions,
-        such as latency, congestion, unused capacity,
+        <t>By contrast, autonomic networks need to be able to manage many
+        different types of parameter and consider many more dimensions,
+        such as latency, load, unused or limited resources,
+        conflicting resource requests,
         security settings, power saving, load balancing, etc. 
-        Status information and traffic metrics need to be shared between
+        Status information and resource metrics need to be shared between
         nodes for dynamic adjustment of resources and for monitoring purposes.
         While this might be achieved by existing protocols when they are
         available, the new protocol needs to be able to support parameter
@@ -405,7 +406,7 @@
   
         <t>The following additional terms are used throughout this document:
           <list style="symbols">
-          <t>Autonomic Device: identical to Autonomic Node.</t>
+          <!-- <t>Autonomic Device: identical to Autonomic Node.</t> -->
           <t>Discovery: a process by which an ASA discovers peers
           according to a specific discovery objective. The discovery results
           may be different according to the different discovery objectives.
@@ -641,7 +642,7 @@
             to the original request or previous suggestion. The suggested value of
             later negotiation steps should be chosen between the suggested values from
             the previous two steps. GRASP provides mechanisms to guarantee convergence
-            (or failure) in a small number of steps, i.e. a timeout and a maximum number
+            (or failure) in a small number of steps, namely a timeout and a maximum number
             of iterations.
             <vspace blankLines="1"/>
             
@@ -760,8 +761,8 @@
          <t>The detailed rules for the DULL instance of GRASP are as follows:
          <list style="symbols">
          <t>An initiator MUST only send Discovery or Flood Synchronization link-local
-         multicast messages with a loop count of 1. A responder SHOULD NOT send a Discovery Response
-         message unless it cannot be avoided. Other GRASP message types MUST NOT be sent.</t>
+         multicast messages with a loop count of 1. <!-- A responder SHOULD NOT send a Discovery Response
+         message unless it cannot be avoided.--> Other GRASP message types MUST NOT be sent.</t>
          <t>A responder MUST silently discard any message whose loop count is not 1.</t>
          <t>A responder MUST silently discard any message referring to a GRASP Objective that is
          not directly part of a service that requires this insecure mode.</t>
@@ -785,7 +786,7 @@
          <t>
          The detailed rules for the SONN instance of GRASP are as follows:
          <list style="symbols">
-         <t>Any type of GRASP message MAY be sent.</t>
+         <t>All types of GRASP message are permitted.</t>
          <t>An initiator MUST send any Discovery or Flood Synchronization link-local
          multicast messages with a loop count of 1.</t>
          <t>A responder MUST silently discard any Discovery or Flood Synchronization message whose loop count is not 1.</t>
@@ -1573,7 +1574,7 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           
           <t>
           A node MAY initiate flooding by sending an unsolicited Flood Synchronization Message
-          with synchronization data. This MAY be sent to the
+          with synchronization data. This MAY be sent to port GRASP_LISTEN_PORT at the
           link-local ALL_GRASP_NEIGHBORS multicast address, in accordance
           with the rules in <xref target="synchproc"/>.
           <list><t>
@@ -1875,7 +1876,8 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
   ]]></artwork>
           </figure></t>
           
-          <t>All objectives are identified by a unique name which is a case-sensitive UTF-8 string. </t>
+          <t>All objectives are identified by a unique name which is a UTF-8 string, to be
+          compared byte by byte. </t>
           
           <t>The names of generic objectives MUST NOT include a colon (":")
           and MUST be registered with IANA (<xref target="iana"/>).</t>
@@ -2391,8 +2393,15 @@ O_URI_LOCATOR = 106
         
         <t>GRASP Objective Names Table. The values in this table are UTF-8 strings.
         Future values MUST be assigned using the Specification Required policy
-        defined by <xref target="RFC5226"/>.
-        The following initial values are assigned by this document:</t>
+        defined by <xref target="RFC5226"/>.</t>
+        
+        <t>To assist expert review of a new objective, the specification should include
+        a precise description of the format of the new objective, with sufficient explanation
+        of its semantics to allow independent implementations. See <xref target="ConsOption"/> for
+        more details. If the new objective is similar in name or purpose to a previously 
+        registered objective, the specification should explain why a new objective is justified. </t>
+        
+        <t>The following initial values are assigned by this document:</t>
 
       <t><figure>
           <artwork><![CDATA[ EX0
@@ -2414,7 +2423,8 @@ O_URI_LOCATOR = 106
     <section anchor="ack" title="Acknowledgements">
     
       <t>A major contribution to the original version of this document was made by Sheng Jiang.
-      Significant review inputs were received from Joel Halpern, Toerless Eckert, Charles E. Perkins, and Michael Richardson.</t>
+      Significant review inputs were received from Toerless Eckert, Joel Halpern, Barry Leiba,
+      Charles E. Perkins, and Michael Richardson.</t>
       
       <t>Valuable comments were received from
       Michael Behringer,
@@ -2488,13 +2498,18 @@ O_URI_LOCATOR = 106
 
     </references>
     
-    <section title="Open Issues [RFC Editor: Please remove if empty]">
+    <section title="Open Issues [RFC Editor: This section should be empty. Please remove]">
       <t><list style="symbols">
       
- 
-      <t>63. Placeholder</t>
-
-  
+      <t>63. Should encryption be MUST instead of SHOULD in <xref target="reqsec"/> and <xref target="secinst-noacp"/>?</t>
+      
+      <t>64. Should more security text be moved from the main text into the Security Considerations?</t>
+      
+      <t>65. Do we need to formally restrict Unicode characters allowed in objective names?</t>
+      
+      <t>66. Split requirements into separate document?</t>
+      
+      <t>67. Remove normative dependency on draft-greevenbosch-appsawg-cbor-cddl?</t>
        
       </list></t>
       
@@ -2839,7 +2854,7 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-      <t>draft-ietf-anima-grasp-10, 2017-03-XX:
+      <t>draft-ietf-anima-grasp-10, 2017-03-10:
       <vspace blankLines="1"/>
       Updates following IETF Last call:
       <vspace blankLines="1"/>
@@ -2848,7 +2863,12 @@ O_URI_LOCATOR = 106
       <vspace blankLines="1"/>
       Protocol change: Specify behavior on receiving unrecognized message type.
       <vspace blankLines="1"/>
-      Editorial improvements and clarifications.
+      Noted that UTF-8 names are matched byte-for-byte.
+      <vspace blankLines="1"/>
+      Added brief guidance for Expert Reviewer of new generic objectives.
+      <vspace blankLines="1"/>
+      Numerous editorial improvements and clarifications and minor text rearrangements,
+      none intended to change the meaning.
       </t>
       <t>draft-ietf-anima-grasp-09, 2016-12-15:
       
