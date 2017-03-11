@@ -88,8 +88,8 @@ Table of Contents
        3.5.6.  Synchronization and Flooding Procedures . . . . . . .  25
      3.6.  GRASP Constants . . . . . . . . . . . . . . . . . . . . .  27
      3.7.  Session Identifier (Session ID) . . . . . . . . . . . . .  28
-     3.8.  GRASP Messages  . . . . . . . . . . . . . . . . . . . . .  28
-       3.8.1.  Message Overview  . . . . . . . . . . . . . . . . . .  28
+     3.8.  GRASP Messages  . . . . . . . . . . . . . . . . . . . . .  29
+       3.8.1.  Message Overview  . . . . . . . . . . . . . . . . . .  29
        3.8.2.  GRASP Message Format  . . . . . . . . . . . . . . . .  29
        3.8.3.  Message Size  . . . . . . . . . . . . . . . . . . . .  30
        3.8.4.  Discovery Message . . . . . . . . . . . . . . . . . .  30
@@ -99,7 +99,7 @@ Table of Contents
        3.8.8.  Negotiation End Message . . . . . . . . . . . . . . .  34
        3.8.9.  Confirm Waiting     Message . . . . . . . . . . . . .  34
        3.8.10. Synchronization Message . . . . . . . . . . . . . . .  34
-       3.8.11. Flood Synchronization Message . . . . . . . . . . . .  34
+       3.8.11. Flood Synchronization Message . . . . . . . . . . . .  35
        3.8.12. Invalid Message . . . . . . . . . . . . . . . . . . .  36
        3.8.13. No Operation Message  . . . . . . . . . . . . . . . .  36
      3.9.  GRASP Options . . . . . . . . . . . . . . . . . . . . . .  36
@@ -904,8 +904,12 @@ Internet-Draft                    GRASP                       March 2017
    If there is no ACP, one of the following alternatives applies:
 
    1.  The protocol instance MUST use another form of strong
-       authentication and SHOULD use a form of strong encryption.  See
-       Section 3.5.2.1 for further discussion.
+       authentication and SHOULD use a form of strong encryption.  An
+       exception is that during initialization of nodes there will be a
+       transition period during which it might not be practical to run
+       with strong encryption.  This period MUST be as short as
+       possible, changing to a fully secure setup as soon as possible.
+       See Section 3.5.2.1 for further discussion.
 
    2.  The protocol instance MUST operate as described in
        Section 3.5.2.2 or Section 3.5.2.3.
@@ -940,12 +944,8 @@ Internet-Draft                    GRASP                       March 2017
    (PKI) [RFC5280] are RECOMMENDED for this purpose.  Further details
    are out of scope for this document.
 
-3.5.2.2.  Discovery Unsolicited Link-Local
 
-   Some services may need to use insecure GRASP discovery, response and
-   flood messages without being able to use pre-existing security
-   associations.  Such operations being intrinsically insecure, they
-   need to be confined to link-local use to minimize the risk of
+
 
 
 
@@ -954,6 +954,12 @@ Bormann, et al.        Expires September 11, 2017              [Page 17]
 Internet-Draft                    GRASP                       March 2017
 
 
+3.5.2.2.  Discovery Unsolicited Link-Local
+
+   Some services may need to use insecure GRASP discovery, response and
+   flood messages without being able to use pre-existing security
+   associations.  Such operations being intrinsically insecure, they
+   need to be confined to link-local use to minimize the risk of
    malicious actions.  Possible examples include discovery of candidate
    ACP neighbors [I-D.ietf-anima-autonomic-control-plane], discovery of
    bootstrap proxies [I-D.ietf-anima-bootstrapping-keyinfra] or perhaps
@@ -996,12 +1002,6 @@ Internet-Draft                    GRASP                       March 2017
    Some services might use insecure on-link operations as in DULL, but
    also use unicast synchronization or negotiation operations protected
    by TLS.  A separate instance of GRASP is used, with its own copy of
-   all GRASP data structures.  This instance is nicknamed SONN - Secure
-   Only Neighbor Negotiation.
-
-   The detailed rules for the SONN instance of GRASP are as follows:
-
-   o  All types of GRASP message are permitted.
 
 
 
@@ -1009,6 +1009,13 @@ Bormann, et al.        Expires September 11, 2017              [Page 18]
 
 Internet-Draft                    GRASP                       March 2017
 
+
+   all GRASP data structures.  This instance is nicknamed SONN - Secure
+   Only Neighbor Negotiation.
+
+   The detailed rules for the SONN instance of GRASP are as follows:
+
+   o  All types of GRASP message are permitted.
 
    o  An initiator MUST send any Discovery or Flood Synchronization
       link-local multicast messages with a loop count of 1.
@@ -1050,14 +1057,7 @@ Internet-Draft                    GRASP                       March 2017
    connection to the peer for the reply.  Note that when the network is
    under heavy load or in a fault condition, UDP might become
    unreliable.  Since this is when autonomic functions are most
-   necessary, automatic fallback to TCP MUST be implemented.  The
-   simplest implementation is therefore to use only TCP.
 
-   For considerations when running without an ACP, see Section 3.5.2.1.
-
-   For link-local multicast, the GRASP protocol listens to the well-
-   known GRASP Listen Port (Section 3.6).  For unicast transport
-   sessions used for discovery responses, synchronization and
 
 
 
@@ -1066,6 +1066,14 @@ Bormann, et al.        Expires September 11, 2017              [Page 19]
 Internet-Draft                    GRASP                       March 2017
 
 
+   necessary, automatic fallback to TCP MUST be implemented.  The
+   simplest implementation is therefore to use only TCP.
+
+   For considerations when running without an ACP, see Section 3.5.2.1.
+
+   For link-local multicast, the GRASP protocol listens to the well-
+   known GRASP Listen Port (Section 3.6).  For unicast transport
+   sessions used for discovery responses, synchronization and
    negotiation, the ASA concerned normally listens on its own
    dynamically assigned ports, which are communicated to its peers
    during discovery.  However, a minimal implementation MAY use the
@@ -1103,6 +1111,17 @@ Internet-Draft                    GRASP                       March 2017
    process and any subsequent operations between the peers are outside
    the scope of GRASP.
 
+
+
+
+
+
+
+Bormann, et al.        Expires September 11, 2017              [Page 20]
+
+Internet-Draft                    GRASP                       March 2017
+
+
 3.5.4.2.  Discovery Overview
 
    A complete discovery process will start with a multicast (of
@@ -1114,14 +1133,6 @@ Internet-Draft                    GRASP                       March 2017
    the same interface, because the peer in question will answer directly
    if still operational.  If it has no cached response, it will relay
    the discovery on its other interfaces, for example reaching a higher-
-
-
-
-Bormann, et al.        Expires September 11, 2017              [Page 20]
-
-Internet-Draft                    GRASP                       March 2017
-
-
    level gateway in a hierarchical network.  If a node receiving the
    relayed discovery supports the discovery objective, it will respond
    to the relayed discovery.  If it has a cached response, it will
@@ -1158,6 +1169,15 @@ Internet-Draft                    GRASP                       March 2017
    message with a Divert option pointing to the appropriate Discovery
    Responder.
 
+
+
+
+
+Bormann, et al.        Expires September 11, 2017              [Page 21]
+
+Internet-Draft                    GRASP                       March 2017
+
+
    If a device has no information about the requested discovery
    objective, and is not acting as a discovery relay (see below) it MUST
    silently discard the Discovery message.
@@ -1168,15 +1188,6 @@ Internet-Draft                    GRASP                       March 2017
    (Section 3.7).  An exponential backoff SHOULD be used for subsequent
    repetitions, to limit the load during busy periods.  Frequent
    repetition might be symptomatic of a denial of service attack.
-
-
-
-
-
-Bormann, et al.        Expires September 11, 2017              [Page 21]
-
-Internet-Draft                    GRASP                       March 2017
-
 
    After a GRASP device successfully discovers a locator for a Discovery
    Responder supporting a specific objective, it MUST cache this
@@ -1216,6 +1227,13 @@ Internet-Draft                    GRASP                       March 2017
    Constrained Instances (Section 3.5.2) are always single-interface
    instances and therefore MUST NOT perform discovery relaying.
 
+
+
+Bormann, et al.        Expires September 11, 2017              [Page 22]
+
+Internet-Draft                    GRASP                       March 2017
+
+
    If a relaying instance receives a Discovery message on a given
    interface for a specific objective that it does not support and for
    which it has not previously cached a Discovery Responder, it MUST
@@ -1226,14 +1244,6 @@ Internet-Draft                    GRASP                       March 2017
    incoming discovery message and MUST be tagged with the IP address of
    its original initiator (see Section 3.8.4).  Note that this initiator
    address is only used to allow for disambiguation of the Session ID
-
-
-
-Bormann, et al.        Expires September 11, 2017              [Page 22]
-
-Internet-Draft                    GRASP                       March 2017
-
-
    and is never used to address Response packets, which are sent to the
    relaying instance, not the original initiator.
 
@@ -1272,6 +1282,14 @@ Internet-Draft                    GRASP                       March 2017
    A negotiation initiator sends a negotiation request (using M_REQ_NEG)
    to a counterpart ASA, including a specific negotiation objective.  It
    may request the negotiation counterpart to make a specific
+
+
+
+Bormann, et al.        Expires September 11, 2017              [Page 23]
+
+Internet-Draft                    GRASP                       March 2017
+
+
    configuration.  Alternatively, it may request a certain simulation or
    forecast result by sending a dry run configuration.  The details,
    including the distinction between dry run and an actual configuration
@@ -1281,15 +1299,6 @@ Internet-Draft                    GRASP                       March 2017
    If no reply message of any kind is received within a reasonable
    timeout (default GRASP_DEF_TIMEOUT milliseconds, Section 3.6), the
    negotiation request MAY be repeated, with a newly generated Session
-
-
-
-
-Bormann, et al.        Expires September 11, 2017              [Page 23]
-
-Internet-Draft                    GRASP                       March 2017
-
-
    ID (Section 3.7).  An exponential backoff SHOULD be used for
    subsequent repetitions.
 
@@ -1329,15 +1338,6 @@ Internet-Draft                    GRASP                       March 2017
    this case it is as if the initiator sent the sequence M_DISCOVERY,
    immediately followed by M_REQ_NEG.  This has implications for the
    construction of the GRASP core, as it must carefully pass the
-   contents of the Negotiation Objective option to the ASA so that it
-   may evaluate the objective directly.  When a Negotiation Objective
-   option is present the ASA replies with an M_NEGOTIATE message (or
-   M_END with O_ACCEPT if it is immediately satisfied with the
-   proposal), rather than with an M_RESPONSE.  However, if the recipient
-   node does not support rapid mode, discovery will continue normally.
-
-
-
 
 
 
@@ -1345,6 +1345,13 @@ Bormann, et al.        Expires September 11, 2017              [Page 24]
 
 Internet-Draft                    GRASP                       March 2017
 
+
+   contents of the Negotiation Objective option to the ASA so that it
+   may evaluate the objective directly.  When a Negotiation Objective
+   option is present the ASA replies with an M_NEGOTIATE message (or
+   M_END with O_ACCEPT if it is immediately satisfied with the
+   proposal), rather than with an M_RESPONSE.  However, if the recipient
+   node does not support rapid mode, discovery will continue normally.
 
    It is possible that a Discovery Response will arrive from a responder
    that does not support rapid mode, before such a Negotiation message
@@ -1386,6 +1393,15 @@ Internet-Draft                    GRASP                       March 2017
    Receiving flood multicasts is a function of the GRASP core, as in the
    case of discovery multicasts (Section 3.5.4.3).
 
+
+
+
+
+Bormann, et al.        Expires September 11, 2017              [Page 25]
+
+Internet-Draft                    GRASP                       March 2017
+
+
    To ensure that flooding does not result in a loop, the originator of
    the Flood Synchronization message MUST set the loop count in the
    objectives to a suitable value (the default is GRASP_DEF_LOOPCT).
@@ -1394,13 +1410,6 @@ Internet-Draft                    GRASP                       March 2017
    of the synchronization objective(s) concerned.  It might be a simple
    rate limit or a more complex mechanism such as the Trickle algorithm
    [RFC6206].
-
-
-
-Bormann, et al.        Expires September 11, 2017              [Page 25]
-
-Internet-Draft                    GRASP                       March 2017
-
 
    A GRASP device with multiple link-layer interfaces (typically a
    router) MUST support synchronization flooding on all interfaces.  If
@@ -1441,6 +1450,14 @@ Internet-Draft                    GRASP                       March 2017
    there is an operational ACP or equivalent strong security in place.
    However, because of the security weakness of link-local multicast
    (Section 5), synchronization objectives that are flooded SHOULD NOT
+
+
+
+Bormann, et al.        Expires September 11, 2017              [Page 26]
+
+Internet-Draft                    GRASP                       March 2017
+
+
    contain unencrypted private information and SHOULD be validated by
    the recipient ASA.
 
@@ -1450,14 +1467,6 @@ Internet-Draft                    GRASP                       March 2017
    In this case the Discovery message also acts as a Request
    Synchronization message to indicate to the Discovery Responder that
    it could directly reply to the Discovery Initiator with a
-
-
-
-Bormann, et al.        Expires September 11, 2017              [Page 26]
-
-Internet-Draft                    GRASP                       March 2017
-
-
    Synchronization message Section 3.8.10 with synchronization data for
    rapid processing, if the discovery target supports the corresponding
    synchronization objective.  The design implications are similar to
@@ -1496,6 +1505,15 @@ Internet-Draft                    GRASP                       March 2017
 
    o  GRASP_DEF_TIMEOUT (60000 milliseconds)
 
+
+
+
+
+Bormann, et al.        Expires September 11, 2017              [Page 27]
+
+Internet-Draft                    GRASP                       March 2017
+
+
       The default timeout used to determine that a discovery etc. has
       failed to complete.
 
@@ -1505,14 +1523,6 @@ Internet-Draft                    GRASP                       March 2017
       failed to complete, and to avoid looping messages.
 
    o  GRASP_DEF_MAX_SIZE (2048)
-
-
-
-
-Bormann, et al.        Expires September 11, 2017              [Page 27]
-
-Internet-Draft                    GRASP                       March 2017
-
 
       The default maximum message size in bytes.
 
@@ -1550,6 +1560,16 @@ Internet-Draft                    GRASP                       March 2017
    might lead to the two sessions being confused.  See Section 3.8.6 for
    details of how to avoid this.
 
+
+
+
+
+
+Bormann, et al.        Expires September 11, 2017              [Page 28]
+
+Internet-Draft                    GRASP                       March 2017
+
+
 3.8.  GRASP Messages
 
 3.8.1.  Message Overview
@@ -1560,15 +1580,6 @@ Internet-Draft                    GRASP                       March 2017
    The messages currently defined are:
 
       Discovery and Discovery Response (M_DISCOVERY, M_RESPONSE).
-
-
-
-
-
-Bormann, et al.        Expires September 11, 2017              [Page 28]
-
-Internet-Draft                    GRASP                       March 2017
-
 
       Request Negotiation, Negotiation, Confirm Waiting and Negotiation
       End (M_REQ_NEG, M_NEGOTIATE, M_WAIT, M_END).
@@ -1608,6 +1619,13 @@ Internet-Draft                    GRASP                       March 2017
    the expected options.  Any options received that are not consistent
    with the MESSAGE_TYPE SHOULD be silently discarded.
 
+
+
+Bormann, et al.        Expires September 11, 2017              [Page 29]
+
+Internet-Draft                    GRASP                       March 2017
+
+
    The No Operation (noop) message is described in Section 3.8.13.
 
    The various MESSAGE_TYPE values are defined in Section 6.
@@ -1618,14 +1636,6 @@ Internet-Draft                    GRASP                       March 2017
    If an unrecognized MESSAGE_TYPE is received in a unicast message, an
    Invalid message (Section 3.8.12) MAY be returned.  Otherwise the
    message MAY be logged and MUST be discarded.  If an unrecognized
-
-
-
-Bormann, et al.        Expires September 11, 2017              [Page 29]
-
-Internet-Draft                    GRASP                       March 2017
-
-
    MESSAGE_TYPE is received in a multicast message, it MAY be logged and
    MUST be silently discarded.
 
@@ -1664,6 +1674,14 @@ Internet-Draft                    GRASP                       March 2017
    sending the Discovery UDP multicast, on a given interface.  In a low-
    end implementation this MAY be GRASP_LISTEN_PORT.  In a more complex
    implementation, the GRASP discovery mechanism will find, for each
+
+
+
+Bormann, et al.        Expires September 11, 2017              [Page 30]
+
+Internet-Draft                    GRASP                       March 2017
+
+
    interface, a dynamic port that it can bind to for both UDP and TCP
    before initiating any discovery.
 
@@ -1673,14 +1691,6 @@ Internet-Draft                    GRASP                       March 2017
    globally unique IP address, it MUST use a link-local address for this
    purpose that is highly likely to be unique, for example using
    [RFC7217].
-
-
-
-
-Bormann, et al.        Expires September 11, 2017              [Page 30]
-
-Internet-Draft                    GRASP                       March 2017
-
 
    A Discovery message MUST include exactly one of the following:
 
@@ -1720,6 +1730,14 @@ Internet-Draft                    GRASP                       March 2017
 
      ttl = 0..4294967295 ; in milliseconds
 
+
+
+
+Bormann, et al.        Expires September 11, 2017              [Page 31]
+
+Internet-Draft                    GRASP                       March 2017
+
+
    A node which receives a Discovery message SHOULD send a Discovery
    Response message if and only if it can respond to the discovery.
 
@@ -1729,14 +1747,6 @@ Internet-Draft                    GRASP                       March 2017
       It MUST contain a time-to-live (ttl) for the validity of the
       response, given as a positive integer value in milliseconds.  Zero
       is treated as the default value GRASP_DEF_TIMEOUT (Section 3.6).
-
-
-
-
-Bormann, et al.        Expires September 11, 2017              [Page 31]
-
-Internet-Draft                    GRASP                       March 2017
-
 
       It MAY include a copy of the discovery objective from the
       Discovery message.
@@ -1776,6 +1786,14 @@ Internet-Draft                    GRASP                       March 2017
    A negotiation or synchronization requesting node sends the
    appropriate Request message to the unicast address (directly stored
    or resolved from an FQDN or URI) of the negotiation or
+
+
+
+Bormann, et al.        Expires September 11, 2017              [Page 32]
+
+Internet-Draft                    GRASP                       March 2017
+
+
    synchronization counterpart, using the appropriate protocol and port
    numbers (selected from the discovery results).
 
@@ -1786,14 +1804,6 @@ Internet-Draft                    GRASP                       March 2017
    When an initiator sends a Request Negotiation message, it MUST
    initialize a negotiation timer for the new negotiation thread.  The
    default is GRASP_DEF_TIMEOUT milliseconds.  Unless this timeout is
-
-
-
-Bormann, et al.        Expires September 11, 2017              [Page 32]
-
-Internet-Draft                    GRASP                       March 2017
-
-
    modified by a Confirm Waiting message (Section 3.8.9), the initiator
    will consider that the negotiation has failed when the timer expires.
 
@@ -1832,16 +1842,6 @@ Internet-Draft                    GRASP                       March 2017
    message in Rapid Mode.  A negotiation process MAY include multiple
    steps.
 
-   The Negotiation message MUST include the relevant Negotiation
-   Objective option, with its value updated according to progress in the
-   negotiation.  The sender MUST decrement the loop count by 1.  If the
-   loop count becomes zero the message MUST NOT be sent.  In this case
-   the negotiation session has failed and will time out.
-
-
-
-
-
 
 
 
@@ -1849,6 +1849,12 @@ Bormann, et al.        Expires September 11, 2017              [Page 33]
 
 Internet-Draft                    GRASP                       March 2017
 
+
+   The Negotiation message MUST include the relevant Negotiation
+   Objective option, with its value updated according to progress in the
+   negotiation.  The sender MUST decrement the loop count by 1.  If the
+   loop count becomes zero the message MUST NOT be sent.  In this case
+   the negotiation session has failed and will time out.
 
 3.8.8.  Negotiation End Message
 
@@ -1893,18 +1899,17 @@ Internet-Draft                    GRASP                       March 2017
    specific synchronization objective present in the Request
    Synchronization.
 
-3.8.11.  Flood Synchronization Message
-
-   In fragmentary CDDL, a Flood Synchronization message follows the
-   pattern:
-
-
 
 
 Bormann, et al.        Expires September 11, 2017              [Page 34]
 
 Internet-Draft                    GRASP                       March 2017
 
+
+3.8.11.  Flood Synchronization Message
+
+   In fragmentary CDDL, a Flood Synchronization message follows the
+   pattern:
 
      flood-message = [M_FLOOD, session-id, initiator, ttl,
                      +[objective, (locator-option / [])]]
@@ -1949,11 +1954,6 @@ Internet-Draft                    GRASP                       March 2017
    will not need this mechanism, so they will be flooded with a null
    locator.
 
-   Cached entries MUST be ignored or deleted after their lifetime
-   expires.
-
-
-
 
 
 
@@ -1961,6 +1961,9 @@ Bormann, et al.        Expires September 11, 2017              [Page 35]
 
 Internet-Draft                    GRASP                       March 2017
 
+
+   Cached entries MUST be ignored or deleted after their lifetime
+   expires.
 
 3.8.12.  Invalid Message
 
@@ -2006,9 +2009,6 @@ Internet-Draft                    GRASP                       March 2017
    limit overhead.
 
    GRASP options may be defined to include encapsulated GRASP options.
-
-
-
 
 
 
@@ -2970,11 +2970,6 @@ Bormann, et al.        Expires September 11, 2017              [Page 53]
 Internet-Draft                    GRASP                       March 2017
 
 
-   [I-D.ietf-netconf-restconf]
-              Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
-              Protocol", draft-ietf-netconf-restconf-18 (work in
-              progress), October 2016.
-
    [I-D.liang-iana-pen]
               Liang, P., Melnikov, A., and D. Conrad, "Private
               Enterprise Number (PEN) practices and Internet Assigned
@@ -3017,6 +3012,11 @@ Internet-Draft                    GRASP                       March 2017
               Tunnels", RFC 3209, DOI 10.17487/RFC3209, December 2001,
               <http://www.rfc-editor.org/info/rfc3209>.
 
+   [RFC3315]  Droms, R., Ed., Bound, J., Volz, B., Lemon, T., Perkins,
+              C., and M. Carney, "Dynamic Host Configuration Protocol
+              for IPv6 (DHCPv6)", RFC 3315, DOI 10.17487/RFC3315, July
+              2003, <http://www.rfc-editor.org/info/rfc3315>.
+
 
 
 
@@ -3025,11 +3025,6 @@ Bormann, et al.        Expires September 11, 2017              [Page 54]
 
 Internet-Draft                    GRASP                       March 2017
 
-
-   [RFC3315]  Droms, R., Ed., Bound, J., Volz, B., Lemon, T., Perkins,
-              C., and M. Carney, "Dynamic Host Configuration Protocol
-              for IPv6 (DHCPv6)", RFC 3315, DOI 10.17487/RFC3315, July
-              2003, <http://www.rfc-editor.org/info/rfc3315>.
 
    [RFC3416]  Presuhn, R., Ed., "Version 2 of the Protocol Operations
               for the Simple Network Management Protocol (SNMP)",
@@ -3072,6 +3067,11 @@ Internet-Draft                    GRASP                       March 2017
               Discovery", RFC 6763, DOI 10.17487/RFC6763, February 2013,
               <http://www.rfc-editor.org/info/rfc6763>.
 
+   [RFC6887]  Wing, D., Ed., Cheshire, S., Boucadair, M., Penno, R., and
+              P. Selkirk, "Port Control Protocol (PCP)", RFC 6887,
+              DOI 10.17487/RFC6887, April 2013,
+              <http://www.rfc-editor.org/info/rfc6887>.
+
 
 
 
@@ -3081,11 +3081,6 @@ Bormann, et al.        Expires September 11, 2017              [Page 55]
 
 Internet-Draft                    GRASP                       March 2017
 
-
-   [RFC6887]  Wing, D., Ed., Cheshire, S., Boucadair, M., Penno, R., and
-              P. Selkirk, "Port Control Protocol (PCP)", RFC 6887,
-              DOI 10.17487/RFC6887, April 2013,
-              <http://www.rfc-editor.org/info/rfc6887>.
 
    [RFC7558]  Lynn, K., Cheshire, S., Blanchet, M., and D. Migault,
               "Requirements for Scalable DNS-Based Service Discovery
@@ -3112,6 +3107,10 @@ Internet-Draft                    GRASP                       March 2017
               Control Protocol", RFC 7788, DOI 10.17487/RFC7788, April
               2016, <http://www.rfc-editor.org/info/rfc7788>.
 
+   [RFC8040]  Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
+              Protocol", RFC 8040, DOI 10.17487/RFC8040, January 2017,
+              <http://www.rfc-editor.org/info/rfc8040>.
+
 Appendix A.  Open Issues [RFC Editor: This section should be empty.
              Please remove]
 
@@ -3128,6 +3127,7 @@ Appendix A.  Open Issues [RFC Editor: This section should be empty.
 
    o  67.  Remove normative dependency on draft-greevenbosch-appsawg-
       cbor-cddl?
+
 
 
 
@@ -4157,22 +4157,20 @@ Internet-Draft                    GRASP                       March 2017
    GIST as a synchronization and negotiation protocol.  They do not
    appear to be directly useable for peer discovery.
 
-   We now consider two protocols that are works in progress at the time
-   of this writing.  Firstly, RESTCONF [I-D.ietf-netconf-restconf] is a
-   protocol intended to convey NETCONF information expressed in the YANG
-   language via HTTP, including the ability to transit HTML
-   intermediaries.  While this is a powerful approach in the context of
-   centralised configuration of a complex network, it is not well
-   adapted to efficient interactive negotiation between peer devices,
-   especially simple ones that might not include YANG processing
-   already.
+   RESTCONF [RFC8040] is a protocol intended to convey NETCONF
+   information expressed in the YANG language via HTTP, including the
+   ability to transit HTML intermediaries.  While this is a powerful
+   approach in the context of centralised configuration of a complex
+   network, it is not well adapted to efficient interactive negotiation
+   between peer devices, especially simple ones that might not include
+   YANG processing already.
 
-   Secondly, we consider Distributed Node Consensus Protocol (DNCP)
-   [RFC7787].  This is defined as a generic form of state
-   synchronization protocol, with a proposed usage profile being the
-   Home Networking Control Protocol (HNCP) [RFC7788] for configuring
-   Homenet routers.  A specific application of DNCP for autonomic
-   networking was proposed in [I-D.stenberg-anima-adncp].
+   The Distributed Node Consensus Protocol (DNCP) [RFC7787] is defined
+   as a generic form of state synchronization protocol, with a proposed
+   usage profile being the Home Networking Control Protocol (HNCP)
+   [RFC7788] for configuring Homenet routers.  A specific application of
+   DNCP for autonomic networking was proposed in
+   [I-D.stenberg-anima-adncp].
 
    DNCP "is designed to provide a way for each participating node to
    publish a set of TLV (Type-Length-Value) tuples, and to provide a
@@ -4194,6 +4192,8 @@ Internet-Draft                    GRASP                       March 2017
    o  Synchronization of state is maintained by a flooding process using
       the Trickle algorithm.  There is no bilateral synchronization or
       negotiation capability.
+
+
 
 
 

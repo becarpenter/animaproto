@@ -709,7 +709,10 @@
          <t>If there is no ACP, one of the following alternatives applies:
            <list style="numbers">
            <t>The protocol instance MUST use another form of strong authentication and SHOULD use a form
-           of strong encryption. See <xref target="secinst-noacp"/> for further discussion. </t>
+           of strong encryption. An exception is that during initialization of nodes there will be
+           a transition period during which it might not be practical to run with strong encryption.
+           This period MUST be as short as possible, changing to a fully secure setup as soon as possible.
+           See <xref target="secinst-noacp"/> for further discussion. </t>
            <t>The protocol instance MUST operate as described in <xref target="secinst-dull"/>
            or <xref target="secinst-sonn"/>.</t>
            </list></t>
@@ -2485,10 +2488,10 @@ O_URI_LOCATOR = 106
       <?rfc include='reference.RFC.7558'?>
       <?rfc include='reference.RFC.7787'?>
       <?rfc include='reference.RFC.7788'?>
+      <?rfc include='reference.RFC.8040'?>
 
       <?rfc include='reference.I-D.liu-anima-grasp-api'?>
       <?rfc include='reference.I-D.stenberg-anima-adncp'?>
-      <?rfc include='reference.I-D.ietf-netconf-restconf'?>
       <?rfc include='reference.I-D.chaparadza-intarea-igcp'?>
       <?rfc include='reference.I-D.ietf-anima-reference-model'?>
       <?rfc include='reference.I-D.ietf-anima-bootstrapping-keyinfra'?>
@@ -3340,9 +3343,7 @@ from the initial M_REQ_NEG, the process is symmetrical.</t>
       synchronization and negotiation protocol. They do not appear to be
       directly useable for peer discovery.</t>
 
-      <t>We now consider two protocols that are works in progress at the time
-      of this writing. Firstly, RESTCONF <xref target="I-D.ietf-netconf-restconf"/>
-      is a protocol intended to
+      <t>RESTCONF <xref target="RFC8040"/> is a protocol intended to
       convey NETCONF information expressed in the YANG language via HTTP,
       including the ability to transit HTML intermediaries. While this is a
       powerful approach in the context of centralised configuration of a
@@ -3350,8 +3351,8 @@ from the initial M_REQ_NEG, the process is symmetrical.</t>
       negotiation between peer devices, especially simple ones that might
       not include YANG processing already.</t>
 
-      <t>Secondly, we consider Distributed Node Consensus Protocol (DNCP) 
-      <xref target="RFC7787"/>. This is defined as a generic form
+      <t>The Distributed Node Consensus Protocol (DNCP) 
+      <xref target="RFC7787"/> is defined as a generic form
       of state synchronization protocol, with a proposed usage profile being the 
       Home Networking Control Protocol (HNCP) <xref target="RFC7788"/>
       for configuring Homenet routers. A specific application of DNCP for autonomic
