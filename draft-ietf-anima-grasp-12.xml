@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="10" month="May" year="2017"/>
+    <date day="19" month="May" year="2017"/>
 
     <abstract>
       <t>This document establishes requirements for a signaling protocol that enables autonomic
@@ -484,10 +484,10 @@
           multiple threads or processes as well as dynamic data structures such as a discovery cache, running in
           a given security environment on a single device. </t>
           
-          <t>Network Interface: Unless otherwise stated, this refers to a network
+          <t>Interface or GRASP Interface: Unless otherwise stated, these refer to a network
           interface - which might be physical or virtual - that a specific instance of
           GRASP is currently using. A device might have other interfaces that are not
-          used by GRASP.</t>
+          used by GRASP and which are outside the scope of the autonomic network.</t>
 
 
         </list></t>
@@ -498,7 +498,8 @@
       in an autonomic node, which must also provide an appropriate security environment.
       In accordance with <xref target="I-D.ietf-anima-reference-model"/>, this SHOULD be the
       Autonomic Control Plane (ACP) <xref target="I-D.ietf-anima-autonomic-control-plane"/>.
-      It is expected that GRASP will access the ACP by using a typical socket programming interface.
+      It is expected that GRASP will access the ACP by using a typical socket programming interface
+      and the ACP will make available only network interfaces within the autonomic network.
       If there is no ACP, the considerations described in <xref target="reqsec"/> apply. </t>
 
       <t>
@@ -533,7 +534,8 @@
       and link-local addresses. In the presence of the ACP, such information will be available from
       the adjacency table discussed in <xref target="I-D.ietf-anima-reference-model"/>.
       In other cases, GRASP must determine such information for itself. Details depend on the
-      device and operating system. In the rest of this document, the term 'interfaces' 
+      device and operating system. In the rest of this document, the terms 'interfaces'
+      or 'GRASP interfaces'
       refers only to the set of network interfaces that a specific instance
       of GRASP is currently using. </t>
       <t>Because GRASP needs to work with very high reliability, especially during bootstrapping
@@ -820,11 +822,11 @@
         
         <t>All other GRASP messages are unicast and could in principle run over any transport protocol.
         An implementation MUST support use of TCP. It MAY support use of another transport
-        protocol<!-- but the details are out of scope for this specification-->.
+        protocol but the details are out of scope for this specification.
         However, GRASP itself does not provide for error detection or retransmission. Use of an
         unreliable transport protocol is therefore NOT RECOMMENDED. </t>
         
-        <t>Nevertheless, when running within a secure ACP on reliable infrastructure,
+        <!-- <t>Nevertheless, when running within a secure ACP on reliable infrastructure,
         UDP MAY be used for unicast messages not exceeding the minimum IPv6 path MTU;
         however, TCP MUST be used for longer messages. In other words, IPv6 fragmentation
         is avoided. If a node receives a UDP message but the reply is too long, it
@@ -832,7 +834,7 @@
         the network is under heavy load or in a fault condition, UDP might become
         unreliable. Since this is when autonomic functions are most necessary,
         automatic fallback to TCP MUST be implemented. The simplest implementation
-        is therefore to use only TCP.</t>
+        is therefore to use only TCP.</t> -->
         
         <t>For considerations when running without an ACP, see <xref target="secinst-noacp"/>.</t> 
         
@@ -887,7 +889,7 @@
                 with a cached response on an interface if it learnt that information from
                 the same interface, because the peer in question will answer directly if still
                 operational. If it has no cached response, it will relay the 
-                discovery on its other interfaces, for example reaching a higher-level gateway
+                discovery on its other GRASP interfaces, for example reaching a higher-level gateway
                 in a hierarchical network. If a node receiving the relayed discovery
                 supports the discovery objective, it will respond to the relayed discovery.
                 If it has a cached response, it will respond with that. 
@@ -967,7 +969,7 @@
                   
                   <section title="Discovery Relaying">
                   <t>A GRASP instance with multiple link-layer interfaces (typically running in a router) MUST
-                  support discovery on all interfaces. We refer to this as a 'relaying instance'.</t>
+                  support discovery on all GRASP interfaces. We refer to this as a 'relaying instance'.</t>
                   
                   <t>Constrained Instances (<xref target="secinst"/>) are
                   always single-interface instances and therefore MUST NOT perform discovery relaying.</t>
@@ -976,7 +978,7 @@
                   on a given interface for a specific objective that it does not support and for
                   which it has not previously cached a Discovery Responder, it MUST relay
                   the query by re-issuing a new Discovery message as a link-local multicast on its other
-                  interfaces.</t>
+                  GRASP interfaces.</t>
                   
                   <t> The relayed discovery message MUST have the same Session ID as the incoming
                   discovery message and MUST be tagged with the IP address of its original initiator
@@ -1132,9 +1134,10 @@
           limit or a more complex mechanism such as the Trickle algorithm <xref target="RFC6206"/>.</t> 
          
           <t>A GRASP device with multiple link-layer interfaces (typically a router) MUST
-          support synchronization flooding on all interfaces. If it receives a multicast
+          support synchronization flooding on all GRASP interfaces. If it receives a multicast
           Flood Synchronization message on a given interface, it MUST relay
-          it by re-issuing a Flood Synchronization message on its other interfaces.
+          it by re-issuing a Flood Synchronization message as a link-local multicast
+          on its other GRASP interfaces.
           The relayed message MUST have the same Session ID as the incoming
           message and MUST be tagged with the IP address of its original initiator. </t>
         
@@ -2197,7 +2200,9 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
       <t>- Link-local multicast security<list style="hanging">
           <t>GRASP has no reasonable alternative to using link-local multicast
           for Discovery or Flood Synchronization messages and these messages are sent in clear and
-          with no authentication. They are therefore available to on-link eavesdroppers, and
+          with no authentication. They are only sent on interfaces within the autonomic network
+          (see <xref target="terms"/> and <xref target="reqsec"/>).
+          They are however available to on-link eavesdroppers, and
           could be forged by on-link attackers. In the case of Discovery, the Discovery Responses
           are unicast and will therefore be protected (<xref target="reqsec"/>), and an untrusted
           forger will not be able to receive responses. In the case of Flood Synchronization, an on-link
@@ -2458,7 +2463,8 @@ O_URI_LOCATOR = 106
       Jeferson Campos Nobre,
       Laurent Ciavaglia,
       Zongpeng Du,
-      Yu Fu,      
+      Yu Fu,
+      Joel Jaeggli,
       Zhenbin Li,
       Dimitri Papadimitriou,
       Pierre Peloso,
@@ -2892,7 +2898,7 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-      <t>draft-ietf-anima-grasp-12, 2017-05-xx:
+      <t>draft-ietf-anima-grasp-12, 2017-05-19:
       <vspace blankLines="1"/>
       Updates following IESG comments:
       <vspace blankLines="1"/>
@@ -2905,6 +2911,10 @@ O_URI_LOCATOR = 106
       Noted that 'dry run' semantics are ASA-dependent
       <vspace blankLines="1"/>
       Made the ACP a normative reference
+      <vspace blankLines="1"/>
+      Clarified that LL multicasts are limited to GRASP interfaces
+      <vspace blankLines="1"/>
+      Unicast UDP moved out of scope
       <vspace blankLines="1"/>
       Editorial clarifications
       </t>
