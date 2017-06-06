@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="1" month="June" year="2017"/>
+    <date day="6" month="June" year="2017"/>
 
     <abstract>
       <t>This document specifies the GeneRic Autonomic Signaling Protocol (GRASP), which
@@ -256,8 +256,7 @@
       in an autonomic node, which must also provide an appropriate security environment.
       In accordance with <xref target="I-D.ietf-anima-reference-model"/>, this SHOULD be the
       Autonomic Control Plane (ACP) <xref target="I-D.ietf-anima-autonomic-control-plane"/>.
-      As a result, all autonomic nodes in the ACP are able to trust each other and the
-      installed ASAs.
+      As a result, all autonomic nodes in the ACP are able to trust each other.
       It is expected that GRASP will access the ACP by using a typical socket programming interface
       and the ACP will make available only network interfaces within the autonomic network.
       If there is no ACP, the considerations described in <xref target="reqsec"/> apply. </t>
@@ -692,7 +691,8 @@
                   about an ASA that supports the requested discovery objective (usually
                   because it discovered the same objective before), it SHOULD
                   respond with a Discovery Response message with a Divert option pointing
-                  to the appropriate Discovery Responder. However, it SHOULD NOT respond
+                  to the appropriate Discovery Responder. However, on a link that supports
+                  link-local multicast, it SHOULD NOT respond
                   with a cached response on an interface if it learnt that information from
                   the same interface, because the peer in question will answer directly if still
                   operational.</t>
@@ -703,7 +703,7 @@
                   
                   
                   <t>The discovery initiator MUST set a reasonable timeout on the
-                  discovery process. A suggested value is 1 second multiplied by the loop count
+                  discovery process. A suggested value is 100 milliseconds multiplied by the loop count
                   embedded in the objective.</t>
                   
                   <t>If no discovery response is received within the timeout,
@@ -784,7 +784,7 @@
                   <t>Since the relay device is unaware of the timeout set by the original
                   initiator it SHOULD set a suitable timeout for the relayed discovery. <!-- significantly less than GRASP_DEF_TIMEOUT
                   milliseconds (<xref target="Constants"/>).-->
-                  A suggested value is 1 second multiplied by the remaining loop count.</t>
+                  A suggested value is 100 milliseconds multiplied by the remaining loop count.</t>
                   
                   <t>The discovery results received by the relaying instance MUST in turn be
                   sent as a Discovery Response message to the Discovery message that caused
@@ -1155,10 +1155,12 @@
                corresponding unicast locators). 
                </t>
                <t>The listening port used for TCP MUST be the same port as used for sending the
-               Discovery UDP multicast, on a given interface. In a low-end implementation this MAY
-               be GRASP_LISTEN_PORT. In a more complex implementation, the GRASP discovery mechanism
-               will find, for each interface, a dynamic port that it can bind to for both UDP and TCP
-               before initiating any discovery.</t>
+               Discovery UDP multicast, on a given interface. In an implementation with a
+               single GRASP instance in a node this MAY be GRASP_LISTEN_PORT. To support
+               multiple instances in the same node, the GRASP discovery mechanism in each
+               instance needs to find, for each interface, a dynamic port that it can bind to
+               for both sending UDP link-local multicast and listening for TCP, before
+               initiating any discovery.</t>
                <t>
                The 'initiator' field in the message is a globally unique IP address of the
                initiator, for the sole purpose of disambiguating the Session ID
@@ -1421,9 +1423,9 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           </list>
           A node that receives a Flood Synchronization message MUST cache the received objectives for
           use by local ASAs. Each cached objective MUST be tagged with the locator option sent with it, or with a null
-          tag if an empty locator option was sent. If a subsequent Flood Synchronization message carrying the same objective
-          arrives with the same tag, the corresponding cached copy of the objective MUST be overwritten.
-          If a subsequent Flood Synchronization message carrying the same objective arrives with a different
+          tag if an empty locator option was sent. If a subsequent Flood Synchronization message carrying an objective
+          with same name and the same tag, the corresponding cached copy of the objective MUST be overwritten.
+          If a subsequent Flood Synchronization message carrying an objective with same name arrives with a different
           tag, a new cached entry MUST be created.</t>
           
           <t>Note: the purpose of this mechanism is to allow the recipient of flooded values to distinguish between
@@ -1584,7 +1586,7 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           and FQDNs include this information explicitly. In the case of the URI Option,
           this information can be encoded in the URI itself.</t>
           
-          <t>Note: It is assumed that all locators are in scope throughout
+          <t>Note: It is assumed that all locators used in locator options are in scope throughout
           the GRASP domain. As stated in <xref target="hilev"/>,
           GRASP is not intended to work across disjoint addressing
           or naming realms. </t>
@@ -1617,7 +1619,8 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           
           <t>Note 2: A link-local IPv6 address MUST NOT be used when this option is included in a Divert option.</t>
           
-          <t>Note 3: The IPPROTO values are taken from the existing IANA Protocol Numbers registry. If GRASP
+          <t>Note 3: The IPPROTO values are taken from the existing IANA Protocol Numbers registry in order
+          to specify TCP or UDP. If GRASP
           requires future values that are not in that registry, a new registry for values outside the range 0..255
           will be needed.</t>
           </section>
@@ -1704,9 +1707,10 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
 
         <t><figure>
             <artwork><![CDATA[
-  objective = [objective-name, objective-flags, loop-count, ?any]
+  objective = [objective-name, objective-flags, loop-count, ?objective-value]
            
   objective-name = text
+  objective-value = any 
   loop-count = 0..255
   ]]></artwork>
           </figure></t>
@@ -1744,11 +1748,11 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           objective itself.
           </t>
           <t>
-          The 'any' field is to express the actual value of a negotiation
+          The 'objective-value' field is to express the actual value of a negotiation
           or synchronization objective. Its format is defined in the
           specification of the objective and may be a simple value
-          or a data structure of any kind. It is optional because it is optional
-          in a Discovery or Discovery Response message.</t>
+          or a data structure of any kind, as long as it can be represented in CBOR.
+          It is optional because it is optional in a Discovery or Discovery Response message.</t>
          </section>
 
          <section title="Objective flags">
@@ -1813,6 +1817,10 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
         by Discovery, Discovery Response, Request Synchronization, or Flood Synchronization
         messages only. They include
         value fields only in Synchronization or Flood Synchronization messages. </t>
+        
+        <t>The design of an objective interacts in various ways with the design of the ASAs
+        that will use it. ASA design considerations are discussed in
+        <xref target="I-D.carpenter-anima-asa-guidelines"/>.</t>
         </section>
         <section title="Organizing of Objective Options">
            
@@ -2145,9 +2153,11 @@ objective-flag = &(
   F_NEG_DRY: 3 ; negotiation is dry-run
 )
 
-objective = [objective-name, objective-flags, loop-count, ?any]
+objective = [objective-name, objective-flags, loop-count, ?objective-value]
 
-objective-name = text ;see specification for uniqueness rules
+objective-name = text ;see section "Format of Objective Options"
+
+objective-value = any 
 
 loop-count = 0..255
 
@@ -2356,6 +2366,7 @@ O_URI_LOCATOR = 106
       <?rfc include='reference.I-D.ietf-anima-bootstrapping-keyinfra'?>
       <?rfc include='reference.I-D.ietf-anima-stable-connectivity'?>
       <?rfc include='reference.I-D.liang-iana-pen'?>
+      <?rfc include='reference.I-D.carpenter-anima-asa-guidelines'?>
 
     </references>
     
@@ -2724,7 +2735,7 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-      <t>draft-ietf-anima-grasp-13, 2017-06-01:
+      <t>draft-ietf-anima-grasp-13, 2017-06-06:
       <vspace blankLines="1"/>
       Updates following additional IESG comments:
       <vspace blankLines="1"/>
@@ -2744,7 +2755,7 @@ O_URI_LOCATOR = 106
       <vspace blankLines="1"/>
       Noted that IPPROTO values come from the Protocol Numbers registry
       <vspace blankLines="1"/>
-      Added protocol and port numbers to URI locator.
+      Protocol change: Added protocol and port numbers to URI locator.
       <vspace blankLines="1"/>
       Removed inaccurate text about routing protocols
       <vspace blankLines="1"/>
