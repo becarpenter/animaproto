@@ -1727,7 +1727,7 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           MAY be used to create such a globally unique string:
           <list style="numbers">
           <t>The unique string is a decimal number representing a registered 32 bit Private Enterprise
-          Number (PEN) <xref target="I-D.liang-iana-pen"/> that uniquely identifies the enterprise
+          Number (PEN) <xref target="RFC5612"/> that uniquely identifies the enterprise
           defining the objective.</t>
           <t>The unique string is a fully qualified domain name that uniquely identifies the entity or person
           defining the objective.</t>
@@ -1735,7 +1735,7 @@ request-synchronization-message = [M_REQ_SYN, session-id, objective]
           defining the objective.</t>
           </list> 
           
-          The GRASP protocol treats the objective name as an opaque string. For example, "EX1", "411:EX1", 
+          The GRASP protocol treats the objective name as an opaque string. For example, "EX1", "32473:EX1", 
           "example.com:EX1", "example.org:EX1 and "user@example.org:EX1" would be five different objectives.</t>
           
           <t>The 'objective-flags' field is described below.</t>
@@ -2365,7 +2365,7 @@ O_URI_LOCATOR = 106
       <?rfc include='reference.I-D.ietf-anima-reference-model'?>
       <?rfc include='reference.I-D.ietf-anima-bootstrapping-keyinfra'?>
       <?rfc include='reference.I-D.ietf-anima-stable-connectivity'?>
-      <?rfc include='reference.I-D.liang-iana-pen'?>
+      <?rfc include='reference.RFC.5612'?>
       <?rfc include='reference.I-D.carpenter-anima-asa-guidelines'?>
 
     </references>
