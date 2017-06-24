@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="23" month="June" year="2017"/>
+    <date day="24" month="June" year="2017"/>
 
     <abstract>
       <t>This document specifies the GeneRic Autonomic Signaling Protocol (GRASP), which
@@ -2226,7 +2226,7 @@ O_URI_LOCATOR = 106
 
       <t>GRASP Messages and Options Table. The values in this table are names paired with decimal
       integers. Future values MUST be assigned using the Standards Action policy
-      defined by <xref target="RFC5226"/>. The following initial values are assigned by this document:</t>
+      defined by <xref target="RFC8126"/>. The following initial values are assigned by this document:</t>
 
       <t><figure>
           <artwork><![CDATA[M_NOOP = 0
@@ -2255,7 +2255,7 @@ O_URI_LOCATOR = 106
         <t>GRASP Objective Names Table. The values in this table are UTF-8 strings which
         MUST NOT include a colon (":"), according to <xref target="ObjForm"/>.
         Future values MUST be assigned using the Specification Required policy
-        defined by <xref target="RFC5226"/>.</t>
+        defined by <xref target="RFC8126"/>.</t>
         
         <t>To assist expert review of a new objective, the specification should include
         a precise description of the format of the new objective, with sufficient explanation
@@ -2336,7 +2336,7 @@ O_URI_LOCATOR = 106
 
       <?rfc include='reference.RFC.2334'?>
       <?rfc include='reference.RFC.3493'?>
-      <?rfc include='reference.RFC.5226'?>
+      <?rfc include='reference.RFC.8126'?>
       <?rfc include='reference.RFC.6733'?>
       <?rfc include='reference.RFC.2865'?>
       <?rfc include='reference.RFC.4861'?>
@@ -2735,7 +2735,7 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-      <t>draft-ietf-anima-grasp-14, 2017-23-06:
+      <t>draft-ietf-anima-grasp-14, 2017-24-06:
       <vspace blankLines="1"/>
       Updates following additional IESG comments:
       <vspace blankLines="1"/>
