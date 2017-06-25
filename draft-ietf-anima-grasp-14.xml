@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="24" month="June" year="2017"/>
+    <date day="26" month="June" year="2017"/>
 
     <abstract>
       <t>This document specifies the GeneRic Autonomic Signaling Protocol (GRASP), which
@@ -593,8 +593,8 @@
         <t>All other GRASP messages are unicast and could in principle run over any transport protocol.
         An implementation MUST support use of TCP. It MAY support use of another transport
         protocol but the details are out of scope for this specification.
-        However, GRASP itself does not provide for error detection or retransmission. Use of an
-        unreliable transport protocol is therefore NOT RECOMMENDED. </t>
+        However, GRASP itself does not provide for error detection or retransmission of
+        its unicast messages, so an unreliable transport protocol MUST NOT be used. </t>
         
         <!-- <t>Nevertheless, when running within a secure ACP on reliable infrastructure,
         UDP MAY be used for unicast messages not exceeding the minimum IPv6 path MTU;
@@ -2735,10 +2735,11 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-      <t>draft-ietf-anima-grasp-14, 2017-24-06:
+      <t>draft-ietf-anima-grasp-14, 2017-06-26:
       <vspace blankLines="1"/>
       Updates following additional IESG comments:
       <vspace blankLines="1"/>
+      Strengthened requirement for reliable transport protocol.
       </t>
       
       <t>draft-ietf-anima-grasp-13, 2017-06-06:
