@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="26" month="June" year="2017"/>
+    <date day="28" month="June" year="2017"/>
 
     <abstract>
       <t>This document specifies the GeneRic Autonomic Signaling Protocol (GRASP), which
@@ -252,7 +252,7 @@
       </section>
       
       <section anchor="hilev" title="High Level Deployment Model">
-      <t>A GRASP implementation will be part of the Autonomic Networking Infrastructure
+      <t>A GRASP implementation will be part of the Autonomic Networking Infrastructure (ANI)
       in an autonomic node, which must also provide an appropriate security environment.
       In accordance with <xref target="I-D.ietf-anima-reference-model"/>, this SHOULD be the
       Autonomic Control Plane (ACP) <xref target="I-D.ietf-anima-autonomic-control-plane"/>.
@@ -470,26 +470,26 @@
       
         <section anchor="reqsec" title="Required External Security Mechanism">
 
-         <t>GRASP does not specify transport security because it is meant to be adopted to
+         <t>GRASP does not specify transport security because it is meant to be adapted to
          different environments. Every solution adopting GRASP MUST specify a security substrate
 	 used by GRASP in that solution.</t>
 
-	 <t>The substrate MUST allow sending/receiving GRASP messages only between members of a mutually trusted
+	 <t>The substrate MUST enforce sending and receiving GRASP messages only between members of a mutually trusted
 	 group running GRASP. Each group member is an instance of GRASP. The group members are nodes of a
-	 connected graph. The group and graph is created by the substrate and called the GRASP domain.
+	 connected graph. The group and graph is created by the security substrate and called the GRASP domain.
 	 The substrate must support unicast messages between any group members and (link-local) multicast
 	 messages between adjacent group members. It must deny messages between group members and non group
 	 members. Substrates MUST use cryptographic member authentication and message integrity for GRASP messages.
 	 This can be end-to-end or hop-by-hop across the domain. The security substrate MUST provide mechanisms
 	 to remove untrusted members from the group.</t>
 
-	 <t>If the substrate does not mandate/enforce GRASP message encryption then any service
-	 using GRASP in such a solution MUST provide protection/encryption for message elements whose               
-	 exposure could constitutes an attack vector.</t>
+	 <t>If the substrate does not mandate and enforce GRASP message encryption then any service
+	 using GRASP in such a solution MUST provide protection and encryption for message elements whose
+	 exposure could constitute an attack vector.</t>
 
 	 <t>The security substrate for GRASP in the ANI is the ACP. Unless otherwise noted, we assume this
-	 security substrate in the remainder of this document. The ACP does mandate the use of encryption
-	 therefore GRASP in the ANI can rely on GRASP message encryption. The GRASP domain is the ACP: all
+	 security substrate in the remainder of this document. The ACP does mandate the use of encryption;
+	 therefore GRASP in the ANI can rely on GRASP message being encrypted. The GRASP domain is the ACP: all
 	 nodes in an autonomic domain connected by encrypted virtual links formed by the ACP. The ACP uses
 	 hop-by-hop security (authentication/encryption) of messages. Removal of nodes relies on standard
 	 PKI certificate revocation or expiry of sufficiently short lived certificates. Refer to 
@@ -507,17 +507,18 @@
          <!-- TLS <xref target="RFC5246"/> and DTLS <xref target="RFC6347"/> based on a Public Key Infrastructure (PKI)
          <xref target="RFC5280"/> are RECOMMENDED for this purpose.-->
 
-         <t>An exception to the requirements against the security substrate exists 
-         for highly constrained subsets of GRASP meant to support the establishment of a security substrate:</t>
+         <t>An exception to the requirements for the security substrate exists 
+         for highly constrained subsets of GRASP meant to support the establishment of a security substrate,
+         described in the following section.</t>
 
          
         </section>
 
          <section anchor="secinst" title="Discovery Unsolicited Link-Local (DULL) GRASP">
          <t>Some services may need to use insecure GRASP discovery, response
-         and flood messages without being able to use pre-existing security associations for example
-	 as part of discovery for establishing security associations such as a security substrate for
-	 GRASP.</t>
+         and flood messages without being able to use pre-existing security associations, for example
+	       as part of discovery for establishing security associations such as a security substrate for
+	       GRASP.</t>
          <t>Such operations being intrinsically insecure, they need to be confined to link-local
          use to minimize the risk of malicious actions. Possible examples
          include discovery of candidate ACP neighbors 
@@ -2279,8 +2280,9 @@ O_URI_LOCATOR = 106
 
     <section anchor="ack" title="Acknowledgements">
     
-      <t>A major contribution to the original version of this document was made by Sheng Jiang.
-      Significant early review inputs were received from Toerless Eckert, Joel Halpern, Barry Leiba,
+      <t>A major contribution to the original version of this document was made by Sheng Jiang
+      and significant contributions were made by Toerless Eckert.
+      Significant early review inputs were received from Joel Halpern, Barry Leiba,
       Charles E. Perkins, and Michael Richardson. William Atwood provided important assistance in
       debugging a prototype implementation.</t>
       
@@ -2730,12 +2732,12 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-      <t>draft-ietf-anima-grasp-14, 2017-06-26:
-      <vspace blankLines="1"/>
-      Updated 2.5.1 and 2.5.2 based on IESG security feedback (specify dependency against security substrate).
+      <t>draft-ietf-anima-grasp-14, 2017-06-28:
       <vspace blankLines="1"/>
       Updates following additional IESG comments:
       <vspace blankLines="1"/>
+      Updated 2.5.1 and 2.5.2 based on IESG security feedback (specify dependency against security substrate).
+      <vspace blankLines="1"/>      
       Strengthened requirement for reliable transport protocol.
       </t>
       

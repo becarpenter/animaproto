@@ -5,10 +5,10 @@
 Network Working Group                                         C. Bormann
 Internet-Draft                                   Universitaet Bremen TZI
 Intended status: Standards Track                       B. Carpenter, Ed.
-Expires: December 28, 2017                             Univ. of Auckland
+Expires: December 30, 2017                             Univ. of Auckland
                                                              B. Liu, Ed.
                                             Huawei Technologies Co., Ltd
-                                                           June 26, 2017
+                                                           June 28, 2017
 
 
              A Generic Autonomic Signaling Protocol (GRASP)
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 28, 2017.
+   This Internet-Draft will expire on December 30, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Bormann, et al.         Expires December 28, 2017               [Page 1]
+Bormann, et al.         Expires December 30, 2017               [Page 1]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Bormann, et al.         Expires December 28, 2017               [Page 2]
+Bormann, et al.         Expires December 30, 2017               [Page 2]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -165,7 +165,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017               [Page 3]
+Bormann, et al.         Expires December 30, 2017               [Page 3]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -221,7 +221,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017               [Page 4]
+Bormann, et al.         Expires December 30, 2017               [Page 4]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -277,7 +277,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017               [Page 5]
+Bormann, et al.         Expires December 30, 2017               [Page 5]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -333,7 +333,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017               [Page 6]
+Bormann, et al.         Expires December 30, 2017               [Page 6]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -347,7 +347,7 @@ Internet-Draft                    GRASP                        June 2017
 2.2.  High Level Deployment Model
 
    A GRASP implementation will be part of the Autonomic Networking
-   Infrastructure in an autonomic node, which must also provide an
+   Infrastructure (ANI) in an autonomic node, which must also provide an
    appropriate security environment.  In accordance with
    [I-D.ietf-anima-reference-model], this SHOULD be the Autonomic
    Control Plane (ACP) [I-D.ietf-anima-autonomic-control-plane].  As a
@@ -389,7 +389,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017               [Page 7]
+Bormann, et al.         Expires December 30, 2017               [Page 7]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -445,7 +445,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017               [Page 8]
+Bormann, et al.         Expires December 30, 2017               [Page 8]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -501,7 +501,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017               [Page 9]
+Bormann, et al.         Expires December 30, 2017               [Page 9]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -557,7 +557,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 10]
+Bormann, et al.         Expires December 30, 2017              [Page 10]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -613,7 +613,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 11]
+Bormann, et al.         Expires December 30, 2017              [Page 11]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -623,15 +623,15 @@ Internet-Draft                    GRASP                        June 2017
 2.5.1.  Required External Security Mechanism
 
    GRASP does not specify transport security because it is meant to be
-   adopted to different environments.  Every solution adopting GRASP
+   adapted to different environments.  Every solution adopting GRASP
    MUST specify a security substrate used by GRASP in that solution.
 
-   The substrate MUST allow sending/receiving GRASP messages only
+   The substrate MUST enforce sending and receiving GRASP messages only
    between members of a mutually trusted group running GRASP.  Each
    group member is an instance of GRASP.  The group members are nodes of
-   a connected graph.  The group and graph is created by the substrate
-   and called the GRASP domain.  The substrate must support unicast
-   messages between any group members and (link-local) multicast
+   a connected graph.  The group and graph is created by the security
+   substrate and called the GRASP domain.  The substrate must support
+   unicast messages between any group members and (link-local) multicast
    messages between adjacent group members.  It must deny messages
    between group members and non group members.  Substrates MUST use
    cryptographic member authentication and message integrity for GRASP
@@ -639,19 +639,19 @@ Internet-Draft                    GRASP                        June 2017
    The security substrate MUST provide mechanisms to remove untrusted
    members from the group.
 
-   If the substrate does not mandate/enforce GRASP message encryption
-   then any service using GRASP in such a solution MUST provide
-   protection/encryption for message elements whose exposure could
-   constitutes an attack vector.
+   If the substrate does not mandate and enforce GRASP message
+   encryption then any service using GRASP in such a solution MUST
+   provide protection and encryption for message elements whose exposure
+   could constitute an attack vector.
 
    The security substrate for GRASP in the ANI is the ACP.  Unless
    otherwise noted, we assume this security substrate in the remainder
-   of this document.  The ACP does mandate the use of encryption
-   therefore GRASP in the ANI can rely on GRASP message encryption.  The
-   GRASP domain is the ACP: all nodes in an autonomic domain connected
-   by encrypted virtual links formed by the ACP.  The ACP uses hop-by-
-   hop security (authentication/encryption) of messages.  Removal of
-   nodes relies on standard PKI certificate revocation or expiry of
+   of this document.  The ACP does mandate the use of encryption;
+   therefore GRASP in the ANI can rely on GRASP message being encrypted.
+   The GRASP domain is the ACP: all nodes in an autonomic domain
+   connected by encrypted virtual links formed by the ACP.  The ACP uses
+   hop-by-hop security (authentication/encryption) of messages.  Removal
+   of nodes relies on standard PKI certificate revocation or expiry of
    sufficiently short lived certificates.  Refer to
    [I-D.ietf-anima-autonomic-control-plane] for more details.
 
@@ -669,20 +669,21 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 12]
+Bormann, et al.         Expires December 30, 2017              [Page 12]
 
 Internet-Draft                    GRASP                        June 2017
 
 
-   An exception to the requirements against the security substrate
-   exists for highly constrained subsets of GRASP meant to support the
-   establishment of a security substrate:
+   An exception to the requirements for the security substrate exists
+   for highly constrained subsets of GRASP meant to support the
+   establishment of a security substrate, described in the following
+   section.
 
 2.5.2.  Discovery Unsolicited Link-Local (DULL) GRASP
 
    Some services may need to use insecure GRASP discovery, response and
    flood messages without being able to use pre-existing security
-   associations for example as part of discovery for establishing
+   associations, for example as part of discovery for establishing
    security associations such as a security substrate for GRASP.
 
    Such operations being intrinsically insecure, they need to be
@@ -720,16 +721,17 @@ Internet-Draft                    GRASP                        June 2017
    o  A node MUST silently discard any message whose source address is
       not link-local.
 
-   To minimize traffic possibly observed by third parties, GRASP traffic
-   SHOULD be minimized by using only Flood Synchronization to announce
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 13]
+
+Bormann, et al.         Expires December 30, 2017              [Page 13]
 
 Internet-Draft                    GRASP                        June 2017
 
 
+   To minimize traffic possibly observed by third parties, GRASP traffic
+   SHOULD be minimized by using only Flood Synchronization to announce
    objectives and their associated locators, rather than by using
    Discovery and Response.  Further details are out of scope for this
    document
@@ -779,9 +781,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-
-
-Bormann, et al.         Expires December 28, 2017              [Page 14]
+Bormann, et al.         Expires December 30, 2017              [Page 14]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -837,7 +837,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 15]
+Bormann, et al.         Expires December 30, 2017              [Page 15]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -893,7 +893,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 16]
+Bormann, et al.         Expires December 30, 2017              [Page 16]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -949,7 +949,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 17]
+Bormann, et al.         Expires December 30, 2017              [Page 17]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1005,7 +1005,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 18]
+Bormann, et al.         Expires December 30, 2017              [Page 18]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1061,7 +1061,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 19]
+Bormann, et al.         Expires December 30, 2017              [Page 19]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1117,7 +1117,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 20]
+Bormann, et al.         Expires December 30, 2017              [Page 20]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1173,7 +1173,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 21]
+Bormann, et al.         Expires December 30, 2017              [Page 21]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1229,7 +1229,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 22]
+Bormann, et al.         Expires December 30, 2017              [Page 22]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1285,7 +1285,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 23]
+Bormann, et al.         Expires December 30, 2017              [Page 23]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1341,7 +1341,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 24]
+Bormann, et al.         Expires December 30, 2017              [Page 24]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1397,7 +1397,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 25]
+Bormann, et al.         Expires December 30, 2017              [Page 25]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1453,7 +1453,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 26]
+Bormann, et al.         Expires December 30, 2017              [Page 26]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1509,7 +1509,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 27]
+Bormann, et al.         Expires December 30, 2017              [Page 27]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1565,7 +1565,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 28]
+Bormann, et al.         Expires December 30, 2017              [Page 28]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1621,7 +1621,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 29]
+Bormann, et al.         Expires December 30, 2017              [Page 29]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1677,7 +1677,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 30]
+Bormann, et al.         Expires December 30, 2017              [Page 30]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1733,7 +1733,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 31]
+Bormann, et al.         Expires December 30, 2017              [Page 31]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1789,7 +1789,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 32]
+Bormann, et al.         Expires December 30, 2017              [Page 32]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1845,7 +1845,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 33]
+Bormann, et al.         Expires December 30, 2017              [Page 33]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1901,7 +1901,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 34]
+Bormann, et al.         Expires December 30, 2017              [Page 34]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -1957,7 +1957,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 35]
+Bormann, et al.         Expires December 30, 2017              [Page 35]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2013,7 +2013,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 36]
+Bormann, et al.         Expires December 30, 2017              [Page 36]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2069,7 +2069,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 37]
+Bormann, et al.         Expires December 30, 2017              [Page 37]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2125,7 +2125,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 38]
+Bormann, et al.         Expires December 30, 2017              [Page 38]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2181,7 +2181,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 39]
+Bormann, et al.         Expires December 30, 2017              [Page 39]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2237,7 +2237,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 40]
+Bormann, et al.         Expires December 30, 2017              [Page 40]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2293,7 +2293,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 41]
+Bormann, et al.         Expires December 30, 2017              [Page 41]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2349,7 +2349,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 42]
+Bormann, et al.         Expires December 30, 2017              [Page 42]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2405,7 +2405,7 @@ message /= request-synchronization-message
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 43]
+Bormann, et al.         Expires December 30, 2017              [Page 43]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2461,7 +2461,7 @@ objective-flags = uint .bits objective-flag
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 44]
+Bormann, et al.         Expires December 30, 2017              [Page 44]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2517,7 +2517,7 @@ O_URI_LOCATOR = 106
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 45]
+Bormann, et al.         Expires December 30, 2017              [Page 45]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2573,7 +2573,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 46]
+Bormann, et al.         Expires December 30, 2017              [Page 46]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2602,10 +2602,11 @@ Internet-Draft                    GRASP                        June 2017
 7.  Acknowledgements
 
    A major contribution to the original version of this document was
-   made by Sheng Jiang.  Significant early review inputs were received
-   from Toerless Eckert, Joel Halpern, Barry Leiba, Charles E.  Perkins,
-   and Michael Richardson.  William Atwood provided important assistance
-   in debugging a prototype implementation.
+   made by Sheng Jiang and significant contributions were made by
+   Toerless Eckert.  Significant early review inputs were received from
+   Joel Halpern, Barry Leiba, Charles E.  Perkins, and Michael
+   Richardson.  William Atwood provided important assistance in
+   debugging a prototype implementation.
 
    Valuable comments were received from Michael Behringer, Jeferson
    Campos Nobre, Laurent Ciavaglia, Zongpeng Du, Yu Fu, Joel Jaeggli,
@@ -2628,8 +2629,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-
-Bormann, et al.         Expires December 28, 2017              [Page 47]
+Bormann, et al.         Expires December 30, 2017              [Page 47]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2685,7 +2685,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 48]
+Bormann, et al.         Expires December 30, 2017              [Page 48]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2741,7 +2741,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 49]
+Bormann, et al.         Expires December 30, 2017              [Page 49]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2797,7 +2797,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 50]
+Bormann, et al.         Expires December 30, 2017              [Page 50]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2853,7 +2853,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 51]
+Bormann, et al.         Expires December 30, 2017              [Page 51]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2909,7 +2909,7 @@ Appendix B.  Closed Issues [RFC Editor: Please remove]
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 52]
+Bormann, et al.         Expires December 30, 2017              [Page 52]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -2965,7 +2965,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 53]
+Bormann, et al.         Expires December 30, 2017              [Page 53]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3021,7 +3021,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 54]
+Bormann, et al.         Expires December 30, 2017              [Page 54]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3077,7 +3077,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 55]
+Bormann, et al.         Expires December 30, 2017              [Page 55]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3133,7 +3133,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 56]
+Bormann, et al.         Expires December 30, 2017              [Page 56]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3189,7 +3189,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 57]
+Bormann, et al.         Expires December 30, 2017              [Page 57]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3245,7 +3245,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 58]
+Bormann, et al.         Expires December 30, 2017              [Page 58]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3301,7 +3301,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 59]
+Bormann, et al.         Expires December 30, 2017              [Page 59]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3357,19 +3357,19 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 60]
+Bormann, et al.         Expires December 30, 2017              [Page 60]
 
 Internet-Draft                    GRASP                        June 2017
 
 
 Appendix C.  Change log [RFC Editor: Please remove]
 
-   draft-ietf-anima-grasp-14, 2017-06-26:
+   draft-ietf-anima-grasp-14, 2017-06-28:
+
+   Updates following additional IESG comments:
 
    Updated 2.5.1 and 2.5.2 based on IESG security feedback (specify
    dependency against security substrate).
-
-   Updates following additional IESG comments:
 
    Strengthened requirement for reliable transport protocol.
 
@@ -3413,7 +3413,7 @@ Appendix C.  Change log [RFC Editor: Please remove]
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 61]
+Bormann, et al.         Expires December 30, 2017              [Page 61]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3469,7 +3469,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 62]
+Bormann, et al.         Expires December 30, 2017              [Page 62]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3525,7 +3525,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 63]
+Bormann, et al.         Expires December 30, 2017              [Page 63]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3581,7 +3581,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 64]
+Bormann, et al.         Expires December 30, 2017              [Page 64]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3637,7 +3637,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 65]
+Bormann, et al.         Expires December 30, 2017              [Page 65]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3693,7 +3693,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 66]
+Bormann, et al.         Expires December 30, 2017              [Page 66]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3749,7 +3749,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 67]
+Bormann, et al.         Expires December 30, 2017              [Page 67]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3805,7 +3805,7 @@ D.1.  Discovery Example
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 68]
+Bormann, et al.         Expires December 30, 2017              [Page 68]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3861,7 +3861,7 @@ D.4.  Simple Negotiation Example
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 69]
+Bormann, et al.         Expires December 30, 2017              [Page 69]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3917,7 +3917,7 @@ D.5.  Complete Negotiation Example
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 70]
+Bormann, et al.         Expires December 30, 2017              [Page 70]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -3973,7 +3973,7 @@ E.1.  Requirements for Discovery
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 71]
+Bormann, et al.         Expires December 30, 2017              [Page 71]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -4029,7 +4029,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 72]
+Bormann, et al.         Expires December 30, 2017              [Page 72]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -4085,7 +4085,7 @@ E.2.  Requirements for Synchronization and Negotiation Capability
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 73]
+Bormann, et al.         Expires December 30, 2017              [Page 73]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -4141,7 +4141,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 74]
+Bormann, et al.         Expires December 30, 2017              [Page 74]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -4197,7 +4197,7 @@ E.3.  Specific Technical Requirements
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 75]
+Bormann, et al.         Expires December 30, 2017              [Page 75]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -4253,7 +4253,7 @@ Appendix F.  Capability Analysis of Current Protocols
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 76]
+Bormann, et al.         Expires December 30, 2017              [Page 76]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -4309,7 +4309,7 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 77]
+Bormann, et al.         Expires December 30, 2017              [Page 77]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -4365,7 +4365,7 @@ Authors' Addresses
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 78]
+Bormann, et al.         Expires December 30, 2017              [Page 78]
 
 Internet-Draft                    GRASP                        June 2017
 
@@ -4421,4 +4421,4 @@ Internet-Draft                    GRASP                        June 2017
 
 
 
-Bormann, et al.         Expires December 28, 2017              [Page 79]
+Bormann, et al.         Expires December 30, 2017              [Page 79]
