@@ -495,37 +495,25 @@
 	 PKI certificate revocation or expiry of sufficiently short lived certificates. Refer to 
          <xref target="I-D.ietf-anima-autonomic-control-plane"/> for more details.</t>
 
-	 <t>If the security substrate supports identifying whether it is operational, then this
-	 information should be used by GRASP to refuse synchronization and negotiation functions if
-	 the security substrate is non-functional.</t>
-        
-         <t>An exception to the requirements against the security substrate is defined in
-         <xref target="secinst-dull"/> for highly constrained subsets of GRASP meant to support
-	 the establishment of a security substrate.</t>
-
-        </section>
-         
-        <section anchor="secinst" title="Constrained Instances">
-        
-        <t>This section describes some cases where additional instances of GRASP 
-        are appropriate, subject to certain security constraints.</t>
-        
-        <t>In these cases, since multicast packets are not secured, Rapid Mode
-        discovery (<xref target="rapid"/>) MUST NOT be used.</t>
-         
-         <section anchor="secinst-noacp" title="No ACP">
          <t>As mentioned in <xref target="highlevel"/>, some GRASP operations might be
          performed across an administrative domain boundary by mutual agreement, without the
          benefit of an ACP. Such operations
          MUST be confined to a separate instance of GRASP with its own copy of all GRASP
-         data structures running across a separate GRASP domain. 
-         Messages MUST be authenticated and encryption MUST be used.
+         data structures running across a separate GRASP domain with a security substrate. 
+         In the most simple case, each point-to-point interdomain GRASP peering could be a
+         separate domain and the security substrate could be built using transport or network layer
+         security protocols. This is subject to future specifications. </t>
+
          <!-- TLS <xref target="RFC5246"/> and DTLS <xref target="RFC6347"/> based on a Public Key Infrastructure (PKI)
          <xref target="RFC5280"/> are RECOMMENDED for this purpose.-->
-         Further details may be specified in future documents.
-         </t></section>
+
+         <t>An exception to the requirements against the security substrate exists 
+         for highly constrained subsets of GRASP meant to support the establishment of a security substrate:</t>
+
          
-         <section anchor="secinst-dull" title="Discovery Unsolicited Link-Local">
+        </section>
+
+         <section anchor="secinst" title="Discovery Unsolicited Link-Local (DULL) GRASP">
          <t>Some services may need to use insecure GRASP discovery, response
          and flood messages without being able to use pre-existing security associations for example
 	 as part of discovery for establishing security associations such as a security substrate for
@@ -584,7 +572,6 @@
          <t>Further details are out of scope for this document.</t>
          </section> -->
  
-        </section> 
         
         <section anchor="trans" title="Transport Layer Usage">
         
@@ -614,7 +601,7 @@
         automatic fallback to TCP MUST be implemented. The simplest implementation
         is therefore to use only TCP.</t> -->
         
-        <t>For considerations when running without an ACP, see <xref target="secinst-noacp"/>.</t> 
+        <t>For considerations when running without an ACP, see <xref target="reqsec"/>.</t> 
         
         <t>For link-local multicast, the GRASP protocol listens to the well-known
         GRASP Listen Port (<xref target="Constants"/>). 
@@ -2721,7 +2708,7 @@ O_URI_LOCATOR = 106
           <t>62. Is it helpful to tag descriptive text with message names (M_DISCOVER etc.)?<vspace blankLines="1"/>
            RESOLVED: Yes, done in various parts of the text.</t> 
            
-          <t>63. Should encryption be MUST instead of SHOULD in <xref target="reqsec"/> and <xref target="secinst-noacp"/>?
+          <t>63. Should encryption be MUST instead of SHOULD in <xref target="reqsec"/> and <xref target="reqsec"/>?
           <vspace blankLines="1"/>
            RESOLVED: Yes, MUST implement in both cases.</t>
       
@@ -2744,6 +2731,8 @@ O_URI_LOCATOR = 106
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
       <t>draft-ietf-anima-grasp-14, 2017-06-26:
+      <vspace blankLines="1"/>
+      Updated 2.5.1 and 2.5.2 based on IESG security feedback (specify dependency against security substrate).
       <vspace blankLines="1"/>
       Updates following additional IESG comments:
       <vspace blankLines="1"/>
