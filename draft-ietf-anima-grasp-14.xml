@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="28" month="June" year="2017"/>
+    <date day="2" month="July" year="2017"/>
 
     <abstract>
       <t>This document specifies the GeneRic Autonomic Signaling Protocol (GRASP), which
@@ -2732,7 +2732,7 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-      <t>draft-ietf-anima-grasp-14, 2017-06-28:
+      <t>draft-ietf-anima-grasp-14, 2017-07-02:
       <vspace blankLines="1"/>
       Updates following additional IESG comments:
       <vspace blankLines="1"/>
