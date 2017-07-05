@@ -13,7 +13,7 @@
 <!-- Change to "yes" if someone has disclosed IPR for the draft -->
 <?rfc compact="yes"?>
 <!-- This defines the specific filename and version number of your draft (and inserts the appropriate IETF boilerplate -->
-<rfc category="std" docName="draft-ietf-anima-grasp-14" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-anima-grasp-15" ipr="trust200902">
   <front>
     <title abbrev="GRASP">A Generic Autonomic Signaling Protocol (GRASP)</title>
     
@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="2" month="July" year="2017"/>
+    <date day="5" month="July" year="2017"/>
 
     <abstract>
       <t>This document specifies the GeneRic Autonomic Signaling Protocol (GRASP), which
@@ -479,7 +479,10 @@
 	 connected graph. The group and graph is created by the security substrate and called the GRASP domain.
 	 The substrate must support unicast messages between any group members and (link-local) multicast
 	 messages between adjacent group members. It must deny messages between group members and non group
-	 members. Substrates MUST use cryptographic member authentication and message integrity for GRASP messages.
+	 members. With this model, security is provided by enforcing group membership, but any member of the
+         trusted group can attack the entire network until revoked.</t>
+
+         <t> Substrates MUST use cryptographic member authentication and message integrity for GRASP messages.
 	 This can be end-to-end or hop-by-hop across the domain. The security substrate MUST provide mechanisms
 	 to remove untrusted members from the group.</t>
 
