@@ -78,34 +78,34 @@ Table of Contents
        2.5.1.  Required External Security Mechanism  . . . . . . . .  12
        2.5.2.  Discovery Unsolicited Link-Local (DULL) GRASP . . . .  13
        2.5.3.  Transport Layer Usage . . . . . . . . . . . . . . . .  14
-       2.5.4.  Discovery Mechanism and Procedures  . . . . . . . . .  14
-       2.5.5.  Negotiation Procedures  . . . . . . . . . . . . . . .  18
+       2.5.4.  Discovery Mechanism and Procedures  . . . . . . . . .  15
+       2.5.5.  Negotiation Procedures  . . . . . . . . . . . . . . .  19
        2.5.6.  Synchronization and Flooding Procedures . . . . . . .  20
-     2.6.  GRASP Constants . . . . . . . . . . . . . . . . . . . . .  22
-     2.7.  Session Identifier (Session ID) . . . . . . . . . . . . .  23
+     2.6.  GRASP Constants . . . . . . . . . . . . . . . . . . . . .  23
+     2.7.  Session Identifier (Session ID) . . . . . . . . . . . . .  24
      2.8.  GRASP Messages  . . . . . . . . . . . . . . . . . . . . .  24
        2.8.1.  Message Overview  . . . . . . . . . . . . . . . . . .  24
-       2.8.2.  GRASP Message Format  . . . . . . . . . . . . . . . .  24
-       2.8.3.  Message Size  . . . . . . . . . . . . . . . . . . . .  25
-       2.8.4.  Discovery Message . . . . . . . . . . . . . . . . . .  25
-       2.8.5.  Discovery Response Message  . . . . . . . . . . . . .  26
+       2.8.2.  GRASP Message Format  . . . . . . . . . . . . . . . .  25
+       2.8.3.  Message Size  . . . . . . . . . . . . . . . . . . . .  26
+       2.8.4.  Discovery Message . . . . . . . . . . . . . . . . . .  26
+       2.8.5.  Discovery Response Message  . . . . . . . . . . . . .  27
        2.8.6.  Request Messages  . . . . . . . . . . . . . . . . . .  28
        2.8.7.  Negotiation Message . . . . . . . . . . . . . . . . .  29
-       2.8.8.  Negotiation End Message . . . . . . . . . . . . . . .  29
-       2.8.9.  Confirm Waiting     Message . . . . . . . . . . . . .  29
+       2.8.8.  Negotiation End Message . . . . . . . . . . . . . . .  30
+       2.8.9.  Confirm Waiting     Message . . . . . . . . . . . . .  30
        2.8.10. Synchronization Message . . . . . . . . . . . . . . .  30
-       2.8.11. Flood Synchronization Message . . . . . . . . . . . .  30
-       2.8.12. Invalid Message . . . . . . . . . . . . . . . . . . .  31
-       2.8.13. No Operation Message  . . . . . . . . . . . . . . . .  31
+       2.8.11. Flood Synchronization Message . . . . . . . . . . . .  31
+       2.8.12. Invalid Message . . . . . . . . . . . . . . . . . . .  32
+       2.8.13. No Operation Message  . . . . . . . . . . . . . . . .  32
      2.9.  GRASP Options . . . . . . . . . . . . . . . . . . . . . .  32
        2.9.1.  Format of GRASP Options . . . . . . . . . . . . . . .  32
-       2.9.2.  Divert Option . . . . . . . . . . . . . . . . . . . .  32
-       2.9.3.  Accept Option . . . . . . . . . . . . . . . . . . . .  32
+       2.9.2.  Divert Option . . . . . . . . . . . . . . . . . . . .  33
+       2.9.3.  Accept Option . . . . . . . . . . . . . . . . . . . .  33
        2.9.4.  Decline Option  . . . . . . . . . . . . . . . . . . .  33
-       2.9.5.  Locator Options . . . . . . . . . . . . . . . . . . .  33
-     2.10. Objective Options . . . . . . . . . . . . . . . . . . . .  35
-       2.10.1.  Format of Objective Options  . . . . . . . . . . . .  35
-       2.10.2.  Objective flags  . . . . . . . . . . . . . . . . . .  36
+       2.9.5.  Locator Options . . . . . . . . . . . . . . . . . . .  34
+     2.10. Objective Options . . . . . . . . . . . . . . . . . . . .  36
+       2.10.1.  Format of Objective Options  . . . . . . . . . . . .  36
+       2.10.2.  Objective flags  . . . . . . . . . . . . . . . . . .  37
 
 
 
@@ -120,7 +120,7 @@ Internet-Draft                    GRASP                        July 2017
    3.  Implementation Status [RFC Editor: please remove] . . . . . .  40
      3.1.  BUPT C++ Implementation . . . . . . . . . . . . . . . . .  40
      3.2.  Python Implementation . . . . . . . . . . . . . . . . . .  41
-   4.  Security Considerations . . . . . . . . . . . . . . . . . . .  41
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .  42
    5.  CDDL Specification of GRASP . . . . . . . . . . . . . . . . .  44
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  46
    7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  48
@@ -130,12 +130,12 @@ Internet-Draft                    GRASP                        July 2017
    Appendix A.  Open Issues [RFC Editor: This section should be
                 empty. Please remove]  . . . . . . . . . . . . . . .  53
    Appendix B.  Closed Issues [RFC Editor: Please remove]  . . . . .  53
-   Appendix C.  Change log [RFC Editor: Please remove] . . . . . . .  61
+   Appendix C.  Change log [RFC Editor: Please remove] . . . . . . .  62
    Appendix D.  Example Message Formats  . . . . . . . . . . . . . .  69
-     D.1.  Discovery Example . . . . . . . . . . . . . . . . . . . .  69
+     D.1.  Discovery Example . . . . . . . . . . . . . . . . . . . .  70
      D.2.  Flood Example . . . . . . . . . . . . . . . . . . . . . .  70
      D.3.  Synchronization Example . . . . . . . . . . . . . . . . .  70
-     D.4.  Simple Negotiation Example  . . . . . . . . . . . . . . .  70
+     D.4.  Simple Negotiation Example  . . . . . . . . . . . . . . .  71
      D.5.  Complete Negotiation Example  . . . . . . . . . . . . . .  71
    Appendix E.  Requirement Analysis of Discovery, Synchronization
                 and Negotiation  . . . . . . . . . . . . . . . . . .  72
@@ -144,7 +144,7 @@ Internet-Draft                    GRASP                        July 2017
            Capability  . . . . . . . . . . . . . . . . . . . . . . .  74
      E.3.  Specific Technical Requirements . . . . . . . . . . . . .  76
    Appendix F.  Capability Analysis of Current Protocols . . . . . .  77
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  79
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  80
 
 1.  Introduction
 
@@ -624,48 +624,48 @@ Internet-Draft                    GRASP                        July 2017
 
    GRASP does not specify transport security because it is meant to be
    adapted to different environments.  Every solution adopting GRASP
-   MUST specify a security substrate used by GRASP in that solution.
+   MUST specify a security and transport substrate used by GRASP in that
+   solution.
 
    The substrate MUST enforce sending and receiving GRASP messages only
    between members of a mutually trusted group running GRASP.  Each
    group member is an instance of GRASP.  The group members are nodes of
    a connected graph.  The group and graph is created by the security
-   substrate and called the GRASP domain.  The substrate must support
-   unicast messages between any group members and (link-local) multicast
-   messages between adjacent group members.  It must deny messages
-   between group members and non group members.  With this model,
-   security is provided by enforcing group membership, but any member of
-   the trusted group can attack the entire network until revoked.
+   and transport substrate and called the GRASP domain.  The substrate
+   must support unicast messages between any group members and (link-
+   local) multicast messages between adjacent group members.  It must
+   deny messages between group members and non group members.  With this
+   model, security is provided by enforcing group membership, but any
+   member of the trusted group can attack the entire network until
+   revoked.
 
    Substrates MUST use cryptographic member authentication and message
    integrity for GRASP messages.  This can be end-to-end or hop-by-hop
-   across the domain.  The security substrate MUST provide mechanisms to
-   remove untrusted members from the group.
+   across the domain.  The security and transport substrate MUST provide
+   mechanisms to remove untrusted members from the group.
 
    If the substrate does not mandate and enforce GRASP message
    encryption then any service using GRASP in such a solution MUST
    provide protection and encryption for message elements whose exposure
    could constitute an attack vector.
 
-   The security substrate for GRASP in the ANI is the ACP.  Unless
-   otherwise noted, we assume this security substrate in the remainder
-   of this document.  The ACP does mandate the use of encryption;
-   therefore GRASP in the ANI can rely on GRASP message being encrypted.
-   The GRASP domain is the ACP: all nodes in an autonomic domain
-   connected by encrypted virtual links formed by the ACP.  The ACP uses
-   hop-by-hop security (authentication/encryption) of messages.  Removal
-   of nodes relies on standard PKI certificate revocation or expiry of
-   sufficiently short lived certificates.  Refer to
-   [I-D.ietf-anima-autonomic-control-plane] for more details.
+   The security and transport substrate for GRASP in the ANI is the ACP.
+   Unless otherwise noted, we assume this security and transport
+   substrate in the remainder of this document.  The ACP does mandate
+   the use of encryption; therefore GRASP in the ANI can rely on GRASP
+   message being encrypted.  The GRASP domain is the ACP: all nodes in
+   an autonomic domain connected by encrypted virtual links formed by
+   the ACP.  The ACP uses hop-by-hop security (authentication/
+   encryption) of messages.  Removal of nodes relies on standard PKI
+   certificate revocation or expiry of sufficiently short lived
+   certificates.  Refer to [I-D.ietf-anima-autonomic-control-plane] for
+   more details.
 
    As mentioned in Section 2.3, some GRASP operations might be performed
    across an administrative domain boundary by mutual agreement, without
    the benefit of an ACP.  Such operations MUST be confined to a
    separate instance of GRASP with its own copy of all GRASP data
-   structures running across a separate GRASP domain with a security
-   substrate.  In the most simple case, each point-to-point interdomain
-   GRASP peering could be a separate domain and the security substrate
-
+   structures running across a separate GRASP domain with a security and
 
 
 
@@ -674,13 +674,15 @@ Bormann, et al.          Expires January 6, 2018               [Page 12]
 Internet-Draft                    GRASP                        July 2017
 
 
-   could be built using transport or network layer security protocols.
-   This is subject to future specifications.
+   transport substrate.  In the most simple case, each point-to-point
+   interdomain GRASP peering could be a separate domain and the security
+   and transport substrate could be built using transport or network
+   layer security protocols.  This is subject to future specifications.
 
-   An exception to the requirements for the security substrate exists
-   for highly constrained subsets of GRASP meant to support the
-   establishment of a security substrate, described in the following
-   section.
+   An exception to the requirements for the security and transport
+   substrate exists for highly constrained subsets of GRASP meant to
+   support the establishment of a security and transport substrate,
+   described in the following section.
 
 2.5.2.  Discovery Unsolicited Link-Local (DULL) GRASP
 
@@ -723,8 +725,6 @@ Internet-Draft                    GRASP                        July 2017
 
 
 
-
-
 Bormann, et al.          Expires January 6, 2018               [Page 13]
 
 Internet-Draft                    GRASP                        July 2017
@@ -742,31 +742,61 @@ Internet-Draft                    GRASP                        July 2017
 2.5.3.  Transport Layer Usage
 
    All GRASP messages, after they are serialized as a CBOR byte string,
-   are transmitted as such directly over the transport protocol in use,
-   which itself runs within the security environment discussed in the
-   previous section.
+   are transmitted as such directly over the transport protocol in use.
+   The transport protocol(s) for a GRASP domain are specified by the
+   security and transport substrate as introduced in Section 2.5.1.
 
-   GRASP discovery and flooding messages are designed for use over link-
-   local multicast UDP.  They MUST NOT be fragmented, and therefore MUST
-   NOT exceed the link MTU size.  An implementation should report any
-   attempt to send a longer message as a run-time error.
+   GRASP discovery and flooding messages are designed for GRASP domain
+   wide flooding through hop-by-hop link-local multicast forwarding
+   between adjacent GRASP nodes.  The GRASP security and transport
+   substrate needs to specify how these link local multicasts are
+   transported.  This can be unreliable transport (UDP) but it SHOULD be
+   reliable transport (eg: TCP).
 
-   All other GRASP messages are unicast and could in principle run over
-   any transport protocol.  An implementation MUST support use of TCP.
-   It MAY support use of another transport protocol but the details are
-   out of scope for this specification.  However, GRASP itself does not
-   provide for error detection or retransmission of its unicast
-   messages, so an unreliable transport protocol MUST NOT be used.
+   If the substrate specifies an unreliable transport such as UDP for
+   discovery and flooding messages, then it MUST NOT use IP
+   fragmentation because of its loss characteristics especially in
+   multi-hop flooding.  GRASP MUST then enforce at the API level to its
+   users a limit to the size of discovery and flooding messages so that
+   no fragmentation can occur.  For IPv6 transport this means that those
+   messages must be at most 1280 bytes sized IPv6 packets (unless there
+   is a known larger minimum link MTU across the whole GRASP domain).
 
-   For considerations when running without an ACP, see Section 2.5.1.
+   All other GRASP messages are unicast beteween group members of the
+   GRASP domain.  These MUST use a reliable transport protocol because
+   GRASP itself does not provide for error detection, retransmission or
+   flow control.  Unless otherwise specified by the security and
+   transport substrate, TCP MUST be used.
 
-   For link-local multicast, the GRASP protocol listens to the well-
+   The security and transport substrate for GRASP in the ANI is the ACP.
+   Unless otherwise noted, we assume this security and transport
+   substrate in the remainder of this document when describing GRASPs
+   message transport.  In the ACP, TCP is used for GRASP unicast
+   messages.  GRASP discovery and flooding messages also use TCP: These
+   link-local messages are forwarded by replicating them to all adjacent
+   GRASP nodes on the link via TCP connections to those adjacent GRASP
+   nodes.  Because of this, GRASP in the ANI has no limitations on the
+   size of discovery and flooding messages with respect to fragmentation
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 14]
+
+Internet-Draft                    GRASP                        July 2017
+
+
+   issues.  UDP is used in the ANI with GRASP only with DULL when the
+   ACP is built to discover ACP/GRASP neighbors on links.
+
+   For link-local UDP multicast, the GRASP protocol listens to the well-
    known GRASP Listen Port (Section 2.6).  For unicast transport
    sessions used for discovery responses, synchronization and
    negotiation, the ASA concerned normally listens on its own
    dynamically assigned ports, which are communicated to its peers
-   during discovery.  However, a minimal implementation MAY use the
-   GRASP Listen Port for this purpose.
+   during discovery.  GRASP itself needs to listen for M_RESPONSE
+   messages on the GRASP Listen Port with the unicast transport protocol
+   used by the security and transport substrate.
 
 2.5.4.  Discovery Mechanism and Procedures
 
@@ -778,14 +808,6 @@ Internet-Draft                    GRASP                        July 2017
    synchronization process.  Upon receiving a Discovery (Section 2.8.4)
    message, the recipient node should return a response message in which
    it either indicates itself as a discovery responder or diverts the
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 14]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    initiator towards another more suitable ASA.  However, this response
    may be delayed if the recipient needs to relay the discovery onwards,
    as described below.
@@ -807,6 +829,18 @@ Internet-Draft                    GRASP                        July 2017
    discovered objective is simply used as a name during the discovery
    process and any subsequent operations between the peers are outside
    the scope of GRASP.
+
+
+
+
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 15]
+
+Internet-Draft                    GRASP                        July 2017
+
 
 2.5.4.2.  Discovery Overview
 
@@ -834,14 +868,6 @@ Internet-Draft                    GRASP                        July 2017
    the discovery initiator to contact an off-link ASA for that discovery
    objective.  A Discovery message is sent by a discovery initiator via
    UDP to the ALL_GRASP_NEIGHBORS link-local multicast address
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 15]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    (Section 2.6).  Every network device that supports GRASP always
    listens to a well-known UDP port to capture the discovery messages.
    Because this port is unique in a device, this is a function of the
@@ -861,6 +887,16 @@ Internet-Draft                    GRASP                        July 2017
    SHOULD NOT respond with a cached response on an interface if it
    learnt that information from the same interface, because the peer in
    question will answer directly if still operational.
+
+
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 16]
+
+Internet-Draft                    GRASP                        July 2017
+
 
    If a device has no information about the requested discovery
    objective, and is not acting as a discovery relay (see below) it MUST
@@ -890,14 +926,6 @@ Internet-Draft                    GRASP                        July 2017
    lifetime is derived from a time-to-live (ttl) parameter in each
    Discovery Response message.  Cached entries MUST be ignored or
    deleted after their lifetime expires.  In some environments,
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 16]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    unplanned address renumbering might occur.  In such cases, the
    lifetime SHOULD be short compared to the typical address lifetime.
    The discovery mechanism needs to track the node's current address to
@@ -914,6 +942,17 @@ Internet-Draft                    GRASP                        July 2017
    be repeated.  If an ASA exits for any reason, its locator might still
    be cached for some time, and attempts to connect to it will fail.
    ASAs need to be robust in these circumstances.
+
+
+
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 17]
+
+Internet-Draft                    GRASP                        July 2017
+
 
 2.5.4.4.  Discovery Relaying
 
@@ -946,14 +985,6 @@ Internet-Draft                    GRASP                        July 2017
    messages during normal operation.  The relaying instance MUST cache
    the Session ID value and initiator address of each relayed Discovery
    message until any Discovery Responses have arrived or the discovery
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 17]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    process has timed out.  To prevent loops, it MUST NOT relay a
    Discovery message which carries a given cached Session ID and
    initiator address more than once.  These precautions avoid discovery
@@ -967,6 +998,17 @@ Internet-Draft                    GRASP                        July 2017
    The discovery results received by the relaying instance MUST in turn
    be sent as a Discovery Response message to the Discovery message that
    caused the relay action.
+
+
+
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 18]
+
+Internet-Draft                    GRASP                        July 2017
+
 
 2.5.4.5.  Rapid Mode (Discovery with Negotiation or Synchronization )
 
@@ -1001,15 +1043,6 @@ Internet-Draft                    GRASP                        July 2017
    details of the backoff algorithm will depend on the use case for the
    objective concerned.
 
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 18]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    If the counterpart can immediately apply the requested configuration,
    it will give an immediate positive (O_ACCEPT) answer (using M_END).
    This will end the negotiation phase immediately.  Otherwise, it will
@@ -1025,6 +1058,14 @@ Internet-Draft                    GRASP                        July 2017
    from the negotiation peer.  Negotiation may also end in failure
    (equivalent to a decline) if a timeout is exceeded or a loop count is
    exceeded.  When the procedure ends for whatever reason, the transport
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 19]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    connection SHOULD be closed.  A transport session failure is treated
    as a negotiation failure.
 
@@ -1059,13 +1100,6 @@ Internet-Draft                    GRASP                        July 2017
    that does not support rapid mode, before such a Negotiation message
    arrives.  In this case, rapid mode will not occur.
 
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 19]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    This rapid mode could reduce the interactions between nodes so that a
    higher efficiency could be achieved.  However, a network in which
    some nodes support rapid mode and others do not will have complex
@@ -1080,6 +1114,14 @@ Internet-Draft                    GRASP                        July 2017
    counterpart ASA using the address, protocol and port obtained during
    discovery.  It then sends a synchronization request (using M_REQ_SYN)
    to the counterpart, including a specific synchronization objective.
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 20]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    The counterpart responds with a Synchronization message (M_SYNCH,
    Section 2.8.10) containing the current value of the requested
    synchronization objective.  No further messages are needed and the
@@ -1113,15 +1155,6 @@ Internet-Draft                    GRASP                        July 2017
    Also, a suitable mechanism is needed to avoid excessive multicast
    traffic.  This mechanism MUST be defined as part of the specification
    of the synchronization objective(s) concerned.  It might be a simple
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 20]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    rate limit or a more complex mechanism such as the Trickle algorithm
    [RFC6206].
 
@@ -1136,6 +1169,15 @@ Internet-Draft                    GRASP                        July 2017
 
    Link-layer Flooding is supported by GRASP by setting the loop count
    to 1, and sending with a link-local source address.  Floods with
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 21]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    link-local source addresses and a loop count other than 1 are
    invalid, and such messages MUST be discarded.
 
@@ -1169,15 +1211,6 @@ Internet-Draft                    GRASP                        July 2017
    there is an operational ACP or equivalent strong security in place.
    However, because of the security weakness of link-local multicast
    (Section 4), synchronization objectives that are flooded SHOULD NOT
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 21]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    contain unencrypted private information and SHOULD be validated by
    the recipient ASA.
 
@@ -1191,6 +1224,15 @@ Internet-Draft                    GRASP                        July 2017
    rapid processing, if the discovery target supports the corresponding
    synchronization objective.  The design implications are similar to
    those discussed in Section 2.5.5.1.
+
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 22]
+
+Internet-Draft                    GRASP                        July 2017
+
 
    It is possible that a Discovery Response will arrive from a responder
    that does not support rapid mode, before such a Synchronization
@@ -1225,15 +1267,6 @@ Internet-Draft                    GRASP                        July 2017
 
    o  GRASP_DEF_TIMEOUT (60000 milliseconds)
 
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 22]
-
-Internet-Draft                    GRASP                        July 2017
-
-
       The default timeout used to determine that an operation has failed
       to complete.
 
@@ -1245,6 +1278,17 @@ Internet-Draft                    GRASP                        July 2017
    o  GRASP_DEF_MAX_SIZE (2048)
 
       The default maximum message size in bytes.
+
+
+
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 23]
+
+Internet-Draft                    GRASP                        July 2017
+
 
 2.7.  Session Identifier (Session ID)
 
@@ -1281,15 +1325,6 @@ Internet-Draft                    GRASP                        July 2017
    might lead to the two sessions being confused.  See Section 2.8.6 for
    details of how to avoid this.
 
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 23]
-
-Internet-Draft                    GRASP                        July 2017
-
-
 2.8.  GRASP Messages
 
 2.8.1.  Message Overview
@@ -1303,6 +1338,13 @@ Internet-Draft                    GRASP                        July 2017
 
       Request Negotiation, Negotiation, Confirm Waiting and Negotiation
       End (M_REQ_NEG, M_NEGOTIATE, M_WAIT, M_END).
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 24]
+
+Internet-Draft                    GRASP                        July 2017
+
 
       Request Synchronization, Synchronization, and Flood
       Synchronization (M_REQ_SYN, M_SYNCH, M_FLOOD.
@@ -1339,13 +1381,6 @@ Internet-Draft                    GRASP                        July 2017
    the expected options.  Any options received that are not consistent
    with the MESSAGE_TYPE SHOULD be silently discarded.
 
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 24]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    The No Operation (noop) message is described in Section 2.8.13.
 
    The various MESSAGE_TYPE values are defined in Section 5.
@@ -1358,6 +1393,14 @@ Internet-Draft                    GRASP                        July 2017
    message MAY be logged and MUST be discarded.  If an unrecognized
    MESSAGE_TYPE is received in a multicast message, it MAY be logged and
    MUST be silently discarded.
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 25]
+
+Internet-Draft                    GRASP                        July 2017
+
 
 2.8.3.  Message Size
 
@@ -1394,14 +1437,6 @@ Internet-Draft                    GRASP                        July 2017
    sending the Discovery UDP multicast, on a given interface.  In an
    implementation with a single GRASP instance in a node this MAY be
    GRASP_LISTEN_PORT.  To support multiple instances in the same node,
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 25]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    the GRASP discovery mechanism in each instance needs to find, for
    each interface, a dynamic port that it can bind to for both sending
    UDP link-local multicast and listening for TCP, before initiating any
@@ -1414,6 +1449,14 @@ Internet-Draft                    GRASP                        July 2017
    purpose that is highly likely to be unique, for example using
    [RFC7217].  Determination of a node's globally unique IP address is
    implementation-dependent.
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 26]
+
+Internet-Draft                    GRASP                        July 2017
+
 
    A Discovery message MUST include exactly one of the following:
 
@@ -1448,16 +1491,6 @@ Internet-Draft                    GRASP                        July 2017
    In fragmentary CDDL, a Discovery Response message follows the
    pattern:
 
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 26]
-
-Internet-Draft                    GRASP                        July 2017
-
-
      response-message = [M_RESPONSE, session-id, initiator, ttl,
                         (+locator-option // divert-option), ?objective)]
 
@@ -1472,6 +1505,15 @@ Internet-Draft                    GRASP                        July 2017
       It MUST contain a time-to-live (ttl) for the validity of the
       response, given as a positive integer value in milliseconds.  Zero
       implies a value significantly greater than GRASP_DEF_TIMEOUT
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 27]
+
+Internet-Draft                    GRASP                        July 2017
+
+
       milliseconds (Section 2.6).  A suggested value is ten times that
       amount.
 
@@ -1503,17 +1545,6 @@ Internet-Draft                    GRASP                        July 2017
    More details on the processing of Discovery Responses are given in
    Section 2.5.4.
 
-
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 27]
-
-Internet-Draft                    GRASP                        July 2017
-
-
 2.8.6.  Request Messages
 
    In fragmentary CDDL, Request Negotiation and Request Synchronization
@@ -1530,6 +1561,14 @@ Internet-Draft                    GRASP                        July 2017
    or synchronization counterpart, using the appropriate protocol and
    port numbers (selected from the discovery result).  If the discovery
    result is an FQDN, it will be resolved first.
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 28]
+
+Internet-Draft                    GRASP                        July 2017
+
 
    A Request message MUST include the relevant objective option.  In the
    case of Request Negotiation, the objective option MUST include the
@@ -1562,14 +1601,6 @@ Internet-Draft                    GRASP                        July 2017
    simultaneously request sessions with each other using the same
    Session ID (Section 2.7), when a node receives a Request message, it
    MUST verify that the received Session ID is not already locally
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 28]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    active.  In case of a clash, it MUST discard the Request message, in
    which case the initiator will detect a timeout.
 
@@ -1587,6 +1618,14 @@ Internet-Draft                    GRASP                        July 2017
    The Negotiation message MUST include the relevant Negotiation
    Objective option, with its value updated according to progress in the
    negotiation.  The sender MUST decrement the loop count by 1.  If the
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 29]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    loop count becomes zero the message MUST NOT be sent.  In this case
    the negotiation session has failed and will time out.
 
@@ -1618,14 +1657,6 @@ Internet-Draft                    GRASP                        July 2017
 
    The responding node SHOULD send a Negotiation, Negotiation End or
    another Confirm Waiting message before the negotiation timer expires.
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 29]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    If not, when the initiator's timer expires, the initiator MUST treat
    the negotiation procedure as failed.
 
@@ -1640,6 +1671,16 @@ Internet-Draft                    GRASP                        July 2017
    with the synchronization data, in the form of a GRASP Option for the
    specific synchronization objective present in the Request
    Synchronization.
+
+
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 30]
+
+Internet-Draft                    GRASP                        July 2017
+
 
 2.8.11.  Flood Synchronization Message
 
@@ -1674,14 +1715,6 @@ Internet-Draft                    GRASP                        July 2017
 
    A node that receives a Flood Synchronization message MUST cache the
    received objectives for use by local ASAs.  Each cached objective
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 30]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    MUST be tagged with the locator option sent with it, or with a null
    tag if an empty locator option was sent.  If a subsequent Flood
    Synchronization message carrying an objective with same name and the
@@ -1696,6 +1729,14 @@ Internet-Draft                    GRASP                        July 2017
    protocol and port included in the locator option.  Many objectives
    will not need this mechanism, so they will be flooded with a null
    locator.
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 31]
+
+Internet-Draft                    GRASP                        July 2017
+
 
    Cached entries MUST be ignored or deleted after their lifetime
    expires.
@@ -1728,16 +1769,6 @@ Internet-Draft                    GRASP                        July 2017
    reasons needs to initialize a socket.  It MUST be silently ignored by
    a recipient.
 
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 31]
-
-Internet-Draft                    GRASP                        July 2017
-
-
 2.9.  GRASP Options
 
    This section defines the GRASP options for the negotiation and
@@ -1754,6 +1785,14 @@ Internet-Draft                    GRASP                        July 2017
    limit overhead.
 
    GRASP options may be defined to include encapsulated GRASP options.
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 32]
+
+Internet-Draft                    GRASP                        July 2017
+
 
 2.9.2.  Divert Option
 
@@ -1787,13 +1826,6 @@ Internet-Draft                    GRASP                        July 2017
 
      accept-option = [O_ACCEPT]
 
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 32]
-
-Internet-Draft                    GRASP                        July 2017
-
-
 2.9.4.  Decline Option
 
    The decline option is used to indicate to the negotiation counterpart
@@ -1810,6 +1842,14 @@ Internet-Draft                    GRASP                        July 2017
 
    Note: there might be scenarios where an ASA wants to decline the
    proposed value and restart the negotiation process.  In this case it
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 33]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    is an implementation choice whether to send a Decline option or to
    continue with a Negotiate message, with an objective option that
    contains a null value, or one that contains a new value that might
@@ -1837,19 +1877,6 @@ Internet-Draft                    GRASP                        July 2017
 
    In fragmentary CDDL, the IPv6 address option follows the pattern:
 
-
-
-
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 33]
-
-Internet-Draft                    GRASP                        July 2017
-
-
      ipv6-locator-option = [O_IPv6_LOCATOR, ipv6-address,
                             transport-proto, port-number]
      ipv6-address = bytes .size 16
@@ -1870,6 +1897,14 @@ Internet-Draft                    GRASP                        July 2017
 
    Note 2: A link-local IPv6 address MUST NOT be used when this option
    is included in a Divert option.
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 34]
+
+Internet-Draft                    GRASP                        July 2017
+
 
    Note 3: The IPPROTO values are taken from the existing IANA Protocol
    Numbers registry in order to specify TCP or UDP.  If GRASP requires
@@ -1897,15 +1932,6 @@ Internet-Draft                    GRASP                        July 2017
      fqdn-locator-option = [O_FQDN_LOCATOR, text,
                             transport-proto, port-number]
 
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 34]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    The content of this option is the Fully Qualified Domain Name of the
    target followed by the protocol number and port number to be used.
 
@@ -1927,6 +1953,14 @@ Internet-Draft                    GRASP                        July 2017
    The content of this option is the Uniform Resource Identifier of the
    target followed by the protocol number and port number to be used (or
    by null values if not required) [RFC3986].
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 35]
+
+Internet-Draft                    GRASP                        July 2017
+
 
    Note 1: Any URI which might not be valid throughout the network in
    question, such as one based on a Multicast DNS name [RFC6762], MUST
@@ -1954,14 +1988,6 @@ Internet-Draft                    GRASP                        July 2017
    All objectives are identified by a unique name which is a UTF-8
    string [RFC3629], to be compared byte by byte.
 
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 35]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    The names of generic objectives MUST NOT include a colon (":") and
    MUST be registered with IANA (Section 6).
 
@@ -1985,6 +2011,13 @@ Internet-Draft                    GRASP                        July 2017
    For example, "EX1", "32473:EX1", "example.com:EX1", "example.org:EX1
    and "user@example.org:EX1" would be five different objectives.
 
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 36]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    The 'objective-flags' field is described below.
 
    The 'loop-count' field is used for terminating negotiation as
@@ -2006,17 +2039,6 @@ Internet-Draft                    GRASP                        July 2017
    An objective may be relevant for discovery only, for discovery and
    negotiation, or for discovery and synchronization.  This is expressed
    in the objective by logical flag bits:
-
-
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 36]
-
-Internet-Draft                    GRASP                        July 2017
-
 
      objective-flags = uint .bits objective-flag
      objective-flag = &(
@@ -2044,6 +2066,14 @@ Internet-Draft                    GRASP                        July 2017
    Names are expressed as UTF-8 strings for convenience in designing
    Objective Options for localized use.  For generic usage, names
    expressed in the ASCII subset of UTF-8 are RECOMMENDED.  Designers
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 37]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    planning to use non-ASCII names are strongly advised to consult
    [RFC7564] or its successor to understand the complexities involved.
    Since the GRASP protocol compares names byte by byte, all issues of
@@ -2064,15 +2094,6 @@ Internet-Draft                    GRASP                        July 2017
    only.  The negotiation initiator MUST set the initial "loop-count" to
    a value specified in the specification of the objective or, if no
    such value is specified, to GRASP_DEF_LOOPCT.
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 37]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    For most scenarios, there should be initial values in the negotiation
    requests.  Consequently, the Negotiation Objective options MUST
@@ -2102,6 +2123,13 @@ Internet-Draft                    GRASP                        July 2017
    negotiation objectives into a single option, nor to split a single
    function or action into multiple negotiation objectives.
 
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 38]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    It is important to understand that GRASP negotiation does not support
    transactional integrity.  If transactional integrity is needed for a
    specific objective, this must be ensured by the ASA.  For example, an
@@ -2120,15 +2148,6 @@ Internet-Draft                    GRASP                        July 2017
    explained in Section 2.5.5.  The semantics of such modes will be
    defined in the specification of the objectives.  These objectives
    SHOULD include flags indicating the applicable mode(s).
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 38]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    An issue requiring particular attention is that GRASP itself is not a
    transactionally safe protocol.  Any state associated with a dry run
@@ -2159,6 +2178,14 @@ Internet-Draft                    GRASP                        July 2017
 
    Normally, a GRASP objective will refer to specific technical
    parameters as explained in Section 2.1.  However, it is acceptable to
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 39]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    define an abstract objective for the purpose of managing or
    coordinating ASAs.  It is also acceptable to define a special-purpose
    objective for purposes such as trust bootstrapping or formation of
@@ -2175,16 +2202,6 @@ Internet-Draft                    GRASP                        July 2017
    (e.g., deadlock resolution, tie-breaking, or revert to best-effort
    service).  This MUST be specified for individual negotiation
    objectives.
-
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 39]
-
-Internet-Draft                    GRASP                        July 2017
-
 
 2.10.5.  Experimental and Example Objective Options
 
@@ -2217,6 +2234,14 @@ Internet-Draft                    GRASP                        July 2017
 
       *  Not support CBOR
 
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 40]
+
+Internet-Draft                    GRASP                        July 2017
+
+
       *  Not support Flooding
 
       *  Not support loop avoidance
@@ -2230,17 +2255,6 @@ Internet-Draft                    GRASP                        July 2017
 
    o  Contact: https://github.com/liubingpang/IETF-Anima-Signaling-
       Protocol
-
-
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 40]
-
-Internet-Draft                    GRASP                        July 2017
-
 
 3.2.  Python Implementation
 
@@ -2275,6 +2289,15 @@ Internet-Draft                    GRASP                        July 2017
 
    o  Licensing: Simplified BSD
 
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 41]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    o  Experience: Tested on Windows, Linux and MacOS.
       https://www.cs.auckland.ac.nz/~brian/graspy/graspy.pdf
 
@@ -2289,14 +2312,6 @@ Internet-Draft                    GRASP                        July 2017
    in Section 2.5.1, GRASP MUST run within a secure environment such as
    the Autonomic Control Plane [I-D.ietf-anima-autonomic-control-plane],
    except for the constrained instances described in Section 2.5.2.
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 41]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    - Authentication
 
@@ -2331,6 +2346,14 @@ Internet-Draft                    GRASP                        July 2017
       modify a given objective, but this may not be appropriate in all
       cases.  For example, it might be operationally useful to allow an
       old and a new version of the same ASA to run simultaneously during
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 42]
+
+Internet-Draft                    GRASP                        July 2017
+
+
       an overlap period.  These questions are out of scope for the
       present specification.
 
@@ -2346,14 +2369,6 @@ Internet-Draft                    GRASP                        July 2017
       Operators generally want to conceal details of their network
       topology and traffic density from outsiders.  Therefore, since
       insider attacks cannot be excluded in a large network, the
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 42]
-
-Internet-Draft                    GRASP                        July 2017
-
-
       security mechanism for the protocol MUST provide message
       confidentiality.  This is why Section 2.5.1 requires either an ACP
       or an alternative security mechanism.
@@ -2388,6 +2403,13 @@ Internet-Draft                    GRASP                        July 2017
 
    - Security during bootstrap and discovery
 
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 43]
+
+Internet-Draft                    GRASP                        July 2017
+
+
       A node cannot trust GRASP traffic from other nodes until the
       security environment (such as the ACP) has identified the trust
       anchor and can authenticate traffic by validating certificates for
@@ -2400,15 +2422,6 @@ Internet-Draft                    GRASP                        July 2017
       are given in Section 2.5.2.
 
    - Security of discovered locators
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 43]
-
-Internet-Draft                    GRASP                        July 2017
-
 
       When GRASP discovery returns an IP address, it MUST be that of a
       node within the secure environment (Section 2.5.1).  If it returns
@@ -2445,6 +2458,14 @@ message /= request-negotiation-message
 request-negotiation-message = [M_REQ_NEG, session-id, objective]
 
 message /= request-synchronization-message
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 44]
+
+Internet-Draft                    GRASP                        July 2017
+
+
 request-synchronization-message = [M_REQ_SYN, session-id, objective]
 
 message /= negotiation-message
@@ -2458,13 +2479,6 @@ wait-message = [M_WAIT, session-id, waiting-time]
 
 message /= invalid-message
 invalid-message = [M_INVALID, session-id, ?any]
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 44]
-
-Internet-Draft                    GRASP                        July 2017
-
 
 noop-message = [M_NOOP]
 
@@ -2500,6 +2514,14 @@ initiator = ipv4-address / ipv6-address
 
 objective-flags = uint .bits objective-flag
 
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 45]
+
+Internet-Draft                    GRASP                        July 2017
+
+
 objective-flag = &(
   F_DISC: 0    ; valid for discovery
   F_NEG: 1     ; valid for negotiation
@@ -2514,13 +2536,6 @@ objective-name = text ;see section "Format of Objective Options"
 objective-value = any
 
 loop-count = 0..255
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 45]
-
-Internet-Draft                    GRASP                        July 2017
-
 
 ; Constants for message types and option types
 
@@ -2556,6 +2571,13 @@ O_URI_LOCATOR = 106
    ALL_GRASP_NEIGHBORS multicast address  (IPv6): (TBD1).  Assigned in
       the IPv6 Link-Local Scope Multicast Addresses registry.
 
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 46]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    ALL_GRASP_NEIGHBORS multicast address  (IPv4): (TBD2).  Assigned in
       the IPv4 Multicast Local Network Control Block.
 
@@ -2569,14 +2591,6 @@ O_URI_LOCATOR = 106
    Contact: chair@ietf.org
    Description: See Section 2.6
    Reference: RFC XXXX (this document)
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 46]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    The IANA is requested to create a GRASP Parameter Registry including
    two registry tables.  These are the GRASP Messages and Options
@@ -2612,6 +2626,14 @@ Internet-Draft                    GRASP                        July 2017
    Section 2.10.1.  Future values MUST be assigned using the
    Specification Required policy defined by [RFC8126].
 
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 47]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    To assist expert review of a new objective, the specification should
    include a precise description of the format of the new objective,
    with sufficient explanation of its semantics to allow independent
@@ -2621,18 +2643,6 @@ Internet-Draft                    GRASP                        July 2017
    justified.
 
    The following initial values are assigned by this document:
-
-
-
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 47]
-
-Internet-Draft                    GRASP                        July 2017
-
 
     EX0
     EX1
@@ -2671,6 +2681,15 @@ Internet-Draft                    GRASP                        July 2017
               express CBOR data structures", draft-greevenbosch-appsawg-
               cbor-cddl-11 (work in progress), July 2017.
 
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 48]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    [I-D.ietf-anima-autonomic-control-plane]
               Behringer, M., Eckert, T., and S. Bjarnason, "An Autonomic
               Control Plane", draft-ietf-anima-autonomic-control-
@@ -2680,15 +2699,6 @@ Internet-Draft                    GRASP                        July 2017
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 48]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    [RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO
               10646", STD 63, RFC 3629, DOI 10.17487/RFC3629, November
@@ -2725,6 +2735,17 @@ Internet-Draft                    GRASP                        July 2017
               Service Agents", draft-carpenter-anima-asa-guidelines-02
               (work in progress), July 2017.
 
+
+
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 49]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    [I-D.chaparadza-intarea-igcp]
               Behringer, M., Chaparadza, R., Petre, R., Li, X., and H.
               Mahkonen, "IP based Generic Control Protocol (IGCP)",
@@ -2736,15 +2757,6 @@ Internet-Draft                    GRASP                        July 2017
               S., and K. Watsen, "Bootstrapping Remote Secure Key
               Infrastructures (BRSKI)", draft-ietf-anima-bootstrapping-
               keyinfra-07 (work in progress), July 2017.
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 49]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    [I-D.ietf-anima-reference-model]
               Behringer, M., Carpenter, B., Eckert, T., Ciavaglia, L.,
@@ -2779,6 +2791,17 @@ Internet-Draft                    GRASP                        July 2017
               DOI 10.17487/RFC2334, April 1998,
               <http://www.rfc-editor.org/info/rfc2334>.
 
+
+
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 50]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    [RFC2608]  Guttman, E., Perkins, C., Veizades, J., and M. Day,
               "Service Location Protocol, Version 2", RFC 2608,
               DOI 10.17487/RFC2608, June 1999,
@@ -2793,14 +2816,6 @@ Internet-Draft                    GRASP                        July 2017
               C., and M. Carney, "Dynamic Host Configuration Protocol
               for IPv6 (DHCPv6)", RFC 3315, DOI 10.17487/RFC3315, July
               2003, <http://www.rfc-editor.org/info/rfc3315>.
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 50]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    [RFC3416]  Presuhn, R., Ed., "Version 2 of the Protocol Operations
               for the Simple Network Management Protocol (SNMP)",
@@ -2834,6 +2849,15 @@ Internet-Draft                    GRASP                        July 2017
               (NETCONF)", RFC 6241, DOI 10.17487/RFC6241, June 2011,
               <http://www.rfc-editor.org/info/rfc6241>.
 
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 51]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    [RFC6733]  Fajardo, V., Ed., Arkko, J., Loughney, J., and G. Zorn,
               Ed., "Diameter Base Protocol", RFC 6733,
               DOI 10.17487/RFC6733, October 2012,
@@ -2846,17 +2870,6 @@ Internet-Draft                    GRASP                        July 2017
    [RFC6763]  Cheshire, S. and M. Krochmal, "DNS-Based Service
               Discovery", RFC 6763, DOI 10.17487/RFC6763, February 2013,
               <http://www.rfc-editor.org/info/rfc6763>.
-
-
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 51]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    [RFC6887]  Wing, D., Ed., Cheshire, S., Boucadair, M., Penno, R., and
               P. Selkirk, "Port Control Protocol (PCP)", RFC 6887,
@@ -2894,6 +2907,13 @@ Internet-Draft                    GRASP                        July 2017
               Control Protocol", RFC 7788, DOI 10.17487/RFC7788, April
               2016, <http://www.rfc-editor.org/info/rfc7788>.
 
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 52]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    [RFC8040]  Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
               Protocol", RFC 8040, DOI 10.17487/RFC8040, January 2017,
               <http://www.rfc-editor.org/info/rfc8040>.
@@ -2902,17 +2922,6 @@ Internet-Draft                    GRASP                        July 2017
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
               <http://www.rfc-editor.org/info/rfc8126>.
-
-
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 52]
-
-Internet-Draft                    GRASP                        July 2017
-
 
 Appendix A.  Open Issues [RFC Editor: This section should be empty.
              Please remove]
@@ -2953,6 +2962,14 @@ Appendix B.  Closed Issues [RFC Editor: Please remove]
       *  2.1.  For replay protection, GRASP currently requires every
          participant to have an NTP-synchronized clock.  Is this OK for
          low-end devices, and how does it work during device
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 53]
+
+Internet-Draft                    GRASP                        July 2017
+
+
          bootstrapping?  We could take the Timestamp out of signature
          option, to become an independent and OPTIONAL (or RECOMMENDED)
          option.
@@ -2961,14 +2978,6 @@ Appendix B.  Closed Issues [RFC Editor: Please remove]
          place in a message.  Wouldn't it be better to specify a
          position (such as the end)?  That would be much simpler to
          implement.
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 53]
-
-Internet-Draft                    GRASP                        July 2017
-
 
       RESOLVED by changing security model.
 
@@ -3008,6 +3017,15 @@ Internet-Draft                    GRASP                        July 2017
 
       RESOLVED: recommend a separate document.
 
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 54]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    o  7.  Cross-check against other ANIMA WG documents for consistency
       and gaps.
 
@@ -3017,14 +3035,6 @@ Internet-Draft                    GRASP                        July 2017
 
       RESOLVED by adding optional use of DNCP for flooding-type
       synchronization.
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 54]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    o  9.  Clarify how a GDNP instance knows whether it is running inside
       the ACP.  (Sheng)
@@ -3063,6 +3073,15 @@ Internet-Draft                    GRASP                        July 2017
 
       RESOLVED: Yes, added to requirements and solution.
 
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 55]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    o  15.  Do we need flag bits in Objective Options to distinguish
       distinguish Synchronization and Negotiation "Request" or rapid
       mode "Discovery" messages?  (Bing)
@@ -3073,15 +3092,6 @@ Internet-Draft                    GRASP                        July 2017
    o  16.  (Related to issue 14).  Should we revive the "unsolicited
       Response" for flooding synchronisation data?  This has to be done
       carefully due to the well-known issues with flooding, but it could
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 55]
-
-Internet-Draft                    GRASP                        July 2017
-
-
       be useful, e.g. for Intent distribution, where DNCP doesn't seem
       applicable.
 
@@ -3120,6 +3130,14 @@ Internet-Draft                    GRASP                        July 2017
 
       RESOLVED: Added hop limit.
 
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 56]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    o  23.  Need more details on TTL for caching discovery responses.
 
       RESOLVED: Done.
@@ -3129,14 +3147,6 @@ Internet-Draft                    GRASP                        July 2017
       RESOLVED: This doesn't seem necessary.  If an ASA exits or stops
       supporting a given objective, peers will fail to start future
       sessions and will simply repeat discovery.
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 56]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    o  25.  Does GDNP discovery meet the needs of multi-hop DNS-SD?
 
@@ -3176,6 +3186,14 @@ Internet-Draft                    GRASP                        July 2017
       synchronization.  Do we also need selective flooding to a subset
       of nodes?
 
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 57]
+
+Internet-Draft                    GRASP                        July 2017
+
+
       RESOLVED: This will be discussed as a protocol extension in a
       separate draft (draft-liu-anima-grasp-distribution).
 
@@ -3186,13 +3204,6 @@ Internet-Draft                    GRASP                        July 2017
    o  34.  Clarify what is mandatory for running in ACP, expand
       discussion of security boundary when running with no ACP - might
       rely on the local PKI infrastructure.
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 57]
-
-Internet-Draft                    GRASP                        July 2017
-
 
       RESOLVED: Done.
 
@@ -3231,6 +3242,14 @@ Internet-Draft                    GRASP                        July 2017
       simply pass the discovery results to the ASA so that it can open
       its own socket?
 
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 58]
+
+Internet-Draft                    GRASP                        July 2017
+
+
       RESOLVED: Both would be possible, but (b) is preferred.
 
    o  42.  Do we need a feature whereby an ASA can bypass the ACP and
@@ -3240,15 +3259,6 @@ Internet-Draft                    GRASP                        July 2017
 
       RESOLVED: This is considered out of scope for GRASP, but a comment
       has been added in security considerations.
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 58]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    o  43.  Rapid mode synchronization and negotiation is currently
       limited to a single objective for simplicity of design and
@@ -3289,6 +3299,13 @@ Internet-Draft                    GRASP                        July 2017
 
       RESOLVED: No (per WG meeting at IETF 96).
 
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 59]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    o  49.  Section 2.5.1 Should say more about signaling between two
       autonomic networks/domains.
 
@@ -3297,14 +3314,6 @@ Internet-Draft                    GRASP                        July 2017
    o  50.  Is Rapid mode limited to on-link only?  What happens if first
       discovery responder does not support Rapid Mode?  Section 2.5.5,
       Section 2.5.6)
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 59]
-
-Internet-Draft                    GRASP                        July 2017
-
 
       RESOLVED: Not limited to on-link.  First responder wins.
 
@@ -3345,6 +3354,14 @@ Internet-Draft                    GRASP                        July 2017
 
    o  58.  Maximum message size?
 
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 60]
+
+Internet-Draft                    GRASP                        July 2017
+
+
       RESOLVED by specifying default maximum message size (2048 bytes).
 
    o  59.  Add F_NEG_DRY flag to specify a "dry run" objective?.
@@ -3353,14 +3370,6 @@ Internet-Draft                    GRASP                        July 2017
 
    o  60.  Change M_FLOOD syntax to associate a locator with each
       objective?
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 60]
-
-Internet-Draft                    GRASP                        July 2017
-
 
       RESOLVED: Done.
 
@@ -3397,7 +3406,34 @@ Internet-Draft                    GRASP                        July 2017
 
       RESOLVED: No, on AD advice.  In worst case, fix at AUTH48.
 
+
+
+
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 61]
+
+Internet-Draft                    GRASP                        July 2017
+
+
 Appendix C.  Change log [RFC Editor: Please remove]
+
+   draft-ietf-anima-grasp-14, 2017-07-02:
+
+   Updates following additional IESG comments:
+
+   Security (Eric Rescorla): missing brittleness of group security
+   concept, attack via compromised member.
+
+   TSV (Mirja Kuehlewind): clarification on the use of UDP, TCP, mandate
+   use of TCP (or other reliable transport).
+
+   Clarified that in ACP, UDP is not used at all.
+
+   Clarified that GRASP itself needs TCP listen port (was previously
+   written as if this was optional).
 
    draft-ietf-anima-grasp-14, 2017-07-02:
 
@@ -3409,14 +3445,6 @@ Appendix C.  Change log [RFC Editor: Please remove]
    Strengthened requirement for reliable transport protocol.
 
    draft-ietf-anima-grasp-13, 2017-06-06:
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 61]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    Updates following additional IESG comments:
 
@@ -3438,6 +3466,13 @@ Internet-Draft                    GRASP                        July 2017
    Noted that IPPROTO values come from the Protocol Numbers registry
 
    Protocol change: Added protocol and port numbers to URI locator.
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 62]
+
+Internet-Draft                    GRASP                        July 2017
+
 
    Removed inaccurate text about routing protocols
 
@@ -3466,14 +3501,6 @@ Internet-Draft                    GRASP                        July 2017
 
    Editorial clarifications
 
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 62]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    draft-ietf-anima-grasp-11, 2017-03-30:
 
    Updates following IETF 98 discussion:
@@ -3495,6 +3522,13 @@ Internet-Draft                    GRASP                        July 2017
    Noted that UTF-8 names are matched byte-for-byte.
 
    Added brief guidance for Expert Reviewer of new generic objectives.
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 63]
+
+Internet-Draft                    GRASP                        July 2017
+
 
    Numerous editorial improvements and clarifications and minor text
    rearrangements, none intended to change the meaning.
@@ -3522,14 +3556,6 @@ Internet-Draft                    GRASP                        July 2017
 
    Dropped the word 'kernel' to avoid confusion with o/s kernel mode.
 
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 63]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    Editorial improvements and clarifications.
 
    draft-ietf-anima-grasp-08, 2016-10-30:
@@ -3551,6 +3577,14 @@ Internet-Draft                    GRASP                        July 2017
    Response.
 
    Noted that Discovery message could be sent unicast in special cases.
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 64]
+
+Internet-Draft                    GRASP                        July 2017
+
 
    Added paragraph on extensibility.
 
@@ -3579,13 +3613,6 @@ Internet-Draft                    GRASP                        July 2017
 
    Strengthened advice to use TCP rather than UDP.
 
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 64]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    Updated IANA considerations and text about well-known port usage
    (issue 53).
 
@@ -3606,6 +3633,14 @@ Internet-Draft                    GRASP                        July 2017
    Added text on unexpected address changes.
 
    Added text on robust implementation.
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 65]
+
+Internet-Draft                    GRASP                        July 2017
+
 
    Clarifications and editorial fixes for numerous review comments
 
@@ -3634,14 +3669,6 @@ Internet-Draft                    GRASP                        July 2017
 
    draft-ietf-anima-grasp-04, 2016-03-11:
 
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 65]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    Protocol change: Restored initiator field in certain messages and
    adjusted relaying rules to provide complete loop detection.
 
@@ -3662,6 +3689,14 @@ Internet-Draft                    GRASP                        July 2017
    Further clarified text on transport layer usage.
 
    New text about multicast insecurity in Security Considerations.
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 66]
+
+Internet-Draft                    GRASP                        July 2017
+
 
    Various other clarifications and editorial fixes, including moving
    some material to Appendix.
@@ -3688,16 +3723,6 @@ Internet-Draft                    GRASP                        July 2017
 
    Protocol change: Added SYNCH message to simplify coding.
 
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 66]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    Protocol change: Added initiator id to DISCOVER, RESPONSE and FLOOD
    messages.  But also allowed the relay process for DISCOVER and FLOOD
    to regenerate a Session ID.
@@ -3722,6 +3747,13 @@ Internet-Draft                    GRASP                        July 2017
 
    Updated requirements after list discussion.
 
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 67]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    Changed from TLV to CBOR format - many detailed changes, added co-
    author.
 
@@ -3745,14 +3777,6 @@ Internet-Draft                    GRASP                        July 2017
 
    Reformulated requirements to be clear that the ASA is the main
    customer for signaling.
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 67]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    Added requirement for flooding unsolicited synch, and added it to
    protocol spec.  Recognized DNCP as alternative for flooding synch
@@ -3779,6 +3803,13 @@ Internet-Draft                    GRASP                        July 2017
 
    Format changes to allow DNCP co-existence
 
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 68]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    Recognized DNS-SD as alternative discovery method.
 
    Editorial improvements
@@ -3802,13 +3833,6 @@ Internet-Draft                    GRASP                        July 2017
    Provided for missing or multiple discovery responses,
 
    Indicated how modes such as "dry run" should be supported,
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 68]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    Minor editorial and technical corrections and clarifications,
 
@@ -3835,6 +3859,13 @@ Appendix D.  Example Message Formats
    2.  Similar, but showing the names of the constants.  (Details of the
        flag bit encoding are omitted.)
 
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 69]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    3.  Hexadecimal version of the CBOR wire format.
 
    Long lines are split for display purposes only.
@@ -3851,20 +3882,6 @@ D.1.  Discovery Example
 
    A peer (2001:0db8:f000:baaa:f000:baaa:f000:baaa) responds with a
    locator:
-
-
-
-
-
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 69]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    [2, 13948744, h'20010db8f000baaa28ccdc4c97036781', 60000,
                  [103, h'20010db8f000baaaf000baaaf000baaa', 6, 49443]]
@@ -3897,6 +3914,14 @@ D.3.  Synchronization Example
 
    The peer responds with a value:
 
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 70]
+
+Internet-Draft                    GRASP                        July 2017
+
+
  [8, 4038926, ["EX2", 5, 5, ["Example 2 value=", 200]]]
  [M_SYNCH, 4038926, ["EX2", F_SYNCH_bits, 5, ["Example 2 value=", 200]]]
  h'83081a003da10e8463455832050582704578616d706c6520322076616c75653d18c8'
@@ -3913,14 +3938,6 @@ D.4.  Simple Negotiation Example
    The peer responds with immediate acceptance.  Note that no objective
    is needed, because the initiator's request was accepted without
    change:
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 70]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    [6, 802813, [101]]
    [M_END , 802813, [O_ACCEPT]]
@@ -3953,6 +3970,14 @@ D.5.  Complete Negotiation Example
    [M_WAIT, 13767778, 34965]
    h'83071a00d21462198895'
 
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 71]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    The responder continues to negotiate (increasing its offer):
 
    [5, 13767778, ["EX3", 3, 4, ["NZD", 120]]]
@@ -3970,13 +3995,6 @@ D.5.  Complete Negotiation Example
    [6, 13767778, [102, "Insufficient funds"]]
    [M_END , 13767778, [O_DECLINE, "Insufficient funds"]]
    h'83061a00d2146282186672496e73756666696369656e742066756e6473'
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 71]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    This negotiation has failed.  If either side had sent [M_END,
    13767778, [O_ACCEPT]] it would have succeeded, converging on the
@@ -4008,6 +4026,14 @@ E.1.  Requirements for Discovery
    In an autonomic network we must assume that when a device starts up
    it has no information about any peer devices, the network structure,
    or what specific role it must play.  The ASA(s) inside the device are
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 72]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    in the same situation.  In some cases, when a new application session
    starts up within a device, the device or ASA may again lack
    information about relevant peers.  For example, it might be necessary
@@ -4024,15 +4050,6 @@ E.1.  Requirements for Discovery
    specific network to which it is attached.  Therefore the discovery
    process must be able to support any network scenario, assuming only
    that the device concerned is bootstrapped from factory condition.
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 72]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    D3.  When an ASA starts up, it must require no configured location
    information about any peers in order to discover them.
@@ -4065,6 +4082,14 @@ Internet-Draft                    GRASP                        July 2017
    o  During initialization, a device must be able to establish mutual
       trust with autonomic nodes elsewhere in the network and
       participate in an authentication mechanism.  Although this will
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 73]
+
+Internet-Draft                    GRASP                        July 2017
+
+
       inevitably start with a discovery action, it is a special case
       precisely because trust is not yet established.  This topic is the
       subject of [I-D.ietf-anima-bootstrapping-keyinfra].  We require
@@ -4082,13 +4107,6 @@ Internet-Draft                    GRASP                        July 2017
    must take account of sleeping nodes.
 
    D9.  There must be a mechanism for handling stale discovery results.
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 73]
-
-Internet-Draft                    GRASP                        July 2017
-
 
 E.2.  Requirements for Synchronization and Negotiation Capability
 
@@ -4121,6 +4139,13 @@ E.2.  Requirements for Synchronization and Negotiation Capability
    to encapsulate the data formats used by existing configuration
    protocols (such as NETCONF/YANG) in cases where that is convenient.
 
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 74]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    SN5.  Human intervention in complex situations is costly and error-
    prone.  Therefore, synchronization or negotiation of parameters
    without human intervention is desirable whenever the coordination of
@@ -4136,15 +4161,6 @@ E.2.  Requirements for Synchronization and Negotiation Capability
    Infrastructure, should be capable of running in any device that would
    otherwise be managed by an NMS, and that it can co-exist with an NMS,
    and with protocols such as SNMP and NETCONF.
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 74]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    SN7.  Specific autonomic features are expected to be implemented by
    individual ASAs, but the protocol must be general enough to allow
@@ -4178,6 +4194,14 @@ Internet-Draft                    GRASP                        July 2017
 
    o  Since a major goal is to minimize human intervention, it is
       necessary that the network can in effect "think ahead" before
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 75]
+
+Internet-Draft                    GRASP                        July 2017
+
+
       changing its parameters.  One aspect of this is an ASA that relies
       on a knowledge base to predict network behavior.  This is out of
       scope for the signaling protocol.  However, another aspect is
@@ -4194,14 +4218,6 @@ Internet-Draft                    GRASP                        July 2017
 
    SN8.  The protocol will be able to deal with a wide variety of
    technical objectives, covering any type of network parameter.
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 75]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    Therefore the protocol will need a flexible and easily extensible
    format for describing objectives.  At a later stage it may be
    desirable to adopt an explicit information model.  One consideration
@@ -4233,6 +4249,15 @@ E.3.  Specific Technical Requirements
    routable addresses, i.e., must not be restricted to link-local
    operation.
 
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 76]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    T5.  It must also be possible for an external discovery mechanism to
    be used, if appropriate for a given technical objective.  In other
    words, GRASP discovery must not be a prerequisite for GRASP
@@ -4250,14 +4275,6 @@ E.3.  Specific Technical Requirements
    be able to report to a monitoring system.  Some events must be able
    to generate operator alerts and some provision for emergency
    intervention must be possible (e.g.  to freeze synchronization or
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 76]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    negotiation in a mis-behaving device).  These features might not use
    the signaling protocol itself, but its design should not exclude such
    use.
@@ -4289,6 +4306,14 @@ Appendix F.  Capability Analysis of Current Protocols
    layer services, not the layer 2 and 3 objectives relevant to basic
    network configuration.  Both SLP and DNS-SD are text-based protocols.
 
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 77]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    Simple Network Management Protocol (SNMP) [RFC3416] uses a command/
    response model not well suited for peer negotiation.  Network
    Configuration Protocol (NETCONF) [RFC6241] uses an RPC model that
@@ -4306,14 +4331,6 @@ Appendix F.  Capability Analysis of Current Protocols
 
    There are some signaling protocols with an element of negotiation.
    For example Resource ReSerVation Protocol (RSVP) [RFC2205] was
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 77]
-
-Internet-Draft                    GRASP                        July 2017
-
-
    designed for negotiating quality of service parameters along the path
    of a unicast or multicast flow.  RSVP is a very specialised protocol
    aimed at end-to-end flows.  A more generic design is General Internet
@@ -4346,6 +4363,13 @@ Internet-Draft                    GRASP                        July 2017
    state changes are needed, the preferable choice is to use an
    additional point-to-point channel..."
 
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 78]
+
+Internet-Draft                    GRASP                        July 2017
+
+
    Specific features of DNCP include:
 
    o  Every participating node has a unique node identifier.
@@ -4359,16 +4383,6 @@ Internet-Draft                    GRASP                        July 2017
    o  Synchronization of state is maintained by a flooding process using
       the Trickle algorithm.  There is no bilateral synchronization or
       negotiation capability.
-
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 78]
-
-Internet-Draft                    GRASP                        July 2017
-
 
    o  The HNCP profile of DNCP is designed to operate between directly
       connected neighbors on a shared link using UDP and link-local IPv6
@@ -4402,6 +4416,16 @@ Internet-Draft                    GRASP                        July 2017
    we have not identified a path by which one of the existing protocols
    could be extended to meet the requirements.
 
+
+
+
+
+
+Bormann, et al.          Expires January 6, 2018               [Page 79]
+
+Internet-Draft                    GRASP                        July 2017
+
+
 Authors' Addresses
 
    Carsten Bormann
@@ -4411,19 +4435,6 @@ Authors' Addresses
    Germany
 
    Email: cabo@tzi.org
-
-
-
-
-
-
-
-
-
-
-Bormann, et al.          Expires January 6, 2018               [Page 79]
-
-Internet-Draft                    GRASP                        July 2017
 
 
    Brian Carpenter (editor)
@@ -4444,17 +4455,6 @@ Internet-Draft                    GRASP                        July 2017
    P.R. China
 
    Email: leo.liubing@huawei.com
-
-
-
-
-
-
-
-
-
-
-
 
 
 
