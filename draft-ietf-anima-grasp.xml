@@ -621,12 +621,19 @@
         is therefore to use only TCP.</t> -->
         
         <t>For link-local UDP multicast, the GRASP protocol listens to the well-known
-        GRASP Listen Port (<xref target="Constants"/>). 
-        For unicast transport sessions used for discovery responses, synchronization and
-        negotiation, the ASA concerned normally listens on its own dynamically assigned ports,
-        which are communicated to its peers during discovery. GRASP itself needs to listen
-        for M_RESPONSE messages on the GRASP Listen Port with the unicast transport protocol
-        used by the security and transport substrate.</t>
+        GRASP Listen Port (<xref target="Constants"/>). Transport connections for Discovery
+        and Flooding on relay nodes must terminate in GRASP instances (eg: GRASP ASAs) so
+        that link-local multicast, hop-by-hop flooding of M_DISCOVERY and M_FLOOD and hop-by-hop forwarding
+        of M_RESPONSE and caching of those responses along the path work correctly.</t>
+
+        <t>Unicast transport connections used for synchronization and negotiation can terminate
+        directly in ASAs that implement objectives and therefore this traffic does not need to
+        pass through GRASP instances. For this, the ASA listens on its own dynamically assigned ports,
+        which are communicated to its peers during discovery. Alternatively, the GRASP instance
+        can also terminate the unicast transport connections and pass the traffic from/to the 
+        ASA if that is preferrable in some implementation (eg: to better decouple ASAs from
+        network connections).</t>
+
         </section>
          
                
@@ -677,7 +684,7 @@
                 The loop count and timeout will ensure that the process ends. Further details
                 are given below.
                 </t>
-                <t>A Discovery message MAY be sent unicast (via UDP or TCP) to a peer node,
+                <t>A Discovery message MAY be sent unicast to a peer node,
                 which SHOULD then proceed exactly as if the message had been multicast,
                 except that when TCP is used, the response will be
                 on the same socket as the query. However,
@@ -688,11 +695,12 @@
               <section anchor="discproc" title="Discovery Procedures">
                   <t>Discovery starts as an on-link operation. The Divert option
                   can tell the discovery initiator to contact an off-link
-                  ASA for that discovery objective. A Discovery message is sent
-                  by a discovery initiator via UDP to the ALL_GRASP_NEIGHBORS link-local
-                  multicast address (<xref target="Constants"/>). Every network
-                  device that supports GRASP always listens to a well-known
-                  UDP port to capture the discovery messages. Because this port
+                  ASA for that discovery objective. If the security and transport substrate
+                  of the GRASP domain (see <xref target="trans"/>) uses UDP link-local multicast
+                  then the discovery initiator sends these to the ALL_GRASP_NEIGHBORS link-local
+                  multicast address (<xref target="Constants"/>) and and all GRASP nodes need
+                  to listen to this address to act as discovery responder.
+                  Because this port
                   is unique in a device, this is a function of the GRASP instance
                   and not of an individual ASA. As a result, each ASA will need to
                   register the objectives that it supports with the local GRASP instance.</t>
@@ -704,8 +712,7 @@
                   about an ASA that supports the requested discovery objective (usually
                   because it discovered the same objective before), it SHOULD
                   respond with a Discovery Response message with a Divert option pointing
-                  to the appropriate Discovery Responder. However, on a link that supports
-                  link-local multicast, it SHOULD NOT respond
+                  to the appropriate Discovery Responder. However, it SHOULD NOT respond
                   with a cached response on an interface if it learnt that information from
                   the same interface, because the peer in question will answer directly if still
                   operational.</t>
@@ -765,7 +772,7 @@
                   <t>A GRASP instance with multiple link-layer interfaces (typically running in a router) MUST
                   support discovery on all GRASP interfaces. We refer to this as a 'relaying instance'.</t>
                   
-                  <t>Constrained Instances (<xref target="secinst"/>) are
+                  <t>DULL Instances (<xref target="secinst"/>) are
                   always single-interface instances and therefore MUST NOT perform discovery relaying.</t>
                   
                   <t>If a relaying instance receives a Discovery message
@@ -774,12 +781,25 @@
                   the query by re-issuing a new Discovery message as a link-local multicast on its other
                   GRASP interfaces.</t>
                   
-                  <t> The relayed discovery message MUST have the same Session ID as the incoming
-                  discovery message and MUST be tagged with the IP address of its original initiator
-                  (see <xref target="DiscoveryMessage"/>). Note that this initiator address is only used
-                  to allow for disambiguation of the Session ID and is never used to address Response packets,
-                  which are sent to the relaying instance, not the original initiator.
-                  </t>
+                  <t> The relayed discovery message MUST have the same Session ID and Initiator field
+                  as the incoming (see <xref target="DiscoveryMessage"/>). The Initiator IP address field is only
+                  used to allow for disambiguation of the Session ID and is never used to address Response packets.
+                  Response packets are sent back to the relaying instance, not the original initiator.</t>
+
+                  <t>The M_DISCOVERY message does not encode the transport address of the originator or
+                  relay. Response packets must therefore be sent to the transport layer address of the connection
+                  on which the M_DISCOVERY message was received. If the M_DISCOVERY was relayed via a reliable 
+                  hop-by-hop transport connection, the response is simply sent back via the same connection.</t>
+                  
+                  <t>If the M_DISCOVERY was relayed via link-local (eg: UDP) multicast, the response is sent
+                  back via a reliable hop-by-hop transport connection with the same port number as
+                  the source port of the link-local multicast. Therefore, if link-local multicast is
+                  used and M_RESPONSE messages are required (which is the case in almost all GRASP instances
+                  except for the limited use of DULL instances in the ANI), GRASP needs to be able to bind to one
+                  port number on UDP from which to originate the link-local multicast M_DISCOVERY messages
+                  and the same port number on the reliable hop-by-hop transport (eg: TCP by default)
+                  to be able to respond to transport connections from responders that want to send
+                  M_RESPONSE messages back. Note that this port does not need to be the GRASP_LISTEN_PORT.</t>
                                     
                   <t>The relaying instance MUST decrement the loop count within the objective, and 
                   MUST NOT relay the Discovery message if the result is zero.
@@ -1027,7 +1047,8 @@
               </list></t>
 
             <t>GRASP_LISTEN_PORT (TBD3)<vspace blankLines="1"/>A well-known UDP user port that
-            every GRASP-enabled network device MUST always listen to for link-local multicasts.
+            every GRASP-enabled network device MUST listen to for link-local multicasts when UDP
+            is used for M_DISCOVERY or M_FLOOD messages in the GRASP instance
             This user port MAY also be used to listen for TCP or UDP unicast messages
             in a simple implementation of GRASP (<xref target="trans"/>).</t>
             
