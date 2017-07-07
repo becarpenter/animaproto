@@ -62,7 +62,7 @@
 
     <!---->
 
-    <date day="5" month="July" year="2017"/>
+    <date day="7" month="July" year="2017"/>
 
     <abstract>
       <t>This document specifies the GeneRic Autonomic Signaling Protocol (GRASP), which
@@ -587,12 +587,12 @@
         through hop-by-hop link-local multicast forwarding between adjacent GRASP nodes. The
         GRASP security and transport substrate needs to specify how these link local multicasts
         are transported. This can be unreliable transport (UDP) but it SHOULD be reliable
-        transport (eg: TCP).</t>
+        transport (e.g., TCP).</t>
 
         <t>If the substrate specifies an unreliable transport such as UDP for discovery and flooding messages,
-        then it MUST NOT use IP fragmentation because of its loss characteristics especially
-        in multi-hop flooding. GRASP MUST then enforce at the API level to its users a limit to the size
-        of discovery and flooding messages so that no fragmentation can occur. For IPv6 transport this
+        then it MUST NOT use IP fragmentation because of its loss characteristic, especially
+        in multi-hop flooding. GRASP MUST then enforce at the user API level a limit to the size
+        of discovery and flooding messages, so that no fragmentation can occur. For IPv6 transport this
         means that those messages must be at most 1280 bytes sized IPv6 packets (unless there is a known
         larger minimum link MTU across the whole GRASP domain).</t>
 
@@ -2770,7 +2770,7 @@ O_URI_LOCATOR = 106
       
       <section anchor="changes" title="Change log [RFC Editor: Please remove]">
       
-      <t>draft-ietf-anima-grasp-14, 2017-07-02:
+      <t>draft-ietf-anima-grasp-15, 2017-07-07:
       <vspace blankLines="1"/>
       Updates following additional IESG comments:
       <vspace blankLines="1"/>
