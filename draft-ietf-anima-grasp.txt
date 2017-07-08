@@ -707,8 +707,8 @@ Internet-Draft                    GRASP                        July 2017
 
    o  An initiator MAY send Discovery or Flood Synchronization link-
       local multicast messages which MUST have a loop count of 1, to
-      prevent off-link operations.  Other GRASP message types MUST NOT
-      be sent.
+      prevent off-link operations.  Other unsolicited GRASP message
+      types MUST NOT be sent.
 
    o  A responder MUST silently discard any message whose loop count is
       not 1.
@@ -751,14 +751,14 @@ Internet-Draft                    GRASP                        July 2017
    between adjacent GRASP nodes.  The GRASP security and transport
    substrate needs to specify how these link local multicasts are
    transported.  This can be unreliable transport (UDP) but it SHOULD be
-   reliable transport (eg: TCP).
+   reliable transport (e.g., TCP).
 
    If the substrate specifies an unreliable transport such as UDP for
    discovery and flooding messages, then it MUST NOT use IP
-   fragmentation because of its loss characteristics especially in
-   multi-hop flooding.  GRASP MUST then enforce at the API level to its
-   users a limit to the size of discovery and flooding messages so that
-   no fragmentation can occur.  For IPv6 transport this means that those
+   fragmentation because of its loss characteristic, especially in
+   multi-hop flooding.  GRASP MUST then enforce at the user API level a
+   limit to the size of discovery and flooding messages, so that no
+   fragmentation can occur.  For IPv6 transport this means that those
    messages must be at most 1280 bytes sized IPv6 packets (unless there
    is a known larger minimum link MTU across the whole GRASP domain).
 

@@ -538,7 +538,7 @@
          <t>An initiator MAY send Discovery or Flood Synchronization link-local
          multicast messages which MUST have a loop count of 1, to prevent
          off-link operations.
-         Other GRASP message types MUST NOT be sent.</t>
+         Other unsolicited GRASP message types MUST NOT be sent.</t>
          <t>A responder MUST silently discard any message whose loop count is not 1.</t>
          <t>A responder MUST silently discard any message referring to a GRASP Objective that is
          not directly part of a service that requires this insecure mode.</t>
