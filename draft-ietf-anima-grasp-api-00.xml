@@ -13,7 +13,7 @@
 <!-- Change to "yes" if someone has disclosed IPR for the draft -->
 <?rfc compact="yes"?>
 <!-- This defines the specific filename and version number of your draft (and inserts the appropriate IETF boilerplate -->
-<rfc category="info" docName="draft-liu-anima-grasp-api-07" ipr="trust200902">
+<rfc category="info" docName="draft-ietf-anima-grasp-api-00" ipr="trust200902">
   <front>
     <title abbrev="GRASP API">Generic Autonomic Signaling Protocol Application
     Program Interface (GRASP API)</title>
@@ -50,7 +50,7 @@
       </address>
     </author>
 
-    <author fullname="Wendong Wang" initials="W." surname="Wang">
+    <author fullname="Wendong Wang" initials="W." surname="Wang  ">
       <organization>BUPT University</organization>
 
       <address>
@@ -79,11 +79,11 @@
 
     <!---->
 
-    <date day="xx" month="December" year="2017"/>
+    <date day="23" month="December" year="2017"/>
 
     <abstract>
-      <t>This document is a conceptual outline of the application
-      programming interface (API) of the
+      <t>This document is a conceptual outline of an application
+      programming interface (API) for the
       Generic Autonomic Signaling Protocol (GRASP). Such an API is needed for
       Autonomic Service Agents (ASA) calling the GRASP protocol module to
       exchange autonomic network messages with other ASAs.</t>
@@ -135,7 +135,7 @@
         </figure></t>
 
       <t>Both the GRASP library and the extended function modules should
-      be available to the ASAs. Thus, there needs to be two sub-sets of API.
+      be available to the ASAs. Thus, there need to be two sub-sets of API.
       However, since the extended functions are expected to be added in an incremental
       manner, it is inappropriate to define the function APIs in a single
       document. This document only defines the base GRASP API.</t>
@@ -162,7 +162,9 @@
         (security, sending and listening for GRASP messages, waiting, caching
         discovery results, negotiation looping, sending and receiving
         sychronization data, etc.) but understands nothing about individual
-        objectives. So this is a high level abstract API for use by ASAs. Individual 
+        objectives. The semantics of objectives are unknown to the GRASP
+        module and are handled only by the ASAs. Thus, this is a high level
+        abstract API for use by ASAs. Individual 
         language bindings should be defined in separate documents.</t>
         
         <t>An assumption of this API is that ASAs may fall into various classes:
@@ -223,7 +225,7 @@
     used to distinguish simultaneous GRASP sessions from each other, so that any
     number of sessions may proceed in parallel.</t> 
     <t>
-    The following calls involve waiting for a remote operation, so they use this mechanism:
+    The following calls involve waiting for a remote operation, so they could use this mechanism:
     <list>
     <t>discover()</t>
     <t>request_negotiate()</t>
@@ -234,7 +236,8 @@
     In all these calls, the 'session_nonce' is a read/write parameter. On
     the first call, it is set to a null value, and the API returns the 'noReply' code
     and a non-null value. This value must be used in all subsequent calls. By this
-    mechanism, multiple overlapping sessions can be distinguished.
+    mechanism, multiple overlapping sessions can be distinguished, both in the ASA
+    and in the GRASP core.
     </t>
     </section>
 
@@ -253,7 +256,8 @@
        <t>No reply: used in non-blocking calls to indicate that the other end has sent no reply so far (see <xref target="noThread"/>).</t>
        <t>Unspecified error: used when no more specific error code applies.</t>
        </list></t>
-       <t><xref target="ErrAppx"/> gives a full list of currently defined error codes.</t> 
+       <t><xref target="ErrAppx"/> gives a full list of currently defined error codes, based on
+       implementation experience.</t> 
        </section> 
        
        <section title="Timeout">
@@ -269,7 +273,7 @@
         <t>name (UTF-8 string) - the objective's name</t>
         <t>neg (Boolean flag) - True if objective supports negotiation (default False)</t>
         <t>synch (Boolean flag) - True if objective supports synchronization (default False)</t>
-        <t>dry (Boolean flag) - True if objective supports dry-run synchronization (default False)
+        <t>dry (Boolean flag) - True if objective supports dry-run negotiation (default False)
         <list style="symbols">
          <t>Note 1: All objectives are assumed to support discovery, so there is no Boolean for that.</t>
          <t>Note 2: Only one of 'synch' or 'neg' may be True.</t>
@@ -307,7 +311,7 @@
     def __init__(self, name):
         self.name = name    #Unique name, string
         self.neg = False    #True if objective supports negotiation
-        self.dry = False    #True if objective supports dry-run negotiation
+        self.dry = False    #True if objective supports dry-run neg.
         self.synch = False  #True if objective supports synch
         self.loop_count = GRASP_DEF_LOOPCT  #Default starting value
         self.value = 0      #Place holder; any valid Python object
@@ -830,7 +834,6 @@
 
     <references title="Informative References">
     
-      <?rfc include='reference.RFC.7749'?>
       <?rfc include='reference.I-D.ietf-anima-reference-model'?>
       <?rfc include='reference.I-D.liu-anima-grasp-distribution'?>
       <?rfc include='reference.I-D.ietf-anima-autonomic-control-plane'?>
@@ -840,7 +843,8 @@
   <section anchor="ErrAppx" title="Error Codes">
   <t>This Appendix lists the error codes defined so far, with suggested symbolic names
   and corresponding descriptive strings in English. It is expected that complete API
-  implementations will provide for localisation of these descriptive strings.</t>
+  implementations will provide for localisation of these descriptive strings,
+  and that additional error codes will be needed according to implementation details.</t>
   
   <t><figure>
            <artwork><![CDATA[
@@ -891,11 +895,13 @@ invalidLoc      38 "Invalid locator"
     
   <section anchor="changes" title="Change log [RFC Editor: Please remove]">
   
-      <t>draft-liu-anima-grasp-api-07, 2017-12-xx:
+      <t>draft-ietf-anima-grasp-api-00, 2017-12-23:
+      <vspace blankLines="1"/>
+      WG adoption
       <vspace blankLines="1"/>
       Editorial improvements.
       </t>
-      
+  
       <t>draft-liu-anima-grasp-api-06, 2017-11-24:
       <vspace blankLines="1"/>
       Improved description of event-loop model.
