@@ -79,7 +79,7 @@
 
     <!---->
 
-    <date day="xx" month="January" year="2018"/>
+    <date day="3" month="March" year="2018"/>
 
     <abstract>
       <t>This document is a conceptual outline of an application
@@ -94,14 +94,14 @@
     <section anchor="intro" title="Introduction">
       <t>As defined in <xref target="I-D.ietf-anima-reference-model"/>, the
       Autonomic Service Agent (ASA)
-      is the atomic entity of an autonomic function; and it is instantiated
+      is the atomic entity of an autonomic function, and it is instantiated
       on autonomic nodes. When ASAs communicate with each other, they should
       use the Generic Autonomic Signaling Protocol (GRASP) <xref target="I-D.ietf-anima-grasp"/>.</t>
 
-      <t>As the following figure shows, GRASP could contain two major
+      <t>As the following figure shows, a GRASP implementation could contain two major
       sub-layers. The bottom is the GRASP base protocol module, which is only
       responsible for sending and receiving GRASP messages and maintaining
-      shared data structures. The upper layer is
+      shared data structures. The upper layer contains
       some extended functions based upon GRASP basic protocol. For example,
       <xref target="I-D.liu-anima-grasp-distribution"/> describes a possible extended
       function.</t>
@@ -138,7 +138,7 @@
       be available to the ASAs. Thus, there need to be two sub-sets of API.
       However, since the extended functions are expected to be added in an incremental
       manner, it is inappropriate to define the function APIs in a single
-      document. This document only defines the base GRASP API.</t>
+      document. This document only describes the base GRASP API.</t>
       
       <t>Note that a very simple autonomic node might contain only a single ASA in
       addition to the autonomic infrastructure components described in
@@ -210,7 +210,8 @@
     of new threads, context switching between threads, queues, locks,
     and implicit wait states. In this case,
     all API calls can be treated naturally as synchronous, even if they include
-    wait states, blocking and queueing.</t>
+    wait states, blocking and queueing. Simultaneous operations will each run
+    in their own threads.</t>
     <t>In an event loop implementation, synchronous blocking calls are not
     acceptable. Therefore all calls must be non-blocking, and
     the main loop will support multiple GRASP sessions in parallel
@@ -218,7 +219,7 @@
     API implementation will provide non-blocking versions of all the functions that
     otherwise involve blocking and queueing. In these calls, a 'noReply' code
     will be returned by each call instead of blocking, until such time as the event
-    for which it is waiting has occurred. Thus, for example, discover()
+    for which it is waiting (or a failure) has occurred. Thus, for example, discover()
     would return "noReply" instead of waiting until discovery has succeeded
     or timed out. The discover() call would be repeated in every cycle of the
     main loop until it completes. A 'session_nonce' parameter (described below) is
@@ -278,6 +279,7 @@
          <t>Note 1: All objectives are assumed to support discovery, so there is no Boolean for that.</t>
          <t>Note 2: Only one of 'synch' or 'neg' may be True.</t>
          <t>Note 3: 'dry' must not be True unless 'neg' is also True.</t>
+         <t>Note 4: In a language such as C the preferred implementation may be to represent the Boolean flags as bits in a single byte.</t>
         </list></t>
         <t>loop_count (integer) - Limit on negotiation steps etc. (default GRASP_DEF_LOOPCT,
         see <xref target="I-D.ietf-anima-grasp"/>)</t>
@@ -813,7 +815,8 @@
     </section>
 
     <section anchor="iana" title="IANA Considerations">
-      <t>This document does not need IANA assignments.</t>
+      <t>This document currently makes no request of the IANA.</t>
+      <t>Open question: Do we need an IANA registry for the error codes?</t>
 
       <t/>
     </section>
@@ -895,9 +898,9 @@ invalidLoc      38 "Invalid locator"
     
   <section anchor="changes" title="Change log [RFC Editor: Please remove]">
   
-      <t>draft-ietf-anima-grasp-api-01, 2018-xx-xx:
+      <t>draft-ietf-anima-grasp-api-01, 2018-03-03:
       <vspace blankLines="1"/>
-      updates...
+      Editorial updates
       </t>      
       
       <t>draft-ietf-anima-grasp-api-00, 2017-12-23:
