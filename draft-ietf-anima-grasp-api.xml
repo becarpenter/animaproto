@@ -79,7 +79,7 @@
 
     <!---->
 
-    <date day="??" month="April" year="2018"/>
+    <date day="22" month="June" year="2018"/>
 
     <abstract>
       <t>This document is a conceptual outline of an application
@@ -236,10 +236,18 @@
     </list>
     In all these calls, the 'session_nonce' is a read/write parameter. On
     the first call, it is set to a null value, and the API returns the 'noReply' code
-    and a non-null value. This value must be used in all subsequent calls. By this
+    and a non-null session_nonce value. This value must be used in all subsequent calls
+    for the same session. By this
     mechanism, multiple overlapping sessions can be distinguished, both in the ASA
     and in the GRASP core.
     </t>
+    
+    <t>An additional mechanism that might increase efficiency for event loop
+    implementations is to add a general call, say notify(), which would check the
+    status of all outstanding operations for the calling ASA and return the session_nonce values
+    for all sessions that have changed state. This would eliminate the need for repeated calls
+    to the individual functions returning a "noReply". This call is not described below
+    as the details are likely to be implementation-specific.</t>
     </section>
 
       <section title="API definition">
@@ -822,7 +830,10 @@
     </section>
 
     <section anchor="ack" title="Acknowledgements">
-      <t>Excellent suggestions were made by Michael Richardson and other participansts in the ANIMA WG.</t>
+      <t>Excellent suggestions were made by
+      Ignas Bagdonas,
+      Michael Richardson
+      and other participansts in the ANIMA WG.</t>
     </section>
   </middle>
   <back>
@@ -848,6 +859,12 @@
   and corresponding descriptive strings in English. It is expected that complete API
   implementations will provide for localisation of these descriptive strings,
   and that additional error codes will be needed according to implementation details.</t>
+  
+  <t>An open issue for these values is whether there is an advantage in aligning
+  them with existing error codes in the socket API, where the meanings coincide,
+  and using different values otherwise.
+  This is to be balanced against the advantage of having a compact and completely
+  portable set of error codes for GRASP alone.</t>
   
   <t><figure>
            <artwork><![CDATA[
@@ -898,10 +915,12 @@ invalidLoc      38 "Invalid locator"
     
   <section anchor="changes" title="Change log [RFC Editor: Please remove]">
   
-      <t>draft-ietf-anima-grasp-api-02, 2018-??-??:
+      <t>draft-ietf-anima-grasp-api-02, 2018-06-22:
       <vspace blankLines="1"/>
-      TBD
-      </t>      
+      Additional suggestion for event-loop API.
+      <vspace blankLines="1"/>
+      Discussion of error code values.
+      </t>
   
       <t>draft-ietf-anima-grasp-api-01, 2018-03-03:
       <vspace blankLines="1"/>
