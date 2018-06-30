@@ -13,7 +13,7 @@
 <!-- Change to "yes" if someone has disclosed IPR for the draft -->
 <?rfc compact="yes"?>
 <!-- This defines the specific filename and version number of your draft (and inserts the appropriate IETF boilerplate -->
-<rfc category="info" docName="draft-ietf-anima-grasp-api-02" ipr="trust200902">
+<rfc category="info" docName="draft-ietf-anima-grasp-api-03" ipr="trust200902">
   <front>
     <title abbrev="GRASP API">Generic Autonomic Signaling Protocol Application
     Program Interface (GRASP API)</title>
@@ -79,7 +79,7 @@
 
     <!---->
 
-    <date day="22" month="June" year="2018"/>
+    <date day="xx" month="xxxx" year="2018"/>
 
     <abstract>
       <t>This document is a conceptual outline of an application
@@ -915,7 +915,12 @@ invalidLoc      38 "Invalid locator"
     
   <section anchor="changes" title="Change log [RFC Editor: Please remove]">
   
-      <t>draft-ietf-anima-grasp-api-02, 2018-06-22:
+      <t>draft-ietf-anima-grasp-api-03, 2018-xx-xxx:
+      <vspace blankLines="1"/>
+      TBD
+      </t>
+      
+      <t>draft-ietf-anima-grasp-api-02, 2018-06-30:
       <vspace blankLines="1"/>
       Additional suggestion for event-loop API.
       <vspace blankLines="1"/>
