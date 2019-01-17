@@ -79,7 +79,7 @@
 
     <!---->
 
-    <date day="xx" month="xxxx" year="2018"/>
+    <date day="17" month="January" year="2019"/>
 
     <abstract>
       <t>This document is a conceptual outline of an application
@@ -137,8 +137,8 @@
       <t>Both the GRASP library and the extended function modules should
       be available to the ASAs. Thus, there need to be two sub-sets of API.
       However, since the extended functions are expected to be added in an incremental
-      manner, it is inappropriate to define the function APIs in a single
-      document. This document only describes the base GRASP API.</t>
+      manner, it is inappropriate to define all the function APIs in a single
+      document. This document only describes the basic GRASP API.</t>
       
       <t>Note that a very simple autonomic node might contain only a single ASA in
       addition to the autonomic infrastructure components described in
@@ -184,6 +184,11 @@
         <t>The API design assumes that the operating system and programming language
         provide a mechanism for simultaneous asynchronous operations. This is discussed
         in detail in <xref target="noThread"/>.</t>
+        
+        <t>The functions provided by the API do not map one-to-one onto GRASP messages. Rather,
+        they are intended to offer convenient support for message sequences (such as a discovery
+        request followed by responses from several peers,
+        or a negotiation request followed by various possible responses).</t>
 
         <t>This is a preliminary version. A few gaps exist:<list style="symbols">
             <t>Authorization of ASAs is out of scope.</t>
@@ -211,7 +216,9 @@
     and implicit wait states. In this case,
     all API calls can be treated naturally as synchronous, even if they include
     wait states, blocking and queueing. Simultaneous operations will each run
-    in their own threads.</t>
+    in their own threads. For example, the discover() call will not return
+    until discovery results have arrived or a timeout has occurred. If the ASA
+    has other work to do, the discover() call must be in a thread of its own.</t>
     <t>In an event loop implementation, synchronous blocking calls are not
     acceptable. Therefore all calls must be non-blocking, and
     the main loop will support multiple GRASP sessions in parallel
@@ -248,6 +255,12 @@
     for all sessions that have changed state. This would eliminate the need for repeated calls
     to the individual functions returning a "noReply". This call is not described below
     as the details are likely to be implementation-specific.</t>
+    
+    <t>An implication of the above for all GRASP implementations is that the GRASP core
+    must keep state for each GRASP operation in progress, most likely keyed by the GRASP
+    Session ID and the GRASP source address of the session initiator. Even in a threaded
+    implementation, the GRASP core will need such state internally. The session_nonce
+    parameter exposes this aspect of the implementation.</t>
     </section>
 
       <section title="API definition">
@@ -265,8 +278,9 @@
        <t>No reply: used in non-blocking calls to indicate that the other end has sent no reply so far (see <xref target="noThread"/>).</t>
        <t>Unspecified error: used when no more specific error code applies.</t>
        </list></t>
-       <t><xref target="ErrAppx"/> gives a full list of currently defined error codes, based on
-       implementation experience.</t> 
+       <t><xref target="ErrAppx"/> gives a full list of currently suggested error codes, based on
+       implementation experience. While there is no absolute requirement for all implementations
+       to use the same error codes, this is highly recommended for portability of applications.</t> 
        </section> 
        
        <section title="Timeout">
@@ -385,7 +399,8 @@
       
         <section title="Registration">
         <t>These functions are used to register an ASA and the objectives that it supports with
-        the GRASP module. If an authorization model is added to GRASP, it would be added here.</t>
+        the GRASP module. If an authorization model is added to GRASP, it would also be added 
+        at this point in the API.</t>
         <t><list style="symbols">
 
       
@@ -439,13 +454,13 @@
                 <t>The 'ttl' parameter is the valid lifetime (time to live) in milliseconds of any
                 discovery response for this objective. The default value should be the GRASP
                 default timeout (GRASP_DEF_TIMEOUT, see <xref target="I-D.ietf-anima-grasp"/>).</t>
-                <t>If the optional parameter 'discoverable' is True, the objective
+                <t>If the parameter 'discoverable' is True, the objective
                 is immediately discoverable. This is
                 intended for objectives that are only defined for GRASP discovery,
                 and which do not support negotiation or synchronization.</t>
-                <t>If the optional parameter 'overlap' is True, more than one ASA may register this objective
+                <t>If the parameter 'overlap' is True, more than one ASA may register this objective
                 in the same GRASP instance.</t>
-                <t>If the optional parameter 'local' is True, discovery must return a link-local address.
+                <t>If the parameter 'local' is True, discovery must return a link-local address.
                 This feature is for objectives that must be restricted to the local link.</t>
                 <t>This call may be repeated for multiple objectives.</t>
             </list></t>
@@ -479,7 +494,7 @@
               <t>locator_list (structure)</t>
               </list></t>
              <t>This returns a list of discovered 'ASA_locator's for the given objective.
-             If the optional parameter 'flush' is True, any locally cached locators for the
+             If the parameter 'flush' is True, any locally cached locators for the
              objective are deleted first. Otherwise, they are returned immediately. If not,
              GRASP discovery is performed, and all results obtained before the timeout expires
              are returned. If no results are obtained, an empty list is returned after the timeout.
@@ -804,11 +819,13 @@
     </section>
     
     
-    
-    <section anchor="examples" title="Example Logic Flows">
-    <t>TBD</t>
-    <t>(Until this section is written, some Python examples can be found at
-    <eref target="https://github.com/becarpenter/graspy"/>.)
+     
+    <section title="Implementation Status [RFC Editor: please remove]">
+    <t>A prototype open source Python implementation of GRASP, including
+    an API similar to this document, has been used
+    to verify the concepts for the threaded model. It may be found at
+    <eref target="https://github.com/becarpenter/graspy"/>
+    with associated documentation and demonstration ASAs.
     </t>
     </section>
 
@@ -915,9 +932,13 @@ invalidLoc      38 "Invalid locator"
     
   <section anchor="changes" title="Change log [RFC Editor: Please remove]">
   
-      <t>draft-ietf-anima-grasp-api-03, 2018-xx-xxx:
+      <t>draft-ietf-anima-grasp-api-03, 2019-01-17:
       <vspace blankLines="1"/>
-      TBD
+      Replaced empty "logic flows" section by "implementation status".
+      <vspace blankLines="1"/>
+      Minor clarifications.
+      <vspace blankLines="1"/>
+      Editorial improvements.
       </t>
       
       <t>draft-ietf-anima-grasp-api-02, 2018-06-30:
