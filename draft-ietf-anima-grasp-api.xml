@@ -13,7 +13,7 @@
 <!-- Change to "yes" if someone has disclosed IPR for the draft -->
 <?rfc compact="yes"?>
 <!-- This defines the specific filename and version number of your draft (and inserts the appropriate IETF boilerplate -->
-<rfc category="info" docName="draft-ietf-anima-grasp-api-03" ipr="trust200902">
+<rfc category="info" docName="draft-ietf-anima-grasp-api-04" ipr="trust200902">
   <front>
     <title abbrev="GRASP API">Generic Autonomic Signaling Protocol Application
     Program Interface (GRASP API)</title>
@@ -79,7 +79,7 @@
 
     <!---->
 
-    <date day="17" month="January" year="2019"/>
+    <date day="xx" month="xxx" year="2019"/>
 
     <abstract>
       <t>This document is a conceptual outline of an application
@@ -932,7 +932,14 @@ invalidLoc      38 "Invalid locator"
     
   <section anchor="changes" title="Change log [RFC Editor: Please remove]">
   
-      <t>draft-ietf-anima-grasp-api-03, 2019-01-17:
+      <t>draft-ietf-anima-grasp-api-04, 2019-xx-xx:
+      <vspace blankLines="1"/>
+      TBD
+      <vspace blankLines="1"/>
+      Editorial improvements.
+      </t>
+  
+      <t>draft-ietf-anima-grasp-api-03, 2019-01-21:
       <vspace blankLines="1"/>
       Replaced empty "logic flows" section by "implementation status".
       <vspace blankLines="1"/>
