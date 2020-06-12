@@ -13,12 +13,12 @@
 <!-- Change to "yes" if someone has disclosed IPR for the draft -->
 <?rfc compact="yes"?>
 <!-- This defines the specific filename and version number of your draft (and inserts the appropriate IETF boilerplate -->
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-ietf-anima-grasp-api-06" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="info" docName="draft-ietf-anima-grasp-api-07" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 2.44.0 -->
   <front>
     <title abbrev="GRASP API">Generic Autonomic Signaling Protocol Application
     Program Interface (GRASP API)</title>
-    <seriesInfo name="Internet-Draft" value="draft-ietf-anima-grasp-api-06"/>
+    <seriesInfo name="Internet-Draft" value="draft-ietf-anima-grasp-api-07"/>
     <author fullname="Brian Carpenter" initials="B. E." surname="Carpenter">
       <organization abbrev="Univ. of Auckland"/>
       <address>
@@ -73,7 +73,7 @@
     </author>
     <!---->
 
-    <date day="7" month="June" year="2020"/>
+    <date day="TBD" month="TBD" year="2020"/>
     <abstract>
       <t>This document is a conceptual outline of an application
       programming interface (API) for the
@@ -1256,6 +1256,10 @@ invalidLoc      38 "Invalid locator"
     </section>
     <section anchor="changes" numbered="true" toc="default">
       <name>Change log [RFC Editor: Please remove]</name>
+      
+      <t>draft-ietf-anima-grasp-api-07, 2020-TBD-TBD:</t>
+      <ul><li>TBD</li>
+      </ul>
       
       <t>draft-ietf-anima-grasp-api-06, 2020-06-07:</t>
       <ul><li>Improved diagram</li>
