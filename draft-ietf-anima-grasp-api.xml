@@ -73,7 +73,7 @@
     </author>
     <!---->
 
-    <date day="TBD" month="TBD" year="2020"/>
+    <date day="9" month="October" year="2020"/>
     <abstract>
       <t>This document is a conceptual outline of an application
       programming interface (API) for the
@@ -81,7 +81,7 @@
       Autonomic Service Agents (ASA) calling the GRASP protocol module to
       exchange autonomic network messages with other ASAs. Since GRASP is
       designed to support asynchronous operations, the API will need to
-      be adapted to the support for asynchronicity in various languages
+      be adapted to the support for asynchronicity in various programming languages
       and operating systems.</t>
     </abstract>
   </front>
@@ -93,12 +93,13 @@
       is the atomic entity of an autonomic function, and it is instantiated
       on autonomic nodes. When ASAs communicate with each other, they should
       use the Generic Autonomic Signaling Protocol (GRASP) <xref target="I-D.ietf-anima-grasp" format="default"/>.</t>
-      <t>As the following figure shows, a GRASP implementation could contain two major
-      sub-layers. The bottom is the GRASP base protocol module, which is only
+      <t>As <xref target="sw"/> shows, a GRASP implementation could contain several
+      sub-layers. The bottom layer is the GRASP base protocol module, which is only
       responsible for sending and receiving GRASP messages and maintaining
-      shared data structures. The upper layer contains
-      some extended functions based upon GRASP basic protocol. For example,
-      <xref target="I-D.liu-anima-grasp-distribution" format="default"/> describes a possible extended
+      shared data structures. Above that is the basic API described in this
+      document. The upper layer contains
+      some extended API functions based upon GRASP basic protocol. For example,
+      <xref target="I-D.ietf-anima-grasp-distribution" format="default"/> describes a possible extended
       function.</t>
       
       <t>Multiple ASAs in a single node will share the same instance of GRASP, much as
@@ -106,33 +107,41 @@
       individual ASAs by the API, and is not further discussed here.</t>
       
       <t>It is desirable that ASAs can be designed as portable user-space programs
-      using a system-independent API. In many implementations, the GRASP module will therefore
-      be split into two layers. The top layer is a library that provides the API
-      and communicates directly with ASAs. The lower layer is a daemon, or a set
+      using a system-independent API. In many implementations, the GRASP code will therefore
+      be split between user space and kernel space. In user space, library functions provide the API
+      and communicate directly with ASAs. In kernel space is a daemon, or a set
       of sub-services, providing GRASP core functions that are
       independent of specific ASAs, such as multicast handling and relaying, and
       common data structures such as the discovery cache. The GRASP API 
       library would need to communicate with the GRASP core via an inter-process
       communication (IPC) mechanism. The details of this are system-dependent.
       </t>
+      
+      <figure anchor="sw">
+        <name>Software layout</name>
       <artwork align="center" name="" type="" alt=""><![CDATA[
  +--------------+          +--------------+
  |     ASAs     |          |     ASAs     |
  +--------------+          +--------------+
    |          |                    |
-   |          | GRASP Function     |
-   |          | API                |
-   | +------------------+          |GRASP API
+   | +------------------+          |
    | | GRASP Extended   |          |
-   | | Function Modules |          |
+   | | Function API     |          |
    | +------------------+          |
    |          |                    |
 +------------------------------------------+
-|                   GRASP API Library      |
-|  GRASP Modules - - - - - - - - - - - - - |
-|                   GRASP Core (Daemon)    |
+|            GRASP API Library             |
++------------------------------------------+
+                    |
+                   IPC
+                    |
++------------------------------------------+
+|  GRASP Core                              |
+|  (functions, data structures, daemon(s)) |
 +------------------------------------------+
 ]]></artwork>
+</figure>
+
       <t>Both the GRASP library and the extended function modules should
       be available to the ASAs.
       However, since the extended functions are expected to be added in an incremental
@@ -151,7 +160,8 @@
       addition to the autonomic infrastructure components described in
       <xref target="I-D.ietf-anima-bootstrapping-keyinfra" format="default"/>
       and <xref target="I-D.ietf-anima-autonomic-control-plane" format="default"/>.
-      Such a node might directly integrate GRASP in its code and therefore not
+      Such a node might directly integrate a GRASP protocol stack in
+      its code and therefore not
       require this API to be installed. However, the programmer would then need
       a deeper understanding of the GRASP protocol than is needed to use the API.</t>
       
@@ -218,16 +228,16 @@
         <name> Alternative Asynchronous Mechanisms</name>
     <t>Thus, some ASAs need to support asynchronous operations, and therefore
     the GRASP core must do so. Depending on both the
-    operating system and the programming language in use, there are three main
-    techniques for such parallel operations: multi-threading, an
-    event loop structure using polling, and an event loop structure using
-    callback functions.</t>
+    operating system and the programming language in use, there are various
+    techniques for such parallel operations, three of which we
+    consider here: multi-threading, an event loop structure using polling,
+    and an event loop structure using callback functions.</t>
         <ol spacing="normal" type="1">
           <li>In multi-threading, the operating system and language will provide
     the necessary support for asynchronous operations, including creation
     of new threads, context switching between threads, queues, locks,
     and implicit wait states. In this case, API calls can be treated as simple
-    function calls within their own thread, even if the function includes
+    synchronous function calls within their own thread, even if the function includes
     wait states, blocking and queueing. Concurrent operations will each run
     in their own threads. For example, the discover() call may not return
     until discovery results have arrived or a timeout has occurred. If the ASA
@@ -280,14 +290,17 @@
         <t>Note that ASAs could be designed to avoid such a scenario, i.e. restricted to exactly one
     negotiation session at a time for a given objective, but this would be a voluntary
     restriction not required by the GRASP protocol. In fact it is an assumption of GRASP
-    that an ASA managing a resource may need to conduct multiple parallel negotiations,
-    possibly with the same peer. Therefore, the API design allows for such scenarios.</t>
+    that any ASA managing a resource may need to conduct multiple parallel negotiations,
+    possibly with the same peer. Communication patterns could be very complex, with a group
+    of ASAs overlapping negotiations among themselves, as described in 
+    <xref target="I-D.ciavaglia-anima-coordination" format="default"/>.
+    Therefore, the API design allows for such scenarios.</t>
         <t>In the callback model, for the scenario just described,
     the ASAs "A" and "B" will each provide two instances of negotiate_step_received(), one for
     each session. For this reason, each ASA must be
     able to distinguish the two sessions, and the peer's IP address is not sufficient for this.
     It is also not safe to rely on transport port numbers for this, since future variants of GRASP
-    might use shared ports rather than a separate port per session. This is why the GRASP design
+    might use shared ports rather than a separate port per session. Hence the GRASP design
     includes a session identifier. Thus, when necessary, a 'session_nonce' parameter is
     used in the API to distinguish simultaneous GRASP sessions from each other, so that any
     number of sessions may proceed asynchronously in parallel.</t>
@@ -297,8 +310,7 @@
        <section anchor="overlap" numbered="true" toc="default">
         <name>Overlapping Sessions and Operations</name>
         
-    <t>In calls where it is used, the 'session_nonce' is an opaque read/write parameter. On
-    the first call, it is set to a null value, and the API returns a non-null 'session_nonce'
+    <t>On the first call in a new GRASP session, the API returns a 'session_nonce'
     value based on the GRASP session identifier. This value must be used in all subsequent
     calls for the same session, and will be provided as a parameter in the callback functions. By this
     mechanism, multiple overlapping sessions can be distinguished, both in the ASA
@@ -320,9 +332,16 @@
       
       <section numbered="true" toc="default">
         <name>API definition</name>
+        <t>Some example logic flows for a resource management ASA are given in 
+        <xref target="I-D.carpenter-anima-asa-guidelines"/>, which may be of help
+        in understanding the following descriptions.
+        The next section describes parameters and data structures used in multiple API calls. 
+        The following sections describe various groups of function APIs. Those APIs that
+        do not list asynchronous mechanisms are implicitly synchronous in their behaviour.
+        
+        </t>
         <section numbered="true" toc="default">
           <name>Parameters and data structures</name>
-          <t>This section describes parameters and data structures used in multiple API calls.</t>
           <section numbered="true" toc="default">
             <name>Errorcode</name>
             <t>All functions in the API have an unsigned 'errorcode' integer as their return value (the first returned value
@@ -367,14 +386,18 @@
         see <xref target="I-D.ietf-anima-grasp" format="default"/>)</li>
               <li>
                 <t>value - a specific data structure expressing the value of the objective. The format is 
-           language dependent, with the constraint that it can be validly represented in CBOR (default integer = 0).
+           language dependent, with the constraint that it can be validly represented in CBOR.
                 </t>
                 <t>
            An essential requirement for all language mappings and all implementations is that, regardless
-           of what other options exist for a language-specific represenation of the value, there is
-           always an option to use a CBOR byte string as the value. The API will then wrap this
-           byte string in CBOR Tag 24 for transmission via GRASP, and unwrap it after reception.
+           of what other options exist for a language-specific representation of the value, there is
+           always an option to use a raw CBOR data item as the value. The API will then wrap this
+           with CBOR Tag 24 as an encoded CBOR data item <xref target="RFC7049"/>
+           for transmission via GRASP, and unwrap it after reception.
                 </t>
+                <t>The 'name' and 'value' fields are of variable length. GRASP does not set a maximum
+                length for these fields, but only for the total length of a GRASP message. Implementations
+                might impose length limits.</t>
                 <t>
            An example data structure definition for an objective in the C language,
            assuming the use of a particular CBOR library, is:
@@ -387,7 +410,7 @@
     int value_size;           // size of value in bytes
     cbor_mutable_data cbor_value;
                               // CBOR bytestring (libcbor/cbor/data.h)
-    } objective;
+                 } objective;
 ]]></artwork>
                 <t>
            An example data structure definition for an objective in the Python language is:
@@ -397,8 +420,8 @@
     """A GRASP objective"""
     def __init__(self, name):
         self.name = name    # Unique name (string)
-        self.negotiate = False   # True if objective supports negotiation
-        self.dryrun = False      # True if objective supports dry-run neg.
+        self.negotiate = False  #True if objective supports negotiation
+        self.dryrun = False     #True if objective supports dry-run neg.
         self.synch = False  # True if objective supports synch
         self.loop_count = GRASP_DEF_LOOPCT  # Default starting value
         self.value = 0      # Place holder; any valid Python object
@@ -422,6 +445,10 @@
               <li>protocol (integer) - Applicable transport protocol (IPPROTO_TCP or IPPROTO_UDP)</li>
               <li>port (integer) - Applicable port number</li>
             </ul>
+            
+            <t>The 'locator' field is of variable length in the case of an FQDN or a URI. GRASP does not set a maximum
+                length for this field, but only for the total length of a GRASP message. Implementations
+                might impose length limits.</t>
           </section>
           <section numbered="true" toc="default">
             <name>Tagged_objective</name>
@@ -677,31 +704,35 @@
                 function.</li> 
                 <li>The 'objective' parameter must
              include the requested value, and its loop count should be set to a
-             suitable value by the ASA. If not, the GRASP default will apply.</li>
+             suitable starting value by the ASA. If not, the GRASP default will apply.</li>
                 <li>Note that a given negotiation session may or may not be a dry-run negotiation;
              the two modes must not be mixed in a single session.</li>
                 <li>The 'peer' parameter is the target node; it must be an 'ASA_locator' as returned
-             by discover(). If the peer is null, GRASP discovery is performed first.</li>
+             by discover(). If 'peer' is null, GRASP discovery is automatically performed first to find
+             a suitable peer (i.e., any node that supports the objective in question).</li>
                 <li>
                   <t>If the 'errorcode' return parameter is 0, the negotiation has successfully
              started. There are then two cases:
                   </t>
                   <ol spacing="normal" type="1">
                     <li>The 'session_nonce' parameter is null. In this case the negotiation
-              has succeeded (the peer has accepted the request). The returned
+              has succeeded immediately (the peer has accepted the request). The returned
               'proffered_objective' contains the value accepted by the peer.</li>
                     <li>
                       <t>The 'session_nonce' parameter is not null. In this case negotiation
-              must continue. The returned 'proffered_objective' contains the first value
-              proffered by the negotiation peer. Note that this instance of the objective
+              must continue. The 'session_nonce' must be presented in all subsequent negotiation steps.
+              The returned 'proffered_objective' contains the first value
+              proffered by the negotiation peer. The contents of this instance of the objective
               must be used in the subsequent negotiation call because
-              it also contains the current loop count. The 'session_nonce' must be
-              presented in all subsequent negotiation steps. 
+              it contains the updated loop count, sent by the negotiation peer.
+              The GRASP code automatically decrements the loop count by 1 at each step,
+              and returns an error if it becomes zero.
+               
                       </t>
                       <t>
               This function must be followed by calls to 'negotiate_step' and/or 'negotiate_wait'
               and/or 'end_negotiate' until the negotiation ends. 'request_negotiate' may then be called
-              again to start a new negotation.</t>
+              again to start a new negotiation.</t>
                     </li>
                   </ol>
                 </li>
@@ -711,7 +742,8 @@
              an exponential backoff is recommended before any retry.</li>
                 <li><t>Asynchronous Mechanisms:</t><ul>
                 <li>Threaded implementation: This should be called in a separate thread if asynchronous operation is required.</li>
-                <li>Event loop implementation: The 'session_nonce' parameter is used in read/write mode.</li></ul></li>
+                <li>Event loop implementation: The 'session_nonce' parameter is used to distinguish
+                multiple simultaneous sessions.</li></ul></li>
                 <li>Use of dry run mode: This must be consistent within a GRASP session. The state of the 'dry'
              flag in the initial request_negotiate() call must be the same in all subsequent negotiation
              steps of the same session. The semantics of the dry run mode are built into the ASA; GRASP
@@ -752,26 +784,30 @@
                 <li><t>Asynchronous Mechanisms:</t><ul>
                 <li>Threaded implementation: It will block waiting for an incoming request, so
              should be called in a separate thread if asynchronous operation is required.
+             Unless there is an unexpected failure, this call only returns after an
+             incoming negotiation request.
              If the ASA supports multiple simultaneous transactions, a new thread must
              be spawned for each new session.</li>
-                <li>Event loop implementation: A read/write 'session_nonce' parameter is used.
+                <li>Event loop implementation: A 'session_nonce' parameter is used
+                to distinguish individual sessions.
              If the ASA supports multiple simultaneous transactions, a new event must be inserted
              in the event loop for each new session.</li></ul></li>
-                <li>Unless there is an unexpected failure, this call only returns after an
-             incoming negotiation request. When it does so,
+                <li>This call only returns (threaded model) or triggers (event loop) after an
+             incoming negotiation request. When this occurs,
              'requested_objective' contains the first value requested by
-             the negotiation peer. Note that this instance of the objective
-             must be used in the subsequent negotiation call because
-             it also contains the current loop count. The 'session_nonce' must be
+             the negotiation peer. The contents of this instance of the objective
+              must be used in the subsequent negotiation call because
+              it contains the loop count sent by the negotiation peer. The 'session_nonce' must be
              presented in all subsequent negotiation steps. </li>
                 <li>This function must be followed by calls to 'negotiate_step' and/or 'negotiate_wait'
              and/or 'end_negotiate' until the negotiation ends. 'listen_negotiate' may then be called
-             again to await a new negotation.</li>
+             again to await a new negotiation.</li>
                 <li>If an ASA is capable of handling multiple negotiations simultaneously, it may
-             call 'listen_negotiate' simultaneously from multiple threads. The API and GRASP implementation
+             call 'listen_negotiate' simultaneously from multiple threads, or insert multiple events.
+             The API and GRASP implementation
              must support re-entrant use of the listening state and the negotiation calls. Simultaneous
-             sessions will be distinguished by the threads themselves, the GRASP Session IDs, and the underlying unicast
-             transport sockets.</li>
+             sessions will be distinguished by the threads or events themselves, 
+             the GRASP session nonces, and the underlying unicast transport sockets.</li>
               </ul>
             </li>
             <li>
@@ -855,7 +891,8 @@
                   </dl>
                 </li>
                 <li>Delay negotiation session by 'timeout' milliseconds, thereby extending the original timeout. This
-             function simply triggers a GRASP Confirm Waiting message.</li>
+             function simply triggers a GRASP Confirm Waiting message (see <xref target="I-D.ietf-anima-grasp"/>
+             for details).</li>
                 <li><t>Asynchronous Mechanisms:</t><ul>
                 <li>Threaded implementation: Called in the same thread as the preceding 'request_negotiate' or 'listen_negotiate',
              with the same value of 'session_nonce'.</li>
@@ -874,7 +911,7 @@
                     <dt/>
                     <dd>session_nonce (structure)</dd>
                     <dt/>
-                    <dd>reply (Boolean)</dd>
+                    <dd>result (Boolean)</dd>
                     <dt/>
                     <dd>reason (UTF-8 string)</dd>
                   </dl>
@@ -890,7 +927,7 @@
                   <t>End the negotiation session.
                   </t>
                   <t>
-             'reply' = True for accept (successful negotiation), False for decline (failed negotiation).
+             'result' = True for accept (successful negotiation), False for decline (failed negotiation).
                   </t>
                   <t>
              'reason' = optional string describing reason for decline.</t>
@@ -940,11 +977,12 @@
              the API checks that the ASA is registered,  but the objective does not need to
              be registered by the calling ASA.</li>
                 <li>If the objective was already flooded, the flooded value is
-             returned immediately in the 'result' parameter. In this case, the 'source' 
+             returned immediately in the 'result' parameter. In this case, the 'peer' 
              and 'timeout' are ignored.</li>
                 <li> Otherwise, synchronization with a discovered ASA is performed. 
              The 'peer' parameter is an 'ASA_locator' as returned by discover().
-             If 'peer' is null, GRASP discovery is performed first.</li>
+             If 'peer' is null, GRASP discovery is automatically performed first to find
+             a suitable peer (i.e., any node that supports the objective in question).</li>
                 <li>This call should be repeated whenever the latest value is needed.</li>
                 <li><t>Asynchronous Mechanisms:</t><ul>
                 <li>Threaded implementation: Call in a separate thread if asynchronous operation is required.</li>
@@ -1180,6 +1218,7 @@
       Toerless Eckert,
       Guangpeng Li,
       Michael Richardson,
+      Rob Wilton,
       and other participants in the ANIMA WG.</t>
     </section>
   </middle>
@@ -1188,16 +1227,17 @@
       <name>References</name>
       <references>
         <name>Normative References</name>
-        <!-- <?rfc include='reference.RFC.2119'?> -->
-
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7049.xml"/>  
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-anima-grasp.xml"/>
       </references>
       <references>
         <name>Informative References</name>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-anima-reference-model.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.liu-anima-grasp-distribution.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-anima-grasp-distribution.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-anima-autonomic-control-plane.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-anima-bootstrapping-keyinfra.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ciavaglia-anima-coordination.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.carpenter-anima-asa-guidelines.xml"/>
       </references>
     </references>
     <section anchor="ErrAppx" numbered="true" toc="default">
@@ -1257,8 +1297,12 @@ invalidLoc      38 "Invalid locator"
     <section anchor="changes" numbered="true" toc="default">
       <name>Change log [RFC Editor: Please remove]</name>
       
-      <t>draft-ietf-anima-grasp-api-07, 2020-TBD-TBD:</t>
-      <ul><li>TBD</li>
+      <t>draft-ietf-anima-grasp-api-07, 2020-10-09:</t>
+      <ul><li>Improved diagram and its description</li>
+      <li>Added pointer to example logic flows</li>
+      <li>Added note on variable length parameters</li>
+      <li>Clarified that API decrements loop count automatically</li>
+      <li>Other corrections and clarifications from AD review</li>
       </ul>
       
       <t>draft-ietf-anima-grasp-api-06, 2020-06-07:</t>
