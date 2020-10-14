@@ -5,11 +5,11 @@
 Network Working Group                                    B. E. Carpenter
 Internet-Draft                                         Univ. of Auckland
 Intended status: Informational                               B. Liu, Ed.
-Expires: 12 April 2021                               Huawei Technologies
+Expires: 16 April 2021                               Huawei Technologies
                                                                  W. Wang
                                                                  X. Gong
                                                          BUPT University
-                                                          9 October 2020
+                                                         13 October 2020
 
 
    Generic Autonomic Signaling Protocol Application Program Interface
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 April 2021.
+   This Internet-Draft will expire on 16 April 2021.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Carpenter, et al.         Expires 12 April 2021                 [Page 1]
+Carpenter, et al.         Expires 16 April 2021                 [Page 1]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Carpenter, et al.         Expires 12 April 2021                 [Page 2]
+Carpenter, et al.         Expires 16 April 2021                 [Page 2]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -165,7 +165,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                 [Page 3]
+Carpenter, et al.         Expires 16 April 2021                 [Page 3]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -221,7 +221,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                 [Page 4]
+Carpenter, et al.         Expires 16 April 2021                 [Page 4]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -277,7 +277,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                 [Page 5]
+Carpenter, et al.         Expires 16 April 2021                 [Page 5]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -333,7 +333,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                 [Page 6]
+Carpenter, et al.         Expires 16 April 2021                 [Page 6]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -389,7 +389,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                 [Page 7]
+Carpenter, et al.         Expires 16 April 2021                 [Page 7]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -445,7 +445,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                 [Page 8]
+Carpenter, et al.         Expires 16 April 2021                 [Page 8]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -501,7 +501,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                 [Page 9]
+Carpenter, et al.         Expires 16 April 2021                 [Page 9]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -557,7 +557,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 10]
+Carpenter, et al.         Expires 16 April 2021                [Page 10]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -613,7 +613,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 11]
+Carpenter, et al.         Expires 16 April 2021                [Page 11]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -669,7 +669,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 12]
+Carpenter, et al.         Expires 16 April 2021                [Page 12]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -725,7 +725,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 13]
+Carpenter, et al.         Expires 16 April 2021                [Page 13]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -781,7 +781,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 14]
+Carpenter, et al.         Expires 16 April 2021                [Page 14]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -837,7 +837,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 15]
+Carpenter, et al.         Expires 16 April 2021                [Page 15]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -893,7 +893,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 16]
+Carpenter, et al.         Expires 16 April 2021                [Page 16]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -949,7 +949,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 17]
+Carpenter, et al.         Expires 16 April 2021                [Page 17]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1005,7 +1005,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 18]
+Carpenter, et al.         Expires 16 April 2021                [Page 18]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1061,7 +1061,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 19]
+Carpenter, et al.         Expires 16 April 2021                [Page 19]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1117,7 +1117,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 20]
+Carpenter, et al.         Expires 16 April 2021                [Page 20]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1173,7 +1173,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 21]
+Carpenter, et al.         Expires 16 April 2021                [Page 21]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1229,7 +1229,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 22]
+Carpenter, et al.         Expires 16 April 2021                [Page 22]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1285,7 +1285,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 23]
+Carpenter, et al.         Expires 16 April 2021                [Page 23]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1341,7 +1341,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 24]
+Carpenter, et al.         Expires 16 April 2021                [Page 24]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1397,7 +1397,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 25]
+Carpenter, et al.         Expires 16 April 2021                [Page 25]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1453,7 +1453,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 26]
+Carpenter, et al.         Expires 16 April 2021                [Page 26]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1509,7 +1509,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 27]
+Carpenter, et al.         Expires 16 April 2021                [Page 27]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1565,14 +1565,14 @@ Appendix A.  Error Codes
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 28]
+Carpenter, et al.         Expires 16 April 2021                [Page 28]
 
 Internet-Draft                  GRASP API                   October 2020
 
 
 Appendix B.  Change log [RFC Editor: Please remove]
 
-   draft-ietf-anima-grasp-api-07, 2020-10-09:
+   draft-ietf-anima-grasp-api-07, 2020-10-13:
 
    *  Improved diagram and its description
 
@@ -1621,7 +1621,7 @@ Appendix B.  Change log [RFC Editor: Please remove]
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 29]
+Carpenter, et al.         Expires 16 April 2021                [Page 29]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1677,7 +1677,7 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 30]
+Carpenter, et al.         Expires 16 April 2021                [Page 30]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1733,7 +1733,7 @@ Authors' Addresses
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 31]
+Carpenter, et al.         Expires 16 April 2021                [Page 31]
 
 Internet-Draft                  GRASP API                   October 2020
 
@@ -1789,4 +1789,4 @@ Internet-Draft                  GRASP API                   October 2020
 
 
 
-Carpenter, et al.         Expires 12 April 2021                [Page 32]
+Carpenter, et al.         Expires 16 April 2021                [Page 32]
