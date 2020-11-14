@@ -390,7 +390,7 @@
           
           
           <t>Some example logic flows for a resource management ASA are given in 
-          <xref target="I-D.carpenter-anima-asa-guidelines"/>, which may be of help
+          <xref target="I-D.ietf-anima-asa-guidelines"/>, which may be of help
           in understanding the following descriptions.
           The next section describes parameters and data structures used in multiple API calls. 
           The following sections describe various groups of function APIs. Those APIs that
@@ -1406,7 +1406,7 @@ negotiate_step()
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-anima-autonomic-control-plane.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-anima-bootstrapping-keyinfra.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ciavaglia-anima-coordination.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.carpenter-anima-asa-guidelines.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-anima-asa-guidelines.xml"/>
       </references>
     </references>
     <section anchor="ErrAppx" numbered="true" toc="default">
