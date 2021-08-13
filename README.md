@@ -1,5 +1,5 @@
 # animaproto
-Anima signaling protocol (GRASP)
+Anima signaling protocol (now named GRASP)
 
 This repository is for an IETF effort and falls under IETF rules: see CONTRIBUTING.md
 
